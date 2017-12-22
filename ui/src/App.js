@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import sentences from './lang/index';
+import sentences from './language/index';
 import NavigationBar from './components/NavigationBar';
 
 const Main = () => (
@@ -14,17 +14,17 @@ const Main = () => (
       <NavigationBar appName={ 'ROAp' }/>
       <Route
         exact
-        path="/"
+        path="/ui/"
         render={ (props) => (<Home hi='hi' />) }
       />
-      <Route path="/search" component={Search}/>
-      <Route path="/new-users" component={NewUsers}/>
-      <Route path="/reported-publications" component={ReportedPublications}/>
-      <Route path="/languages" component={Languages}/>
-      <Route path="/fonts" component={Fonts}/>
-      <Route path="/sign-in" component={SignIn}/>
-      <Route path="/sign-out" component={SignOut}/>
-      <Route path="/profile" component={Profile}/>
+      <Route path="/ui/search" component={Search}/>
+      <Route path="/ui/new-users" component={NewUsers}/>
+      <Route path="/ui/reported-publications" component={ReportedPublications}/>
+      <Route path="/ui/languages" component={Languages}/>
+      <Route path="/ui/fonts" component={Fonts}/>
+      <Route path="/ui/sign-in" component={SignIn}/>
+      <Route path="/ui/sign-out" component={SignOut}/>
+      <Route path="/ui/profile" component={Profile}/>
     </MuiThemeProvider>
   </Router>
 )

@@ -13,7 +13,7 @@ import Notifications from 'material-ui/svg-icons/social/notifications';
 import IconButton from 'material-ui/IconButton';
 
 import inlineStyles from './NavigationBarStyles';
-import sentences from '../lang/index';
+import sentences from '../language/index';
 
 class NavigationBar extends React.Component {
 
@@ -33,7 +33,7 @@ class NavigationBar extends React.Component {
         title={ appName }
         style={inlineStyles.appBar.root}
         titleStyle={inlineStyles.appBar.title}
-        onTitleClick={()=> history.push('/')}
+        onTitleClick={()=> history.push('/ui/')}
         zDepth={0}
         iconStyleRight={inlineStyles.appBar.elementRight}
         iconElementRight={
@@ -41,7 +41,7 @@ class NavigationBar extends React.Component {
             <IconButton
               name="sign-out-button"
               disableTouchRipple={true}
-              onClick={()=> history.push('/search')}
+              onClick={()=> history.push('/ui/search')}
             >
               <FindInPage color={inlineStyles.iconColor} />
             </IconButton>
@@ -55,11 +55,11 @@ class NavigationBar extends React.Component {
               anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
               targetOrigin={{horizontal: 'left', vertical: 'top'}}
             >
-              <Link to="/new-users" >
-                <MenuItem primaryText={sentences.UserCreations} />
+              <Link to="/ui/new-users" >
+                <MenuItem primaryText={sentences.newUsers} />
               </Link>
-              <Link to="/reported-publications" >
-                <MenuItem primaryText={sentences.PostReports} />
+              <Link to="/ui/reported-publications" >
+                <MenuItem primaryText={sentences.reportedPosts} />
               </Link>
             </IconMenu>
 
@@ -72,13 +72,13 @@ class NavigationBar extends React.Component {
               anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
               targetOrigin={{horizontal: 'left', vertical: 'top'}}
             >
-              <Link to="/sign-in" >
+              <Link to="/ui/sign-in" >
                 <MenuItem primaryText={sentences.signIn} />
               </Link>
-              <Link to="/sign-out" >
+              <Link to="/ui/sign-out" >
                 <MenuItem primaryText={sentences.signOut} />
               </Link>
-              <Link to="/profile" >
+              <Link to="/ui/profile" >
                 <MenuItem primaryText={sentences.profile} />
               </Link>
             </IconMenu>
@@ -92,10 +92,10 @@ class NavigationBar extends React.Component {
               anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
               targetOrigin={{horizontal: 'left', vertical: 'top'}}
             >
-              <Link to="/languages" >
+              <Link to="/ui/languages" >
                 <MenuItem primaryText={sentences.languages} />
               </Link>
-              <Link to="/fonts" >
+              <Link to="/ui/fonts" >
                 <MenuItem primaryText={sentences.fonts} />
               </Link>
             </IconMenu>

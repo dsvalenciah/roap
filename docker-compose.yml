@@ -23,6 +23,14 @@ services:
     ports:
       - 27017:27017
 
+  ui:
+    image: ui
+    build: ./ui
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/ui, */ui*"
+
   lb:
     image: dockercloud/haproxy
     volumes:
@@ -33,6 +41,7 @@ services:
     links:
       - back
       - db
+      - ui
 
 volumes:
     database-storage:
