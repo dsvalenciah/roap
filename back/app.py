@@ -3,13 +3,14 @@ from apistar.frameworks.wsgi import WSGIApp as App
 from pymongo import MongoClient
 import os
 
-client = MongoClient(os.getenv('DB_STORAGE'), 27017)
+client = MongoClient(os.getenv('DB_HOST'), 27017)
 db = client.test
 names = db.names
 
+
 def new():
     name_id = names.insert_one({'name': 'daniel'}).inserted_id
-    return {'status': name_id}
+    return {'status': str(name_id)}
 
 
 ROUTES = [
