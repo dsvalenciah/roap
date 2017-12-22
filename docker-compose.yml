@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  back:
+    image: back
+    build: ./back
+    command: apistar run --port 80 --host 0.0.0.0
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/back/*"
+      VIRTUAL_HOST_WEIGHT: 10
+      DB_STORAGE: /run/db
+    links:
+      - db
+    volumes:
+      - database-storage:/run/db
+    depends_on:
+      - db
+
+  db:
+    image: mongo:latest
+    environment:
+      - MONGO_DATA_DIR=/run/db
+    volumes:
+      - database-storage:/run/db
+    ports:
+        - 27017:27017
+
+  lb:
+    image: dockercloud/haproxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - '80:80'
+      - '1936:1936'
+    links:
+      - back
+      - db
+
+volumes:
+    database-storage:
