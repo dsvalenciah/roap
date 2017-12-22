@@ -10,22 +10,26 @@ services:
     environment:
       VIRTUAL_HOST: "*/back/*"
       VIRTUAL_HOST_WEIGHT: 10
-      DB_STORAGE: /run/db
+      DB_HOST: db
     links:
       - db
-    volumes:
-      - database-storage:/run/db
     depends_on:
       - db
 
   db:
     image: mongo:latest
-    environment:
-      - MONGO_DATA_DIR=/run/db
     volumes:
       - database-storage:/run/db
     ports:
-        - 27017:27017
+      - 27017:27017
+
+  ui:
+    image: ui
+    build: ./ui
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/ui, */ui*"
 
   lb:
     image: dockercloud/haproxy
@@ -37,6 +41,7 @@ services:
     links:
       - back
       - db
+      - ui
 
 volumes:
     database-storage:
