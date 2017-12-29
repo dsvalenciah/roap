@@ -36,5 +36,5 @@ class User(typesystem.Object):
         'role': UserRoles,
         'created': typesystem.string(max_length=40),
         'modified': typesystem.string(max_length=40),
-        'publications': typing.List[Publication],
+        'publications': typesystem.array(),
     }
