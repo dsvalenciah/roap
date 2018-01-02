@@ -1,40 +1,33 @@
-import typing
+from marshmallow import fields, Schema, ValidationError, validate
 
-from apistar import typesystem
+class Publication(Schema):
+    _id = fields.UUID(required=True)
+    title = fields.Str(required=True)
+    description = fields.Str(required=True)
+    expert_rating = fields.Integer(
+        default=1,
+        validate=validate.Range(min=1, max=5)
+    )
+    general_rating = fields.Integer(
+        default=1,
+        validate=validate.Range(min=1, max=5)
+    )
+    # _type = fields.Select(['zip', 'html'])
+    _type = fields.Str(required=True)
+    files_path = fields.Str()
+    tags = fields.List(fields.Str())
+    # state = fields.Select(['unevaluated', 'evaluated'])
+    state = fields.Str(required=True)
 
-class UserRoles(typesystem.Enum):
-    enum=['administrator', 'expert', 'creator', 'external']
-
-class PublicationRating(typesystem.Integer):
-    minimum = 1
-    maximum = 5
-
-class PublicationType(typesystem.Enum):
-    enum = ['zip', 'html']
-
-class PublicationState(typesystem.Enum):
-    enum = ['unevaluated', 'evaluated']
-
-class Publication(typesystem.Object):
-    properties = {
-        '_id': typesystem.string(max_length=40),
-        'title': typesystem.string(max_length=512),
-        'description': typesystem.string(max_length=float('inf')),
-        'expert_rating': PublicationRating,
-        'general_rating': PublicationRating,
-        'type': PublicationType,
-        'files_path': typesystem.string(max_length=40),
-        'tags': typesystem.array(),
-        'state': PublicationState,
-    }
-
-class User(typesystem.Object):
-    properties = {
-        '_id': typesystem.string(max_length=40),
-        'name': typesystem.string(max_length=50),
-        'email': typesystem.string(max_length=50),
-        'role': UserRoles,
-        'created': typesystem.string(max_length=40),
-        'modified': typesystem.string(max_length=40),
-        'publications': typesystem.array(),
-    }
+class User(Schema):
+    _id = fields.Str(required=True)
+    name = fields.Str(required=True)
+    email = fields.Str(
+        required=True,
+        validate=validate.Email(error='Not a valid email address')
+    )
+    # role = fields.Select(['administrator', 'expert', 'creator', 'external'])
+    role = fields.Str(required=True)
+    created = fields.Str(required=True, format='%Y-%m-%d %H:%M:%S')
+    modified = fields.Str(required=False)
+    publications = fields.Nested(Publication())
