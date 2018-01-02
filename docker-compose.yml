@@ -4,7 +4,7 @@ services:
   back:
     image: back
     build: ./back
-    command: apistar run --port 80 --host 0.0.0.0
+    command: gunicorn -b 0.0.0.0:80 app:api
     ports:
       - 80
     environment:
