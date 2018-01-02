@@ -1,2 +1,4 @@
-apistar
+falcon
+gunicorn
 pymongo
+marshmallow
