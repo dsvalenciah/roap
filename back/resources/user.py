@@ -35,9 +35,9 @@ class CreatorResource:
         result = db.users.insert_one(valid_user)
 
         if not result.acknowledged:
-            resp.body = {
+            resp.body = json.dumps({
                 'message': 'Create user is not posible'
-            }
+            })
             resp.status = falcon.HTTP_404
             return
 
@@ -56,9 +56,9 @@ class ModifierResource:
         )
 
         if not result.modified_count:
-            resp.body = {
+            resp.body = json.dumps({
                 'message': 'The specified user id is not found on database'
-            }
+            })
             resp.status = falcon.HTTP_404
             return
 
@@ -68,9 +68,9 @@ class ModifierResource:
     def on_delete(self, req, resp, user_id):
         result = db.users.delete_one({'_id': user_id})
         if not result.deleted_count:
-            resp.body = {
+            resp.body = json.dumps({
                 'message': 'The specified user id is not found on database'
-            }
+            })
             resp.status = falcon.HTTP_404
             return
 
