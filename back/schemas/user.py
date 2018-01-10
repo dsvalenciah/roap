@@ -1,5 +1,4 @@
 from marshmallow import fields, Schema, validate
-from schemas.learning_object import LearningObject
 
 class User(Schema):
     _id = fields.Str(required=True)
@@ -12,4 +11,8 @@ class User(Schema):
     role = fields.Str(required=True)
     created = fields.Str(required=True, format='%Y-%m-%d %H:%M:%S')
     modified = fields.Str(required=False)
-    publications = fields.Nested(LearningObject())
+
+user_schema = User()
+
+def is_valid_user(user):
+    return user_schema.load(user)
