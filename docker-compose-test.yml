@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  back:
+    image: back
+    build:
+      context: ./back
+      dockerfile: Dockerfile.test
+    command: python -m pytest tests/
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/back/*"
+      VIRTUAL_HOST_WEIGHT: 10
+      DB_HOST: db
+    links:
+      - db
+    depends_on:
+      - db
+
+  db:
+    image: mongo:latest
+    volumes:
+      - database-storage:/run/db
+    ports:
+      - 27017:27017
+
+volumes:
+    database-storage:
