@@ -1,34 +1,37 @@
 import json
-import os
 from uuid import uuid4
 from datetime import datetime
 
 from schemas.user import is_valid_user
 from utils.req_to_json import req_to_json
 
-from pymongo import MongoClient
 from bson.json_util import dumps
 
 import falcon
 
-client = MongoClient(os.getenv('DB_HOST'), 27017)
-db = client.roap
+db = None
 
+def set_db_client(db_client):
+    global db
+    db = db_client
 
 class Create:
     def on_post(self, req, resp):
         if req.headers.get("AUTHORIZATION"):
             user = req_to_json(req)
-            user.update({
-                '_id': str(uuid4().hex),
-                'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-            })
-            valid_user, errors = is_valid_user(user)
+            if not user.get('_id') and not user.get('created'):
+                user.update({
+                    '_id': str(uuid4().hex),
+                    'created': str(
+                        datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    )
+                })
+            _, errors = is_valid_user(user)
             if errors:
                 resp.body = json.dumps({"errors": errors})
                 resp.status = falcon.HTTP_400
             else:
-                result = db.users.insert_one(valid_user)
+                result = db.users.insert_one(user)
                 if not result.acknowledged:
                     resp.status = falcon.HTTP_400
                 else:

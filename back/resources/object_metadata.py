@@ -2,12 +2,10 @@ from datetime import datetime
 from uuid import uuid4
 import json
 import re
-import os
 
 from schemas.object_metadata import is_valid_schema_field
 from utils.req_to_json import req_to_json
 
-from pymongo import MongoClient
 from bson.json_util import dumps
 
 import falcon
@@ -15,8 +13,11 @@ import falcon
 
 only_letters = re.compile(r"^[A-Z]+$",re.IGNORECASE)
 
-client = MongoClient(os.getenv('DB_HOST'), 27017)
-db = client.roap
+db = None
+
+def set_db_client(db_client):
+    global db
+    db = db_client
 
 def is_correct_parameter(param):
     return bool(only_letters.match(param))
@@ -31,7 +32,7 @@ class Create:
                 resp.body = json.dumps(errors)
                 resp.status = falcon.HTTP_400
             else:
-                result = db.metadata.insert_one(valid_field)
+                result = db.metadata.insert_one(field)
                 if not result.acknowledged:
                     resp.status = falcon.HTTP_400
                 else:

@@ -1,20 +1,20 @@
 from datetime import datetime
 from uuid import uuid4
 import json
-import os
 
 from schemas.object_metadata import is_valid_object
 from utils.req_to_json import req_to_json
 
-from pymongo import MongoClient
 from bson.json_util import dumps
 
 import falcon
 
 
-client = MongoClient(os.getenv('DB_HOST'), 27017)
-db = client.roap
+db = None
 
+def set_db_client(db_client):
+    global db
+    db = db_client
 
 class Create:
     def on_post(self, req, resp, user_id):
