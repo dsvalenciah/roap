@@ -9,7 +9,7 @@ class User(Schema):
     )
     # role = fields.Select(['administrator', 'expert', 'creator', 'external'])
     role = fields.Str(required=True)
-    created = fields.Str(required=True, format='%Y-%m-%d %H:%M:%S')
+    created = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
     modified = fields.Str(required=False)
 
 user_schema = User()
