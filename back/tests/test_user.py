@@ -13,9 +13,6 @@ def client():
     return testing.TestClient(roap.get_api()), roap.get_db()
 
 def test_post_user_create_from_unauthorized(client):
-    '''
-
-    '''
     cli, db = client
     result = cli.simulate_post('/back/user-create')
     assert result.status_code == 401
