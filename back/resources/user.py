@@ -7,6 +7,7 @@ from schemas.user import is_valid_user
 from utils.req_to_json import req_to_json
 
 from bson.json_util import dumps
+import pymongo
 
 import falcon
 
@@ -37,11 +38,11 @@ class Create:
                 resp.body = json.dumps({"errors": errors})
                 resp.status = falcon.HTTP_400
             else:
-                result = db.users.insert_one(user)
-                if not result.acknowledged:
-                    resp.status = falcon.HTTP_400
-                else:
+                try:
+                    result = db.users.insert_one(user)
                     resp.status = falcon.HTTP_201
+                except pymongo.errors.DuplicateKeyError:
+                    resp.status = falcon.HTTP_400
         else:
             resp.status = falcon.HTTP_401
 
