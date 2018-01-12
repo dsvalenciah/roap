@@ -2,10 +2,10 @@ import json
 import os
 
 from resources import user
-from resources import learning_object
-from resources import object_metadata
+from resources import learning_object as lo
+from resources import learning_object_metadata as lom
 
-from config.object_metadata import learning_object_schema_populate
+from config.learning_object_metadata import learning_object_schema_populate
 
 import falcon
 
@@ -18,8 +18,8 @@ class Roap():
         self.client = MongoClient(os.getenv(db_host), db_port)
         self.db = self.client[db_name]
 
-        object_metadata.set_db_client(self.db)
-        learning_object.set_db_client(self.db)
+        lom.set_db_client(self.db)
+        lo.set_db_client(self.db)
         user.set_db_client(self.db)
 
         self.api = falcon.API()
@@ -27,17 +27,14 @@ class Roap():
         self.api.add_route('/back/user', user.UserCollection())
         self.api.add_route('/back/user/{uid}', user.User())
 
-        self.api.add_route(
-            '/back/object', learning_object.LearningObjectCollection()
-        )
-        self.api.add_route(
-            '/back/object/{uid}', learning_object.LearningObject()
-        )
+        self.api.add_route('/back/object', lo.LearningObjectCollection())
+        self.api.add_route('/back/object/{uid}', lo.LearningObject())
 
-        self.api.add_route('/back/obj-meta', object_metadata.Query())
-        self.api.add_route('/back/obj-meta-create', object_metadata.Create())
         self.api.add_route(
-            '/back/obj-meta/{field_id}', object_metadata.Modify()
+            '/back/object-meta', lom.LearningObjectMetadataCollection()
+        )
+        self.api.add_route(
+            '/back/object-meta/{uid}', lom.LearningObjectMetadata()
         )
 
     def get_db(self):

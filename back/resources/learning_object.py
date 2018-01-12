@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import uuid4
 import json
 
-from schemas.object_metadata import is_valid_learning_object
+from schemas.learning_object_metadata import is_valid_learning_object
 from utils.req_to_json import req_to_json
 
 from bson.json_util import dumps
