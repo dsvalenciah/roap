@@ -42,6 +42,7 @@ def test_post_user_create_from_authorized_correct_data(client):
         headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
         body=json.dumps(user)
     )
+
     assert db.users.find_one({"_id": user.get("_id")}) == user
     assert result.status_code == 201
 
@@ -71,7 +72,7 @@ def test_post_user_create_from_authorized_incorrect_created(client):
     user = {
         "_id": uuid4().hex,
         "name": "Daniel",
-        "email": "dsvalenciah",
+        "email": "dsvalenciah@unal.edu.co",
         "role": "administrator",
         "created": datetime.now().strftime('%Y-%m-%d %H:%M')
     }
