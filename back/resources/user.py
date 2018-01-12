@@ -36,56 +36,10 @@ class User(object):
         """
         Update user
         """
-
-    def on_delete(self, req, res, uid):
-        """
-        Delete single user
-        """
-
-
-class UserCollection(object):
-
-    def on_get(self, req, res, uid):
-        """
-        Get all users (maybe filtered, and paginated)
-        """
-
-    def on_post(self, req, res):
-        """
-        Create user.
-        """
-
-
-class Create:
-    def on_post(self, req, resp):
-        if req.headers.get("AUTHORIZATION"):
-            user = req_to_json(req)
-            if not user.get('_id') and not user.get('created'):
-                user.update({
-                    '_id': str(uuid4().hex),
-                    'created': str(
-                        datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    )
-                })
-            _, errors = is_valid_user(user)
-            if errors:
-                resp.body = json.dumps({"errors": errors})
-                resp.status = falcon.HTTP_400
-            else:
-                try:
-                    result = db.users.insert_one(user)
-                    resp.status = falcon.HTTP_201
-                except pymongo.errors.DuplicateKeyError:
-                    resp.status = falcon.HTTP_400
-        else:
-            resp.status = falcon.HTTP_401
-
-class Modify:
-    def on_put(self, req, resp, user_id):
         if req.headers.get("AUTHORIZATION"):
             user = req_to_json(req)
             result = db.users.update_one(
-                {'_id': user_id},
+                {'_id': uid},
                 {'$set': user}
             )
             if not result.modified_count:
@@ -99,9 +53,12 @@ class Modify:
         else:
             resp.status = falcon.HTTP_401
 
-    def on_delete(self, req, resp, user_id):
+    def on_delete(self, req, res, uid):
+        """
+        Delete single user
+        """
         if req.headers.get("AUTHORIZATION"):
-            result = db.users.delete_one({'_id': user_id})
+            result = db.users.delete_one({'_id': uid})
             if not result.deleted_count:
                 resp.body = json.dumps({
                     'message': 'The specified user id is not found on database'
@@ -113,8 +70,13 @@ class Modify:
         else:
             resp.status = falcon.HTTP_401
 
-class Query:
+
+class UserCollection(object):
+
     def on_get(self, req, resp):
+        """
+        Get all users (maybe filtered, and paginated)
+        """
         if req.headers.get("AUTHORIZATION"):
             query_params = req.params
             if not query_params:
@@ -139,6 +101,32 @@ class Query:
                     )))
                     resp.status = falcon.HTTP_200
                 else:
+                    resp.status = falcon.HTTP_400
+        else:
+            resp.status = falcon.HTTP_401
+
+    def on_post(self, req, resp):
+        """
+        Create user.
+        """
+        if req.headers.get("AUTHORIZATION"):
+            user = req_to_json(req)
+            if not user.get('_id') and not user.get('created'):
+                user.update({
+                    '_id': str(uuid4().hex),
+                    'created': str(
+                        datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    )
+                })
+            _, errors = is_valid_user(user)
+            if errors:
+                resp.body = json.dumps({"errors": errors})
+                resp.status = falcon.HTTP_400
+            else:
+                try:
+                    result = db.users.insert_one(user)
+                    resp.status = falcon.HTTP_201
+                except pymongo.errors.DuplicateKeyError:
                     resp.status = falcon.HTTP_400
         else:
             resp.status = falcon.HTTP_401

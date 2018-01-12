@@ -16,14 +16,14 @@ def client():
 
 def test_post_user_create_from_unauthorized(client):
     cli, db = client
-    result = cli.simulate_post('/back/user-create')
+    result = cli.simulate_post('/back/user')
     assert result.status_code == 401
 
 def test_post_user_create_from_authorized(client):
     # TODO: set correct authorization header
     cli, db = client
     result = cli.simulate_post(
-        '/back/user-create', headers={"AUTHORIZATION": "uuid"}
+        '/back/user', headers={"AUTHORIZATION": "uuid"}
     )
     assert result.status_code == 400
 
@@ -40,7 +40,7 @@ def test_post_user_create_from_authorized_correct_data(client):
     cli, db = client
 
     result = cli.simulate_post(
-        '/back/user-create',
+        '/back/user',
         headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
         body=json.dumps(user)
     )
@@ -61,7 +61,7 @@ def test_post_user_create_from_authorized_correct_data_repeat_user(client):
     cli, db = client
 
     result = cli.simulate_post(
-        '/back/user-create',
+        '/back/user',
         headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
         body=json.dumps(user)
     )
@@ -70,7 +70,7 @@ def test_post_user_create_from_authorized_correct_data_repeat_user(client):
     assert result.status_code == 201
 
     result = cli.simulate_post(
-        '/back/user-create',
+        '/back/user',
         headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
         body=json.dumps(user)
     )
@@ -90,7 +90,7 @@ def test_post_user_create_from_authorized_incorrect_email(client):
     cli, db = client
 
     result = cli.simulate_post(
-        '/back/user-create',
+        '/back/user',
         headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
         body=json.dumps(user)
     )
@@ -111,7 +111,7 @@ def test_post_user_create_from_authorized_incorrect_created(client):
     cli, db = client
 
     result = cli.simulate_post(
-        '/back/user-create',
+        '/back/user',
         headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
         body=json.dumps(user)
     )

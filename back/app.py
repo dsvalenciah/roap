@@ -26,6 +26,7 @@ class Roap():
 
         self.api.add_route('/back/user', user.UserCollection())
         self.api.add_route('/back/user/{uid}', user.User())
+
         self.api.add_route('/back/object', object_.LearningObjectCollection())
         self.api.add_route('/back/object/{uid}', object_.LearningObject())
 
@@ -38,10 +39,6 @@ class Roap():
         self.api.add_route('/back/obj', object_.Query())
         self.api.add_route('/back/obj-create/{user_id}', object_.Create())
         self.api.add_route('/back/obj/{user_id}/{object_id}', object_.Modify())
-
-        self.api.add_route('/back/user', user.Query())
-        self.api.add_route('/back/user-create', user.Create())
-        self.api.add_route('/back/user/{user_id}', user.Modify())
 
     def get_db(self):
         return self.db
