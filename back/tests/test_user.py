@@ -10,7 +10,9 @@ from app import Roap
 @pytest.fixture(scope='module')
 def client():
     roap = Roap(db_name="roap-test")
-    return testing.TestClient(roap.get_api()), roap.get_db()
+    db = roap.get_db()
+    db.users.delete_many({})
+    return testing.TestClient(roap.get_api()), db
 
 def test_post_user_create_from_unauthorized(client):
     cli, db = client
@@ -45,6 +47,35 @@ def test_post_user_create_from_authorized_correct_data(client):
 
     assert db.users.find_one({"_id": user.get("_id")}) == user
     assert result.status_code == 201
+
+def test_post_user_create_from_authorized_correct_data_repeat_user(client):
+    # TODO: set correct user schema
+    user = {
+        "_id": uuid4().hex,
+        "name": "Daniel",
+        "email": "dsvalenciah@unal.edu.co",
+        "role": "administrator",
+        "created": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+
+    cli, db = client
+
+    result = cli.simulate_post(
+        '/back/user-create',
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
+        body=json.dumps(user)
+    )
+
+    assert db.users.find_one({"_id": user.get("_id")}) == user
+    assert result.status_code == 201
+
+    result = cli.simulate_post(
+        '/back/user-create',
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
+        body=json.dumps(user)
+    )
+
+    assert result.status_code == 400
 
 def test_post_user_create_from_authorized_incorrect_email(client):
     # TODO: set correct user schema
