@@ -12,9 +12,51 @@ import falcon
 
 db = None
 
+
 def set_db_client(db_client):
     global db
     db = db_client
+
+
+class LearningObject(object):
+    """
+    Deal with single learning objects.
+    """
+
+    def on_get(self, req, res, uid):
+        """
+        Get a single learning object
+        """
+
+    def on_put(self, req, res, uid):
+        """
+        Update a single learning object
+        """
+        # Auth, check if the learing object belongs to the authorised user.
+
+    def on_delete(self, req, res, uid):
+        """
+        Delete a learing object (might be soft delete)
+        """
+
+
+class LearningObjectCollection(object):
+    """
+    Deal with the whole collection of learning objects
+    """
+
+
+    def on_get(self, req, res):
+        """
+        Get all learning objects (maybe filtered, and paginated)
+        """
+
+    def on_post(self, req, res):
+        """
+        Create learning object.
+        """
+        # Notice that, the user id will come in the payload
+
 
 class Create:
     def on_post(self, req, resp, user_id):

@@ -24,6 +24,11 @@ class Roap():
 
         self.api = falcon.API()
 
+        self.api.add_route('/back/user', user.UserCollection())
+        self.api.add_route('/back/user/{uid}', user.User())
+        self.api.add_route('/back/object', object_.LearningObjectCollection())
+        self.api.add_route('/back/object/{uid}', object_.LearningObject())
+
         self.api.add_route('/back/obj-meta', object_metadata.Query())
         self.api.add_route('/back/obj-meta-create', object_metadata.Create())
         self.api.add_route(

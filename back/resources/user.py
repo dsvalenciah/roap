@@ -15,12 +15,46 @@ only_letters = re.compile(r"^[A-Z]+$",re.IGNORECASE)
 
 db = None
 
+
 def set_db_client(db_client):
     global db
     db = db_client
 
+
 def is_correct_parameter(param):
     return bool(only_letters.match(param))
+
+
+class User(object):
+
+    def on_get(self, req, res, uid):
+        """
+        Get a single user
+        """
+
+    def on_put(self, req, res, uid):
+        """
+        Update user
+        """
+
+    def on_delete(self, req, res, uid):
+        """
+        Delete single user
+        """
+
+
+class UserCollection(object):
+
+    def on_get(self, req, res, uid):
+        """
+        Get all users (maybe filtered, and paginated)
+        """
+
+    def on_post(self, req, res):
+        """
+        Create user.
+        """
+
 
 class Create:
     def on_post(self, req, resp):
