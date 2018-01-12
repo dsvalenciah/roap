@@ -1,4 +1,5 @@
 import json
+import re
 from uuid import uuid4
 from datetime import datetime
 
@@ -9,11 +10,16 @@ from bson.json_util import dumps
 
 import falcon
 
+only_letters = re.compile(r"^[A-Z]+$",re.IGNORECASE)
+
 db = None
 
 def set_db_client(db_client):
     global db
     db = db_client
+
+def is_correct_parameter(param):
+    return bool(only_letters.match(param))
 
 class Create:
     def on_post(self, req, resp):
