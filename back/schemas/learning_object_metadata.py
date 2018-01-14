@@ -85,12 +85,12 @@ def dict_to_schema(fields):
 def is_valid_schema_field(field):
     return Field().load(field)
 
-def is_valid_data(data):
+def is_valid_learning_object(data):
     schema_fields = json.loads(dumps(db.metadata.find()))
     generic_schema = dict_to_schema(schema_fields)
     if len(data) > len(schema_fields):
-        return None, "Invalid number of attribiutes"
+        return "Invalid number of attribiutes"
     if not isinstance(generic_schema, dict):
-        return generic_schema.load(data)
+        return generic_schema.load(data)[1]
     else:
-        return None, generic_schema
+        return generic_schema

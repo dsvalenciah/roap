@@ -1,23 +1,48 @@
 import json
+import os
 
 from resources import user
-from resources import metadata
+from resources import learning_object as lo
+from resources import learning_object_metadata as lom
 
-from config.learning_object import learning_object_schema_populate
+from config.learning_object_metadata import learning_object_schema_populate
 
 import falcon
 
+from pymongo import MongoClient
+
 learning_object_schema_populate()
 
-api = falcon.API()
+class Roap():
+    def __init__(self, db_host='DB_HOST', db_port=27017, db_name="roap"):
+        self.client = MongoClient(os.getenv(db_host), db_port)
+        self.db = self.client[db_name]
 
-api.add_route('/back/learn-obj-schema/{field_id}', metadata.ModifierResource())
-api.add_route('/back/learn-obj-schema-create', metadata.CreatorResource())
-api.add_route('/back/learn-obj-schema-search', metadata.FinderResource())
-api.add_route(
-    '/back/validate-learning-object', metadata.ValidateLearningObject()
-)
+        lom.set_db_client(self.db)
+        lo.set_db_client(self.db)
+        user.set_db_client(self.db)
 
-api.add_route('/back/user/{user_id}', user.ModifierResource())
-api.add_route('/back/user-create', user.CreatorResource())
-api.add_route('/back/user-search', user.FinderResource())
+        self.api = falcon.API()
+
+        self.api.add_route('/back/user', user.UserCollection())
+        self.api.add_route('/back/user/{uid}', user.User())
+
+        self.api.add_route('/back/object', lo.LearningObjectCollection())
+        self.api.add_route('/back/object/{uid}', lo.LearningObject())
+
+        self.api.add_route(
+            '/back/object-meta', lom.LearningObjectMetadataCollection()
+        )
+        self.api.add_route(
+            '/back/object-meta/{uid}', lom.LearningObjectMetadata()
+        )
+
+    def get_db(self):
+        return self.db
+
+    def get_api(self):
+        return self.api
+
+
+roap = Roap()
+api = roap.get_api()
