@@ -86,7 +86,7 @@ def is_valid_schema_field(field):
     return Field().load(field)
 
 def is_valid_learning_object(data):
-    schema_fields = json.loads(dumps(db.learning_object_metadadta.find()))
+    schema_fields = json.loads(dumps(db.learning_object_metadata.find()))
     generic_schema = dict_to_schema(schema_fields)
     if len(data) > len(schema_fields):
         return "Invalid number of attribiutes"

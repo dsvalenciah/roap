@@ -10,11 +10,11 @@ db = client.roap
 
 
 def learning_object_schema_populate():
-    schema_fields = json.loads(dumps(db.learning_object_metadadta.find()))
+    schema_fields = json.loads(dumps(db.learning_object_metadata.find()))
     if not schema_fields:
         schema_fields = json.load(
             open("config/default_learning_object_fields_schema.json")
         )
         for schema_field in schema_fields:
             schema_field.update({"_id": uuid4().hex})
-            db.learning_object_metadadta.insert_one(schema_field)
+            db.learning_object_metadata.insert_one(schema_field)

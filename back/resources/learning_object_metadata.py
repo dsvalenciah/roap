@@ -29,7 +29,7 @@ class LearningObjectMetadata(object):
         Get a single learning object metadata field
         """
         if req.headers.get("AUTHORIZATION"):
-            result = db.learning_object_metadadta.find_one(
+            result = db.learning_object_metadata.find_one(
                 {'_id': uid}
             )
             if not result:
@@ -47,7 +47,7 @@ class LearningObjectMetadata(object):
         if req.headers.get("AUTHORIZATION"):
             field = req_to_json(req)
             # TODO: validate new learning object metadata field
-            result = db.learning_object_metadadta.update_one(
+            result = db.learning_object_metadata.update_one(
                 {'_id': uid},
                 {'$set': field}
             )
@@ -64,7 +64,7 @@ class LearningObjectMetadata(object):
         Delete single learning object metadata field
         """
         if req.headers.get("AUTHORIZATION"):
-            result = db.learning_object_metadadta.delete_one(
+            result = db.learning_object_metadata.delete_one(
                 {'_id': uid}
             )
             if not result.deleted_count:
@@ -85,7 +85,7 @@ class LearningObjectMetadataCollection(object):
             query_params = req.params
             if not query_params:
                 resp.body = json.dumps(json.loads(dumps(
-                    db.learning_object_metadadta.find()
+                    db.learning_object_metadata.find()
                 )))
                 resp.status = falcon.HTTP_200
             else:
@@ -106,7 +106,7 @@ class LearningObjectMetadataCollection(object):
                     ]
                     query = {"$and": fields_to_use}
                     resp.body = json.dumps(json.loads(dumps(
-                        db.learning_object_metadadta.find(query)
+                        db.learning_object_metadata.find(query)
                     )))
                     resp.status = falcon.HTTP_200
                 else:
@@ -126,7 +126,7 @@ class LearningObjectMetadataCollection(object):
                 resp.body = json.dumps({"errors": errors})
                 resp.status = falcon.HTTP_400
             else:
-                result = db.learning_object_metadadta.insert_one(field)
+                result = db.learning_object_metadata.insert_one(field)
                 if not result.acknowledged:
                     resp.status = falcon.HTTP_400
                 else:
