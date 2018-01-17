@@ -49,7 +49,7 @@ class LearningObject(object):
         # Auth, check if the learing object belongs to the authorised user.
         if req.headers.get("AUTHORIZATION"):
             learning_object = req_to_json(req)
-            # TODO: validate if new learning object is valid
+            # TODO: validate new learning object
             result = db.learning_objects.update_one(
                 {'_id': uid},
                 {'$set': learning_object}
@@ -90,6 +90,7 @@ class LearningObjectCollection(object):
                 resp.body = dumps(db.learning_objects.find())
                 resp.status = falcon.HTTP_200
             else:
+                # TODO: add offset, count as a required params
                 enabled_fields = [
                     # TODO: add "start", "end" date range
                     # get enabled fields depends on object schema

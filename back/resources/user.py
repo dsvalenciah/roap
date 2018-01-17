@@ -47,7 +47,7 @@ class User(object):
         """
         if req.headers.get("AUTHORIZATION"):
             user = req_to_json(req)
-            # TODO: validate if new user is valid
+            # TODO: validate new user
             result = db.users.update_one(
                 {'_id': uid},
                 {'$set': user}
@@ -63,6 +63,7 @@ class User(object):
         """
         Delete single user
         """
+        # TODO: make cascade delete for all data related to this user
         if req.headers.get("AUTHORIZATION"):
             result = db.users.delete_one({'_id': uid})
             if not result.deleted_count:
@@ -85,6 +86,7 @@ class UserCollection(object):
                 resp.body = dumps(db.users.find())
                 resp.status = falcon.HTTP_200
             else:
+                # TODO: add offset, count as a required params
                 enabled_fields = [
                     "name", "email", "role", "created", "modified",
                     # TODO: add "start", "end" date range

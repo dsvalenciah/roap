@@ -46,7 +46,7 @@ class LearningObjectMetadata(object):
         """
         if req.headers.get("AUTHORIZATION"):
             field = req_to_json(req)
-            # TODO: validate if new learning object metadata field is valid
+            # TODO: validate new learning object metadata field
             result = db.learning_object_metadadta.update_one(
                 {'_id': uid},
                 {'$set': field}
@@ -89,6 +89,7 @@ class LearningObjectMetadataCollection(object):
                 )))
                 resp.status = falcon.HTTP_200
             else:
+                # TODO: add offset, count as a required params
                 enabled_fields = [
                     "title", "description", "keyword", "name"
                     # TODO: add "start", "end" date range
