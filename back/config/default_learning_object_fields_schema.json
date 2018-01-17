@@ -56,5 +56,6 @@
     {"name": "classification_taxonPath_taxon_id",                 "kind": "string", "params": {"required": true}},
     {"name": "classification_taxonPath_taxon_entry",              "kind": "string", "params": {"required": true}},
     {"name": "classification_description",                        "kind": "string", "params": {"required": true}},
-    {"name": "classification_keyword",                            "kind": "string", "params": {"required": true}}
+    {"name": "classification_keyword",                            "kind": "string", "params": {"required": true}},
+    {"name": "user_id",                                           "kind": "uuid","params": {"required": true}}
 ]

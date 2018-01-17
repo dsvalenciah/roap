@@ -47,6 +47,7 @@ class User(object):
         """
         if req.headers.get("AUTHORIZATION"):
             user = req_to_json(req)
+            # TODO: validate if new user is valid
             result = db.users.update_one(
                 {'_id': uid},
                 {'$set': user}

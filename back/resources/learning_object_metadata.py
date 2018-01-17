@@ -46,7 +46,7 @@ class LearningObjectMetadata(object):
         """
         if req.headers.get("AUTHORIZATION"):
             field = req_to_json(req)
-
+            # TODO: validate if new learning object metadata field is valid
             result = db.learning_object_metadadta.update_one(
                 {'_id': uid},
                 {'$set': field}
