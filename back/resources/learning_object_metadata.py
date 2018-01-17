@@ -24,12 +24,23 @@ def is_correct_parameter(param):
 
 class LearningObjectMetadata(object):
 
-    def on_get(self, req, res, uid):
+    def on_get(self, req, resp, uid):
         """
         Get a single learning object metadata field
         """
+        if req.headers.get("AUTHORIZATION"):
+            result = db.learning_object_metadadta.find_one(
+                {'_id': uid}
+            )
+            if not result:
+                resp.status = falcon.HTTP_404
+            else:
+                resp.body = dumps(result)
+                resp.status = falcon.HTTP_200
+        else:
+            resp.status = falcon.HTTP_401
 
-    def on_put(self, req, res, uid):
+    def on_put(self, req, resp, uid):
         """
         Update learning object metadata field
         """
@@ -48,7 +59,7 @@ class LearningObjectMetadata(object):
         else:
             resp.status = falcon.HTTP_401
 
-    def on_delete(self, req, res, uid):
+    def on_delete(self, req, resp, uid):
         """
         Delete single learning object metadata field
         """
@@ -111,7 +122,7 @@ class LearningObjectMetadataCollection(object):
             field.update({'_id': str(uuid4().hex)})
             valid_field, errors = is_valid_schema_field(field)
             if errors:
-                resp.body = json.dumps(errors)
+                resp.body = json.dumps({"errors": errors})
                 resp.status = falcon.HTTP_400
             else:
                 result = db.learning_object_metadadta.insert_one(field)

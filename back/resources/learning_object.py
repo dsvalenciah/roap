@@ -23,18 +23,18 @@ class LearningObject(object):
     Deal with single learning objects.
     """
 
-    def on_get(self, req, res, uid):
+    def on_get(self, req, resp, uid):
         """
         Get a single learning object
         """
 
-    def on_put(self, req, res, uid):
+    def on_put(self, req, resp, uid):
         """
         Update a single learning object
         """
         # Auth, check if the learing object belongs to the authorised user.
 
-    def on_delete(self, req, res, uid):
+    def on_delete(self, req, resp, uid):
         """
         Delete a learing object (might be soft delete)
         """
@@ -46,19 +46,19 @@ class LearningObjectCollection(object):
     """
 
 
-    def on_get(self, req, res):
+    def on_get(self, req, resp):
         """
         Get all learning objects (maybe filtered, and paginated)
         """
 
-    def on_post(self, req, res):
+    def on_post(self, req, resp):
         """
         Create learning object.
         """
         # Notice that, the user id will come in the payload
         if req.headers.get("AUTHORIZATION"):
             learning_object = req_to_json(req)
-            errors = is_valid_object(learning_object)
+            errors = is_valid_learning_object(learning_object)
             if errors:
                 resp.body = json.dumps({"errors": errors})
                 resp.status = falcon.HTTP_400
