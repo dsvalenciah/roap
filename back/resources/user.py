@@ -84,7 +84,9 @@ class UserCollection(object):
                 resp.status = falcon.HTTP_200
             else:
                 enabled_fields = [
-                    "title", "description", "keyword", "name"
+                    "name", "email", "role", "created", "modified",
+                    # TODO: add "start", "end" date range
+                    # add "offset", "count"
                 ]
                 correct_fields = map(
                     is_correct_parameter, query_params.values()
