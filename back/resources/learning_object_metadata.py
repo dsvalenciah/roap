@@ -80,6 +80,8 @@ class LearningObjectMetadataCollection(object):
             else:
                 enabled_fields = [
                     "title", "description", "keyword", "name"
+                    # TODO: add "start", "end" date range
+                    # add "offset", "count"
                 ]
                 correct_fields = map(
                     is_correct_parameter, query_params.values()
