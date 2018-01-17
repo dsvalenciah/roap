@@ -27,12 +27,21 @@ def is_correct_parameter(param):
 
 class User(object):
 
-    def on_get(self, req, res, uid):
+    def on_get(self, req, resp, uid):
         """
         Get a single user
         """
+        if req.headers.get("AUTHORIZATION"):
+            result = db.users.find_one({'_id': uid})
+            if not result:
+                resp.status = falcon.HTTP_404
+            else:
+                resp.body = dumps(result)
+                resp.status = falcon.HTTP_200
+        else:
+            resp.status = falcon.HTTP_401
 
-    def on_put(self, req, res, uid):
+    def on_put(self, req, resp, uid):
         """
         Update user
         """
@@ -43,30 +52,22 @@ class User(object):
                 {'$set': user}
             )
             if not result.modified_count:
-                resp.body = json.dumps({
-                    'message': 'The specified user id is not found on database'
-                })
                 resp.status = falcon.HTTP_404
             else:
                 resp.status = falcon.HTTP_200
-                resp.body = json.dumps({'message': 'Ok'})
         else:
             resp.status = falcon.HTTP_401
 
-    def on_delete(self, req, res, uid):
+    def on_delete(self, req, resp, uid):
         """
         Delete single user
         """
         if req.headers.get("AUTHORIZATION"):
             result = db.users.delete_one({'_id': uid})
             if not result.deleted_count:
-                resp.body = json.dumps({
-                    'message': 'The specified user id is not found on database'
-                })
                 resp.status = falcon.HTTP_404
             else:
                 resp.status = falcon.HTTP_200
-                resp.body = json.dumps({'message': 'Ok'})
         else:
             resp.status = falcon.HTTP_401
 
@@ -80,7 +81,7 @@ class UserCollection(object):
         if req.headers.get("AUTHORIZATION"):
             query_params = req.params
             if not query_params:
-                resp.body = json.dumps(json.loads(dumps(db.users.find())))
+                resp.body = dumps(db.users.find())
                 resp.status = falcon.HTTP_200
             else:
                 enabled_fields = [
@@ -98,9 +99,9 @@ class UserCollection(object):
                         if x in enabled_fields
                     ]
                     query = {"$and": fields_to_use}
-                    resp.body = json.dumps(json.loads(dumps(
+                    resp.body = dumps(
                         db.users.find(query)
-                    )))
+                    )
                     resp.status = falcon.HTTP_200
                 else:
                     resp.status = falcon.HTTP_400
