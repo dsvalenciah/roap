@@ -121,7 +121,7 @@ class LearningObjectMetadataCollection(object):
         if req.headers.get("AUTHORIZATION"):
             field = req_to_json(req)
             field.update({'_id': str(uuid4().hex)})
-            valid_field, errors = is_valid_schema_field(field)
+            errors = is_valid_schema_field(field)
             if errors:
                 resp.body = json.dumps({"errors": errors})
                 resp.status = falcon.HTTP_400

@@ -4,7 +4,8 @@ import os
 from pymongo import MongoClient
 from bson.json_util import dumps
 
-from marshmallow import fields, Schema, validate
+from marshmallow import fields, Schema
+from marshmallow import validate as mr_validate
 import marshmallow
 
 
@@ -12,15 +13,15 @@ client = MongoClient(os.getenv('DB_HOST'), 27017)
 db = client.roap
 
 validators_list = {
-    "containsonly": validate.ContainsOnly,  # (choices, labels=None, error=None),
-    "email": validate.Email,  # (error=None),
-    "equal": validate.Equal,  # (comparable, error=None),
-    "length": validate.Length,  # (min=None, max=None, error=None, equal=None),
-    "noneof": validate.NoneOf,  # (iterable, error=None),
-    "oneof": validate.OneOf,  # (choices, labels=None, error=None),
-    "range": validate.Range,  # (min=None, max=None, error=None),
-    "regexp": validate.Regexp,  # (regex, flags=0, error=None)
-    "url": validate.URL,  # (relative=False, error=None, schemes=None, require_tld=True)
+    "containsonly": mr_validate.ContainsOnly,  # (choices, labels=None, error=None),
+    "email": mr_validate.Email,  # (error=None),
+    "equal": mr_validate.Equal,  # (comparable, error=None),
+    "length": mr_validate.Length,  # (min=None, max=None, error=None, equal=None),
+    "noneof": mr_validate.NoneOf,  # (iterable, error=None),
+    "oneof": mr_validate.OneOf,  # (choices, labels=None, error=None),
+    "range": mr_validate.Range,  # (min=None, max=None, error=None),
+    "regexp": mr_validate.Regexp,  # (regex, flags=0, error=None)
+    "url": mr_validate.URL,  # (relative=False, error=None, schemes=None, require_tld=True)
 }
 
 fields_list = {
@@ -43,7 +44,7 @@ fields_list = {
 }
 
 class Validate(Schema):
-    kind = fields.Str(required=True, validate=validate.OneOf(
+    kind = fields.Str(required=True, validate=mr_validate.OneOf(
         choices=validators_list.keys()
     ))
     params = fields.Dict(required=True)
@@ -51,46 +52,50 @@ class Validate(Schema):
 class FieldParams(Schema):
     validate = fields.Nested(Validate, required=False)
     required = fields.Boolean(required=False)
+    cls_or_instance = fields.Str(required=True, validate=mr_validate.OneOf(
+        choices=list(filter(lambda v: v not in ["list"], fields_list.keys()))
+    ))
 
 class Field(Schema):
     _id = fields.Str(required=True)
     name = fields.Str(required=True)
-    kind = fields.Str(required=True, validate=validate.OneOf(
+    kind = fields.Str(required=True, validate=mr_validate.OneOf(
         choices=fields_list.keys()
     ))
     params = fields.Nested(FieldParams, required=True)
 
 def dict_to_schema(fields):
-    data, errors = Field(many=True).load(fields)
-    if errors:
-        return errors
-    else:
-        parsed_fields = dict()
-        for field in fields:
-            if field.get("params").get("validate"):
-                field["params"]["validate"] = (validators_list.get(
-                    field.get("params").get("validate").get("kind")
-                )(
-                    **field.get("params").get("validate").get("params")
-                ))
+    parsed_fields = dict()
+    for field in fields:
+        if field.get("params").get("validate"):
+            field["params"]["validate"] = (validators_list.get(
+                field.get("params").get("validate").get("kind")
+            )(
+                **field.get("params").get("validate").get("params")
+            ))
+        if field.get("params").get("cls_or_instance"):
+            field["params"]["cls_or_instance"] = fields_list.get(
+                field.get("params").get("cls_or_instance")
+            )()
 
-            parsed_fields.update({
-                field.get("name"): fields_list.get(
-                    field.get("kind")
-                )(**field.get("params"))
-            })
+        parsed_fields.update({
+            field.get("name"): fields_list.get(
+                field.get("kind")
+            )(**field.get("params"))
+        })
 
-        return type('MySchema', (marshmallow.Schema,), parsed_fields)()
+    return type('MySchema', (marshmallow.Schema,), parsed_fields)()
 
 def is_valid_schema_field(field):
-    return Field().load(field)
+    field_schema = Field(exclude=(
+        [] if field.get("kind") == "list" else ["params.cls_or_instance"]
+    ))
+    return field_schema.validate(field)
 
 def is_valid_learning_object(data):
     schema_fields = json.loads(dumps(db.learning_object_metadata.find()))
     generic_schema = dict_to_schema(schema_fields)
     if len(data) > len(schema_fields):
-        return "Invalid number of attribiutes"
-    if not isinstance(generic_schema, dict):
-        return generic_schema.load(data)[1]
+        return {"attributes": "invalid number"}
     else:
-        return generic_schema
+        return generic_schema.validate(data)
