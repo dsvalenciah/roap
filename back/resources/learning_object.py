@@ -123,11 +123,11 @@ class LearningObjectCollection(object):
         if req.headers.get("AUTHORIZATION"):
             learning_object = req_to_json(req)
             errors = is_valid_learning_object(learning_object)
-            user = db.users.find_one({"_id": learning_object.get('user_id')})
+            user = db.users.find_one({"_id": learning_object.get('userid')})
             if errors or not user:
                 errors.update(
-                    {"user_id": "specified user uid is not valid"}
-                    if not user and not errors.get("user_id") else {}
+                    {"userid": "specified user uid is not valid"}
+                    if not user and not errors.get("userid") else {}
                 )
                 resp.body = json.dumps({"errors": errors})
                 resp.status = falcon.HTTP_400
