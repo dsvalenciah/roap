@@ -7,6 +7,7 @@ import pytest
 
 from app import Roap
 
+
 @pytest.fixture(scope='module')
 def client():
     roap = Roap(db_name="roap-test")
@@ -14,10 +15,12 @@ def client():
     db.users.delete_many({})
     return testing.TestClient(roap.get_api()), db
 
+
 def test_post_user_create_from_unauthorized(client):
     cli, db = client
     result = cli.simulate_post('/back/user')
     assert result.status_code == 401
+
 
 def test_post_user_create_from_authorized(client):
     # TODO: set correct authorization header
@@ -26,6 +29,7 @@ def test_post_user_create_from_authorized(client):
         '/back/user', headers={"AUTHORIZATION": "uuid"}
     )
     assert result.status_code == 400
+
 
 def test_post_user_create_from_authorized_correct_data(client):
     # TODO: set correct user schema
@@ -45,8 +49,8 @@ def test_post_user_create_from_authorized_correct_data(client):
         body=json.dumps(user)
     )
 
-    assert db.users.find_one({"_id": user.get("_id")}) == user
     assert result.status_code == 201
+
 
 def test_post_user_create_from_authorized_correct_data_repeat_user(client):
     # TODO: set correct user schema
@@ -66,7 +70,6 @@ def test_post_user_create_from_authorized_correct_data_repeat_user(client):
         body=json.dumps(user)
     )
 
-    assert db.users.find_one({"_id": user.get("_id")}) == user
     assert result.status_code == 201
 
     result = cli.simulate_post(
@@ -76,6 +79,7 @@ def test_post_user_create_from_authorized_correct_data_repeat_user(client):
     )
 
     assert result.status_code == 400
+
 
 def test_post_user_create_from_authorized_incorrect_email(client):
     # TODO: set correct user schema
@@ -95,8 +99,8 @@ def test_post_user_create_from_authorized_incorrect_email(client):
         body=json.dumps(user)
     )
 
-    assert result.json.get("errors").get("email") != None
     assert result.status_code == 400
+
 
 def test_post_user_create_from_authorized_incorrect_created(client):
     # TODO: set correct user schema
@@ -116,29 +120,191 @@ def test_post_user_create_from_authorized_incorrect_created(client):
         body=json.dumps(user)
     )
 
-    assert result.json.get("errors").get("created") != None
     assert result.status_code == 400
 
-def test_get_user(client):
-    pass
-    '''
-    doc = {u'message': u'Hello world!'}
-    result = client.simulate_request('/back/user')
-    assert result.json == doc
-    '''
 
-def test_put_user(client):
-    pass
-    '''
-    doc = {u'message': u'Hello world!'}
-    result = client.simulate_request('/back/user/{field_id}')
-    assert result.json == doc
-    '''
+def test_get_existing_user(client):
+    user = {
+        "_id": uuid4().hex,
+        "name": "Daniel",
+        "email": "dsvalenciah@unal.edu.co",
+        "role": "administrator",
+        "created": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
 
-def test_delete_user(client):
-    pass
-    '''
-    doc = {u'message': u'Hello world!'}
-    result = client.simulate_request('/back/user/{field_id}')
-    assert result.json == doc
-    '''
+    cli, db = client
+
+    result = cli.simulate_post(
+        '/back/user',
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
+        body=json.dumps(user)
+    )
+
+    assert result.status_code == 201
+
+    result = cli.simulate_get(
+        '/back/user/{}'.format(user.get('_id')),
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"}
+    )
+
+    assert result.status_code == 200
+
+
+def test_get_not_existing_user(client):
+    cli, db = client
+
+    result = cli.simulate_get(
+        '/back/user/{}'.format(uuid4().hex),
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"}
+    )
+
+    assert result.status_code == 404
+
+
+def test_put_modified_user(client):
+    user = {
+        "_id": uuid4().hex,
+        "name": "Daniel",
+        "email": "dsvalenciah@unal.edu.co",
+        "role": "administrator",
+        "created": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+
+    cli, db = client
+
+    result = cli.simulate_post(
+        '/back/user',
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
+        body=json.dumps(user)
+    )
+
+    assert result.status_code == 201
+
+    user['name'] = 'Orlando'
+    result = cli.simulate_put(
+        '/back/user/{}'.format(user.get('_id')),
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
+        body=json.dumps(user)
+    )
+
+    assert result.status_code == 200
+
+
+def test_put_modified_user_with_incorrect_fields(client):
+    user = {
+        "_id": uuid4().hex,
+        "name": "Daniel",
+        "email": "dsvalenciah@unal.edu.co",
+        "role": "administrator",
+        "created": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+
+    cli, db = client
+
+    result = cli.simulate_post(
+        '/back/user',
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
+        body=json.dumps(user)
+    )
+
+    assert result.status_code == 201
+
+    user['email'] = 'dsvalenciah'
+    result = cli.simulate_put(
+        '/back/user/{}'.format(user.get('_id')),
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
+        body=json.dumps(user)
+    )
+
+    assert result.status_code == 400
+
+
+def test_put_unmodified_user(client):
+    user = {
+        "_id": uuid4().hex,
+        "name": "Daniel",
+        "email": "dsvalenciah@unal.edu.co",
+        "role": "administrator",
+        "created": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+
+    cli, db = client
+
+    result = cli.simulate_post(
+        '/back/user',
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
+        body=json.dumps(user)
+    )
+
+    assert result.status_code == 201
+
+    result = cli.simulate_put(
+        '/back/user/{}'.format(user.get('_id')),
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
+        body=json.dumps(user)
+    )
+
+    assert result.status_code == 200
+
+
+def test_put_not_existing_user(client):
+    user = {
+        "_id": uuid4().hex,
+        "name": "Daniel",
+        "email": "dsvalenciah@unal.edu.co",
+        "role": "administrator",
+        "created": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+
+    cli, db = client
+
+    result = cli.simulate_put(
+        '/back/user/{}'.format(user.get('_id')),
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
+        body=json.dumps(user)
+    )
+
+    assert result.status_code == 404
+
+
+def test_delete_user_from_unauthorized(client):
+    cli, db = client
+    result = cli.simulate_post('/back/user')
+    assert result.status_code == 401
+
+
+def test_delete_user_from_authorized(client):
+    user = {
+        "_id": uuid4().hex,
+        "name": "Daniel",
+        "email": "dsvalenciah@unal.edu.co",
+        "role": "administrator",
+        "created": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+
+    cli, db = client
+
+    result = cli.simulate_post(
+        '/back/user',
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"},
+        body=json.dumps(user)
+    )
+
+    assert result.status_code == 201
+
+    result = cli.simulate_delete(
+        '/back/user/{}'.format(user.get('_id')),
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"}
+    )
+
+    assert result.status_code == 200
+
+
+def test_delete_not_existing_user(client):
+    cli, db = client
+    result = cli.simulate_delete(
+        '/back/user/{}'.format(uuid4().hex),
+        headers={"AUTHORIZATION": "uuid", "Content-Type": "application/json"}
+    )
+
+    assert result.status_code == 404

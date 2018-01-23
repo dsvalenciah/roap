@@ -11,7 +11,7 @@ import pymongo
 
 import falcon
 
-only_letters = re.compile(r"^[A-Z]+$",re.IGNORECASE)
+only_letters = re.compile(r"^[A-Z]+$", re.IGNORECASE)
 
 db = None
 
@@ -48,14 +48,20 @@ class User(object):
         if req.headers.get("AUTHORIZATION"):
             user = req_to_json(req)
             # TODO: validate new user
-            result = db.users.update_one(
-                {'_id': uid},
-                {'$set': user}
-            )
-            if not result.modified_count:
+
+            _, errors = is_valid_user(user)
+            if errors:
+                resp.body = json.dumps({"errors": errors})
+                resp.status = falcon.HTTP_400
+            elif not db.users.find_one({'_id': uid}):
                 resp.status = falcon.HTTP_404
             else:
-                resp.status = falcon.HTTP_200
+                result = db.users.update_one(
+                    {'_id': uid},
+                    {'$set': user}
+                )
+                if result.modified_count:
+                    resp.status = falcon.HTTP_200
         else:
             resp.status = falcon.HTTP_401
 
