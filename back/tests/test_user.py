@@ -99,6 +99,7 @@ def test_post_user_create_from_authorized_incorrect_email(client):
         body=json.dumps(user)
     )
 
+    assert result.json.get("errors").get("email") != None
     assert result.status_code == 400
 
 
@@ -120,6 +121,7 @@ def test_post_user_create_from_authorized_incorrect_created(client):
         body=json.dumps(user)
     )
 
+    assert result.json.get("errors").get("created") != None
     assert result.status_code == 400
 
 
