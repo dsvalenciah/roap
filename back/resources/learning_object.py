@@ -10,7 +10,7 @@ from bson.json_util import dumps
 
 import falcon
 
-only_letters = re.compile(r'^[A-Z]+$',re.IGNORECASE)
+only_letters = re.compile(r'^[A-Z]+$', re.IGNORECASE)
 db = None
 
 
@@ -74,11 +74,11 @@ class LearningObject(object):
         else:
             resp.status = falcon.HTTP_401
 
+
 class LearningObjectCollection(object):
     '''
     Deal with the whole collection of learning objects
     '''
-
 
     def on_get(self, req, resp):
         '''
@@ -99,7 +99,7 @@ class LearningObjectCollection(object):
                 correct_fields = map(
                     is_correct_parameter, query_params.values()
                 )
-                if not False in correct_fields:
+                if False not in correct_fields:
                     fields_to_use = [
                         {x: {'$regex': f'.*{query_params.get(x)}.*'}}
                         for x in query_params.keys()

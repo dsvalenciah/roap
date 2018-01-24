@@ -11,16 +11,19 @@ from bson.json_util import dumps
 import falcon
 
 
-only_letters = re.compile(r'^[A-Z]+$',re.IGNORECASE)
+only_letters = re.compile(r'^[A-Z]+$', re.IGNORECASE)
 
 db = None
+
 
 def set_db_client(db_client):
     global db
     db = db_client
 
+
 def is_correct_parameter(param):
     return bool(only_letters.match(param))
+
 
 class LearningObjectMetadata(object):
 
@@ -98,7 +101,7 @@ class LearningObjectMetadataCollection(object):
                 correct_fields = map(
                     is_correct_parameter, query_params.values()
                 )
-                if not False in correct_fields:
+                if False not in correct_fields:
                     fields_to_use = [
                         {x: {'$regex': f'.*{query_params.get(x)}.*'}}
                         for x in query_params.keys()

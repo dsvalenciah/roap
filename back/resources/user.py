@@ -101,7 +101,7 @@ class UserCollection(object):
                 correct_fields = map(
                     is_correct_parameter, query_params.values()
                 )
-                if not False in correct_fields:
+                if False not in correct_fields:
                     fields_to_use = [
                         {x: {'$regex': f'.*{query_params.get(x)}.*'}}
                         for x in query_params.keys()

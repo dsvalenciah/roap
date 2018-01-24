@@ -78,7 +78,7 @@ def test_post_with_authorization_invalid_user_email(client):
         body=json.dumps(user)
     )
 
-    assert response.json.get('errors').get('email') != None
+    assert response.json.get('errors').get('email') is not None
     assert response.status_code == 400
 
 
@@ -98,7 +98,7 @@ def test_post_with_authorization_invalid_user_created(client):
         body=json.dumps(user)
     )
 
-    assert response.json.get('errors').get('created') != None
+    assert response.json.get('errors').get('created') is not None
     assert response.status_code == 400
 
 

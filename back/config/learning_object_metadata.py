@@ -1,9 +1,11 @@
-from uuid import uuid4
 import json
 import os
+from uuid import uuid4
+
+from bson.json_util import dumps
 
 from pymongo import MongoClient
-from bson.json_util import dumps
+
 
 client = MongoClient(os.getenv('DB_HOST'), 27017)
 db = client.roap

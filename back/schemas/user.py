@@ -1,4 +1,5 @@
-from marshmallow import fields, Schema, validate
+from marshmallow import Schema, fields, validate
+
 
 class User(Schema):
     _id = fields.Str(required=True)
@@ -13,6 +14,7 @@ class User(Schema):
     modified = fields.Str(required=False)
 
 user_schema = User()
+
 
 def is_valid_user(user):
     return user_schema.load(user)

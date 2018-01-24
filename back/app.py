@@ -1,9 +1,4 @@
-import json
 import os
-
-from resources import user
-from resources import learning_object as lo
-from resources import learning_object_metadata as lom
 
 from config.learning_object_metadata import learning_object_schema_populate
 
@@ -11,7 +6,13 @@ import falcon
 
 from pymongo import MongoClient
 
+from resources import user
+import resources.learning_object as lo
+import resources.learning_object_metadata as lom
+
+
 learning_object_schema_populate()
+
 
 class Roap():
     def __init__(self, db_host='DB_HOST', db_port=27017, db_name='roap'):
