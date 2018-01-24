@@ -30,7 +30,7 @@ def parse_xml_to_json(xml):
                 for x in parents:
                     if x[len(x) - 1] == last_element:
                         parents.remove(x)
-            str_xml = delete_trash(trash, string + element.tag, '')
+            str_xml = delete_trash(trash, string + element.tag, '')[4:]
 
             if str_xml in my_dict:
                 if isinstance(my_dict[str_xml], list):
@@ -45,7 +45,6 @@ def parse_xml_to_json(xml):
     return my_dict
 
 
-xml = ET.ElementTree(file='my_xml.xml').getroot()
-parsed = parse_xml_to_json(xml)
-
-print(parsed)
+def xml_to_json(xml_content):
+    xml = ET.ElementTree(ET.fromstring(xml_content)).getroot()
+    return json.loads(parse_xml_to_json(xml))

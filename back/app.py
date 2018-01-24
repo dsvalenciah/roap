@@ -4,6 +4,8 @@ from config.learning_object_metadata import learning_object_schema_populate
 
 import falcon
 
+from falcon_multipart.middleware import MultipartMiddleware
+
 from pymongo import MongoClient
 
 from resources import user
@@ -23,7 +25,7 @@ class Roap():
         lo.set_db_client(self.db)
         user.set_db_client(self.db)
 
-        self.api = falcon.API()
+        self.api = falcon.API(middleware=[MultipartMiddleware()])
 
         self.api.add_route('/back/user', user.UserCollection())
         self.api.add_route('/back/user/{uid}', user.User())
