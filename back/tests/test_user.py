@@ -18,17 +18,17 @@ def client():
 
 def test_post_without_authorization(client):
     cli, db = client
-    result = cli.simulate_post('/back/user')
-    assert result.status_code == 401
+    response = cli.simulate_post('/back/user')
+    assert response.status_code == 401
 
 
 def test_post_with_authorization_without_valid_user(client):
     # TODO: set correct authorization header
     cli, db = client
-    result = cli.simulate_post(
+    response = cli.simulate_post(
         '/back/user', headers={'AUTHORIZATION': 'uuid'}
     )
-    assert result.status_code == 400
+    assert response.status_code == 400
 
 
 def test_post_with_authorization_with_valid_user(client):
@@ -43,13 +43,13 @@ def test_post_with_authorization_with_valid_user(client):
 
     cli, db = client
 
-    result = cli.simulate_post(
+    response = cli.simulate_post(
         '/back/user',
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 201
+    assert response.status_code == 201
 
 
 def test_post_with_authorization_with_repeated_user(client):
@@ -64,21 +64,21 @@ def test_post_with_authorization_with_repeated_user(client):
 
     cli, db = client
 
-    result = cli.simulate_post(
+    response = cli.simulate_post(
         '/back/user',
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 201
+    assert response.status_code == 201
 
-    result = cli.simulate_post(
+    response = cli.simulate_post(
         '/back/user',
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 400
+    assert response.status_code == 400
 
 
 def test_post_with_authorization_invalid_user_email(client):
@@ -93,14 +93,14 @@ def test_post_with_authorization_invalid_user_email(client):
 
     cli, db = client
 
-    result = cli.simulate_post(
+    response = cli.simulate_post(
         '/back/user',
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.json.get('errors').get('email') != None
-    assert result.status_code == 400
+    assert response.json.get('errors').get('email') != None
+    assert response.status_code == 400
 
 
 def test_post_with_authorization_invalid_user_created(client):
@@ -115,14 +115,14 @@ def test_post_with_authorization_invalid_user_created(client):
 
     cli, db = client
 
-    result = cli.simulate_post(
+    response = cli.simulate_post(
         '/back/user',
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.json.get('errors').get('created') != None
-    assert result.status_code == 400
+    assert response.json.get('errors').get('created') != None
+    assert response.status_code == 400
 
 
 def test_get_with_existent_user_id(client):
@@ -136,31 +136,31 @@ def test_get_with_existent_user_id(client):
 
     cli, db = client
 
-    result = cli.simulate_post(
+    response = cli.simulate_post(
         '/back/user',
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 201
+    assert response.status_code == 201
 
-    result = cli.simulate_get(
+    response = cli.simulate_get(
         f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'}
     )
 
-    assert result.status_code == 200
+    assert response.status_code == 200
 
 
 def test_get_without_existent_user_id(client):
     cli, db = client
 
-    result = cli.simulate_get(
+    response = cli.simulate_get(
         f"/back/user/{uuid4().hex}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'}
     )
 
-    assert result.status_code == 404
+    assert response.status_code == 404
 
 
 def test_put_with_valid_user(client):
@@ -174,22 +174,22 @@ def test_put_with_valid_user(client):
 
     cli, db = client
 
-    result = cli.simulate_post(
+    response = cli.simulate_post(
         '/back/user',
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 201
+    assert response.status_code == 201
 
     user['name'] = 'Orlando'
-    result = cli.simulate_put(
+    response = cli.simulate_put(
         f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 200
+    assert response.status_code == 200
 
 
 def test_put_without_invalid_user_email(client):
@@ -203,22 +203,22 @@ def test_put_without_invalid_user_email(client):
 
     cli, db = client
 
-    result = cli.simulate_post(
+    response = cli.simulate_post(
         '/back/user',
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 201
+    assert response.status_code == 201
 
     user['email'] = 'dsvalenciah'
-    result = cli.simulate_put(
+    response = cli.simulate_put(
         f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 400
+    assert response.status_code == 400
 
 
 def test_put_with_unmodified_user(client):
@@ -232,21 +232,21 @@ def test_put_with_unmodified_user(client):
 
     cli, db = client
 
-    result = cli.simulate_post(
+    response = cli.simulate_post(
         '/back/user',
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 201
+    assert response.status_code == 201
 
-    result = cli.simulate_put(
+    response = cli.simulate_put(
         f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 200
+    assert response.status_code == 200
 
 
 def test_put_with_invalid_user_id(client):
@@ -260,19 +260,19 @@ def test_put_with_invalid_user_id(client):
 
     cli, db = client
 
-    result = cli.simulate_put(
+    response = cli.simulate_put(
         f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 404
+    assert response.status_code == 404
 
 
 def test_delete_user_without_authorization(client):
     cli, db = client
-    result = cli.simulate_post('/back/user')
-    assert result.status_code == 401
+    response = cli.simulate_post('/back/user')
+    assert response.status_code == 401
 
 
 def test_delete_user_with_authorization(client):
@@ -286,27 +286,27 @@ def test_delete_user_with_authorization(client):
 
     cli, db = client
 
-    result = cli.simulate_post(
+    response = cli.simulate_post(
         '/back/user',
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
 
-    assert result.status_code == 201
+    assert response.status_code == 201
 
-    result = cli.simulate_delete(
+    response = cli.simulate_delete(
         f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'}
     )
 
-    assert result.status_code == 200
+    assert response.status_code == 200
 
 
 def test_delete_without_existent_user(client):
     cli, db = client
-    result = cli.simulate_delete(
+    response = cli.simulate_delete(
         f"/back/user/{uuid4().hex}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'}
     )
 
-    assert result.status_code == 404
+    assert response.status_code == 404
