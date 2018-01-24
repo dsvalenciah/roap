@@ -16,13 +16,13 @@ def client():
     return testing.TestClient(roap.get_api()), db
 
 
-def test_post_user_create_from_unauthorized(client):
+def test_post_without_authorization(client):
     cli, db = client
     result = cli.simulate_post('/back/user')
     assert result.status_code == 401
 
 
-def test_post_user_create_from_authorized(client):
+def test_post_with_authorization_without_valid_user(client):
     # TODO: set correct authorization header
     cli, db = client
     result = cli.simulate_post(
@@ -31,7 +31,7 @@ def test_post_user_create_from_authorized(client):
     assert result.status_code == 400
 
 
-def test_post_user_create_from_authorized_correct_data(client):
+def test_post_with_authorization_with_valid_user(client):
     # TODO: set correct user schema
     user = {
         "_id": uuid4().hex,
@@ -52,7 +52,7 @@ def test_post_user_create_from_authorized_correct_data(client):
     assert result.status_code == 201
 
 
-def test_post_user_create_from_authorized_correct_data_repeat_user(client):
+def test_post_with_authorization_with_repeated_user(client):
     # TODO: set correct user schema
     user = {
         "_id": uuid4().hex,
@@ -81,7 +81,7 @@ def test_post_user_create_from_authorized_correct_data_repeat_user(client):
     assert result.status_code == 400
 
 
-def test_post_user_create_from_authorized_incorrect_email(client):
+def test_post_with_authorization_invalid_user_email(client):
     # TODO: set correct user schema
     user = {
         "_id": uuid4().hex,
@@ -103,7 +103,7 @@ def test_post_user_create_from_authorized_incorrect_email(client):
     assert result.status_code == 400
 
 
-def test_post_user_create_from_authorized_incorrect_created(client):
+def test_post_with_authorization_invalid_user_created(client):
     # TODO: set correct user schema
     user = {
         "_id": uuid4().hex,
@@ -125,7 +125,7 @@ def test_post_user_create_from_authorized_incorrect_created(client):
     assert result.status_code == 400
 
 
-def test_get_existing_user(client):
+def test_get_with_existent_user_id(client):
     user = {
         "_id": uuid4().hex,
         "name": "Daniel",
@@ -152,7 +152,7 @@ def test_get_existing_user(client):
     assert result.status_code == 200
 
 
-def test_get_not_existing_user(client):
+def test_get_without_existent_user_id(client):
     cli, db = client
 
     result = cli.simulate_get(
@@ -163,7 +163,7 @@ def test_get_not_existing_user(client):
     assert result.status_code == 404
 
 
-def test_put_modified_user(client):
+def test_put_with_valid_user(client):
     user = {
         "_id": uuid4().hex,
         "name": "Daniel",
@@ -192,7 +192,7 @@ def test_put_modified_user(client):
     assert result.status_code == 200
 
 
-def test_put_modified_user_with_incorrect_fields(client):
+def test_put_without_invalid_user_email(client):
     user = {
         "_id": uuid4().hex,
         "name": "Daniel",
@@ -221,7 +221,7 @@ def test_put_modified_user_with_incorrect_fields(client):
     assert result.status_code == 400
 
 
-def test_put_unmodified_user(client):
+def test_put_with_unmodified_user(client):
     user = {
         "_id": uuid4().hex,
         "name": "Daniel",
@@ -249,7 +249,7 @@ def test_put_unmodified_user(client):
     assert result.status_code == 200
 
 
-def test_put_not_existing_user(client):
+def test_put_with_invalid_user_id(client):
     user = {
         "_id": uuid4().hex,
         "name": "Daniel",
@@ -269,13 +269,13 @@ def test_put_not_existing_user(client):
     assert result.status_code == 404
 
 
-def test_delete_user_from_unauthorized(client):
+def test_delete_user_without_authorization(client):
     cli, db = client
     result = cli.simulate_post('/back/user')
     assert result.status_code == 401
 
 
-def test_delete_user_from_authorized(client):
+def test_delete_user_with_authorization(client):
     user = {
         "_id": uuid4().hex,
         "name": "Daniel",
@@ -302,7 +302,7 @@ def test_delete_user_from_authorized(client):
     assert result.status_code == 200
 
 
-def test_delete_not_existing_user(client):
+def test_delete_without_existent_user(client):
     cli, db = client
     result = cli.simulate_delete(
         '/back/user/{}'.format(uuid4().hex),
