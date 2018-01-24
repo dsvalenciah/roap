@@ -11,7 +11,7 @@ import pymongo
 
 import falcon
 
-only_letters = re.compile(r"^[A-Z]+$", re.IGNORECASE)
+only_letters = re.compile(r'^[A-Z]+$', re.IGNORECASE)
 
 db = None
 
@@ -28,10 +28,10 @@ def is_correct_parameter(param):
 class User(object):
 
     def on_get(self, req, resp, uid):
-        """
+        '''
         Get a single user
-        """
-        if req.headers.get("AUTHORIZATION"):
+        '''
+        if req.headers.get('AUTHORIZATION'):
             result = db.users.find_one({'_id': uid})
             if not result:
                 resp.status = falcon.HTTP_404
@@ -42,16 +42,16 @@ class User(object):
             resp.status = falcon.HTTP_401
 
     def on_put(self, req, resp, uid):
-        """
+        '''
         Update user
-        """
-        if req.headers.get("AUTHORIZATION"):
+        '''
+        if req.headers.get('AUTHORIZATION'):
             user = req_to_json(req)
             # TODO: validate new user
 
             _, errors = is_valid_user(user)
             if errors:
-                resp.body = json.dumps({"errors": errors})
+                resp.body = json.dumps({'errors': errors})
                 resp.status = falcon.HTTP_400
             elif not db.users.find_one({'_id': uid}):
                 resp.status = falcon.HTTP_404
@@ -66,11 +66,11 @@ class User(object):
             resp.status = falcon.HTTP_401
 
     def on_delete(self, req, resp, uid):
-        """
+        '''
         Delete single user
-        """
+        '''
         # TODO: make cascade delete for all data related to this user
-        if req.headers.get("AUTHORIZATION"):
+        if req.headers.get('AUTHORIZATION'):
             result = db.users.delete_one({'_id': uid})
             if not result.deleted_count:
                 resp.status = falcon.HTTP_404
@@ -83,10 +83,10 @@ class User(object):
 class UserCollection(object):
 
     def on_get(self, req, resp):
-        """
+        '''
         Get all users (maybe filtered, and paginated)
-        """
-        if req.headers.get("AUTHORIZATION"):
+        '''
+        if req.headers.get('AUTHORIZATION'):
             query_params = req.params
             if not query_params:
                 resp.body = dumps(db.users.find())
@@ -94,20 +94,20 @@ class UserCollection(object):
             else:
                 # TODO: add offset, count as a required params
                 enabled_fields = [
-                    "name", "email", "role", "created", "modified",
-                    # TODO: add "start", "end" date range
-                    # add "offset", "count"
+                    'name', 'email', 'role', 'created', 'modified',
+                    # TODO: add 'start', 'end' date range
+                    # add 'offset', 'count'
                 ]
                 correct_fields = map(
                     is_correct_parameter, query_params.values()
                 )
                 if not False in correct_fields:
                     fields_to_use = [
-                        {x: {"$regex": f".*{query_params.get(x)}.*"}}
+                        {x: {'$regex': f'.*{query_params.get(x)}.*'}}
                         for x in query_params.keys()
                         if x in enabled_fields
                     ]
-                    query = {"$and": fields_to_use}
+                    query = {'$and': fields_to_use}
                     resp.body = dumps(
                         db.users.find(query)
                     )
@@ -118,10 +118,10 @@ class UserCollection(object):
             resp.status = falcon.HTTP_401
 
     def on_post(self, req, resp):
-        """
+        '''
         Create user.
-        """
-        if req.headers.get("AUTHORIZATION"):
+        '''
+        if req.headers.get('AUTHORIZATION'):
             user = req_to_json(req)
             if not user.get('_id') and not user.get('created'):
                 user.update({
@@ -132,7 +132,7 @@ class UserCollection(object):
                 })
             _, errors = is_valid_user(user)
             if errors:
-                resp.body = json.dumps({"errors": errors})
+                resp.body = json.dumps({'errors': errors})
                 resp.status = falcon.HTTP_400
             else:
                 try:

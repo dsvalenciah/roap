@@ -13,7 +13,7 @@ def parse_xml_to_json(xml):
     my_dict = dict()
 
     for element in xml.iter():
-        string = ""
+        string = ''
         continue_for = False
         while len(element) >= 1:
             parents.append(element)
@@ -23,7 +23,7 @@ def parse_xml_to_json(xml):
             continue
         else:
             for x in parents:
-                string += x.tag + "_"
+                string += x.tag + '_'
             last_element = parents[len(parents) - 1]
             if last_element[len(last_element) - 1] == element:
                 parents.pop()

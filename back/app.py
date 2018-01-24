@@ -14,7 +14,7 @@ from pymongo import MongoClient
 learning_object_schema_populate()
 
 class Roap():
-    def __init__(self, db_host='DB_HOST', db_port=27017, db_name="roap"):
+    def __init__(self, db_host='DB_HOST', db_port=27017, db_name='roap'):
         self.client = MongoClient(os.getenv(db_host), db_port)
         self.db = self.client[db_name]
 
