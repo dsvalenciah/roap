@@ -9,4 +9,4 @@ def client():
     roap = Roap(db_name='roap-test')
     db = roap.get_db()
     db.users.delete_many({})
-    return testing.TestClient(roap.get_api()), db
+    return testing.TestClient(roap.get_api())
