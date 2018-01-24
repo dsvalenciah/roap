@@ -145,7 +145,7 @@ def test_get_with_existent_user_id(client):
     assert result.status_code == 201
 
     result = cli.simulate_get(
-        '/back/user/{}'.format(user.get('_id')),
+        f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'}
     )
 
@@ -156,7 +156,7 @@ def test_get_without_existent_user_id(client):
     cli, db = client
 
     result = cli.simulate_get(
-        '/back/user/{}'.format(uuid4().hex),
+        f"/back/user/{uuid4().hex}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'}
     )
 
@@ -184,7 +184,7 @@ def test_put_with_valid_user(client):
 
     user['name'] = 'Orlando'
     result = cli.simulate_put(
-        '/back/user/{}'.format(user.get('_id')),
+        f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
@@ -213,7 +213,7 @@ def test_put_without_invalid_user_email(client):
 
     user['email'] = 'dsvalenciah'
     result = cli.simulate_put(
-        '/back/user/{}'.format(user.get('_id')),
+        f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
@@ -241,7 +241,7 @@ def test_put_with_unmodified_user(client):
     assert result.status_code == 201
 
     result = cli.simulate_put(
-        '/back/user/{}'.format(user.get('_id')),
+        f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
@@ -261,7 +261,7 @@ def test_put_with_invalid_user_id(client):
     cli, db = client
 
     result = cli.simulate_put(
-        '/back/user/{}'.format(user.get('_id')),
+        f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
@@ -295,7 +295,7 @@ def test_delete_user_with_authorization(client):
     assert result.status_code == 201
 
     result = cli.simulate_delete(
-        '/back/user/{}'.format(user.get('_id')),
+        f"/back/user/{user.get('_id')}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'}
     )
 
@@ -305,7 +305,7 @@ def test_delete_user_with_authorization(client):
 def test_delete_without_existent_user(client):
     cli, db = client
     result = cli.simulate_delete(
-        '/back/user/{}'.format(uuid4().hex),
+        f"/back/user/{uuid4().hex}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'}
     )
 
