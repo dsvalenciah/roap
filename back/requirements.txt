@@ -3,3 +3,4 @@ falcon-multipart
 gunicorn
 pymongo
 marshmallow
+dicttoxml
