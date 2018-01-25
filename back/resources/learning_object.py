@@ -6,6 +6,7 @@ import json
 from schemas.learning_object_metadata import is_valid_learning_object
 from utils.req_to_json import req_to_json
 from utils.xml_to_json import xml_to_json
+from utils.json_to_xml import json_to_xml
 
 from bson.json_util import dumps
 
@@ -38,7 +39,7 @@ class LearningObject(object):
             if not result:
                 resp.status = falcon.HTTP_404
             else:
-                resp.body = dumps(result)
+                resp.body = dumps(json_to_xml(result))
                 resp.status = falcon.HTTP_200
         else:
             resp.status = falcon.HTTP_401
