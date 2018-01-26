@@ -1,4 +1,5 @@
 falcon
+falcon-multipart
 gunicorn
 pymongo
 marshmallow

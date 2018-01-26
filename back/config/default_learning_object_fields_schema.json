@@ -4,7 +4,7 @@
     {"name": "general_title",                                     "kind": "string", "params": {"required": true}},
     {"name": "general_language",                                  "kind": "string", "params": {"required": true}},
     {"name": "general_description",                               "kind": "string", "params": {"required": true}},
-    {"name": "general_keyword",                                   "kind": "string", "params": {"required": true}},
+    {"name": "general_keyword",                                   "kind": "list", "params": {"required": true, "cls_or_instance": "string"}},
     {"name": "general_coverage",                                  "kind": "string", "params": {"required": true}},
     {"name": "general_structure",                                 "kind": "string", "params": {"required": true}},
     {"name": "general_aggregationlevel",                          "kind": "string", "params": {"required": true}},
@@ -57,5 +57,5 @@
     {"name": "classification_taxonPath_taxon_entry",              "kind": "string", "params": {"required": true}},
     {"name": "classification_description",                        "kind": "string", "params": {"required": true}},
     {"name": "classification_keyword",                            "kind": "string", "params": {"required": true}},
-    {"name": "userid",                                           "kind": "uuid","params": {"required": true}}
+    {"name": "userid",                                           "kind": "uuid", "params": {"required": true}}
 ]
