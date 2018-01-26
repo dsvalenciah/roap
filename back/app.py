@@ -1,3 +1,8 @@
+
+"""
+Contains roap app and his db run class.
+"""
+
 import os
 
 from config.learning_object_metadata import learning_object_schema_populate
@@ -17,7 +22,10 @@ learning_object_schema_populate()
 
 
 class Roap():
+    """Principal Roap class."""
+
     def __init__(self, db_host='DB_HOST', db_port=27017, db_name='roap'):
+        """Create db and api for Roap."""
         self.client = MongoClient(os.getenv(db_host), db_port)
         self.db = self.client[db_name]
 
@@ -41,9 +49,11 @@ class Roap():
         )
 
     def get_db(self):
+        """Obtain roap db."""
         return self.db
 
     def get_api(self):
+        """Obtain roap api."""
         return self.api
 
 

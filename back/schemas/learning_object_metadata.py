@@ -1,3 +1,9 @@
+
+"""
+Contains utility functions to works with learning-object and his metadata
+fields schemas.
+"""
+
 import json
 import os
 
@@ -89,6 +95,8 @@ fields_list = {
 
 
 class Validate(Schema):
+    """Define schema for a learning-object-metadata-field validation param."""
+
     kind = fields.Str(required=True, validate=mr_validate.OneOf(
         choices=validators_list.keys()
     ))
@@ -96,6 +104,8 @@ class Validate(Schema):
 
 
 class FieldParams(Schema):
+    """Define schema for a learning-object-metadata-field field params."""
+
     validate = fields.Nested(Validate, required=False)
     required = fields.Boolean(required=False)
     cls_or_instance = fields.Str(required=True, validate=mr_validate.OneOf(
@@ -104,6 +114,8 @@ class FieldParams(Schema):
 
 
 class Field(Schema):
+    """Define schema for a learning-object-metadata-field fields."""
+
     _id = fields.Str(required=True)
     name = fields.Str(required=True)
     kind = fields.Str(required=True, validate=mr_validate.OneOf(
@@ -113,6 +125,7 @@ class Field(Schema):
 
 
 def dict_to_schema(fields):
+    """Create Schema for a list of fields."""
     parsed_fields = dict()
     for field in fields:
         if field.get('params').get('validate'):
@@ -136,16 +149,18 @@ def dict_to_schema(fields):
 
 
 def is_valid_schema_field(field):
+    """Check if field matches with Field schema."""
     field_schema = Field(exclude=(
         [] if field.get('kind') == 'list' else ['params.cls_or_instance']
     ))
     return field_schema.validate(field)
 
 
-def is_valid_learning_object(data):
+def is_valid_learning_object(learning_object):
+    """Check if learning-object matches with a learning-object schema."""
     schema_fields = json.loads(dumps(db.learning_object_metadata.find()))
-    generic_schema = dict_to_schema(schema_fields)
-    if len(data) > len(schema_fields):
+    learning_object_schema = dict_to_schema(schema_fields)
+    if len(learning_object) > len(schema_fields):
         return {'attributes': 'invalid number'}
     else:
-        return generic_schema.validate(data)
+        return learning_object_schema.validate(learning_object)

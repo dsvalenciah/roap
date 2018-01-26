@@ -1,43 +1,41 @@
+
+"""
+Contains necessary Resources to works with learning-objects CRUD operations.
+"""
+
 from datetime import datetime
 from uuid import uuid4
 import re
 import json
 
 from schemas.learning_object_metadata import is_valid_learning_object
-from utils.req_to_json import req_to_json
-from utils.xml_to_json import xml_to_json
-from utils.json_to_xml import roapjson_to_xml, roapjson_to_json
+from utils.req_to_dict import req_to_dict
+from utils.xml_to_dict import xml_to_dict
+from utils.request_param import is_correct_parameter
+from utils.dict_to_xml import no_nested_dict_to_dict, no_nested_dict_to_xml
 
 from bson.json_util import dumps
 
 import falcon
 
-only_letters = re.compile(r'^[A-Z]+$', re.IGNORECASE)
 db = None
 
 
 def set_db_client(db_client):
+    """Obtain db client."""
     global db
     db = db_client
 
 
-def is_correct_parameter(param):
-    return bool(only_letters.match(param))
-
-
 class LearningObject(object):
-    '''
-    Deal with single learning objects.
-    '''
+    """Deal with single learning-object."""
 
     def on_get(self, req, resp, uid):
-        '''
-        Get a single learning object
-        '''
+        """Get a single learning-object."""
         if req.headers.get('AUTHORIZATION'):
             parsers = {
-                'xml': roapjson_to_xml,
-                'json': roapjson_to_json,
+                'xml': no_nested_dict_to_xml,
+                'json': no_nested_dict_to_dict
             }
             query_params = req.params
             result = db.learning_objects.find_one({'_id': uid})
@@ -54,13 +52,11 @@ class LearningObject(object):
             resp.status = falcon.HTTP_401
 
     def on_put(self, req, resp, uid):
-        '''
-        Update a single learning object
-        '''
+        """Update a single learning-object."""
         # Auth, check if the learing object belongs to the authorised user.
         if req.headers.get('AUTHORIZATION'):
-            learning_object = req_to_json(req)
-            # TODO: validate new learning object
+            learning_object = req_to_dict(req)
+            # TODO: validate new learning-object
             result = db.learning_objects.update_one(
                 {'_id': uid},
                 {'$set': learning_object}
@@ -73,9 +69,7 @@ class LearningObject(object):
             resp.status = falcon.HTTP_401
 
     def on_delete(self, req, resp, uid):
-        '''
-        Delete a learing object (might be soft delete)
-        '''
+        """Delete a learing object (might be soft delete)."""
         if req.headers.get('AUTHORIZATION'):
             result = db.learning_objects.delete_one({'_id': uid})
             if not result.deleted_count:
@@ -87,14 +81,10 @@ class LearningObject(object):
 
 
 class LearningObjectCollection(object):
-    '''
-    Deal with the whole collection of learning objects
-    '''
+    """Deal with the whole collection of learning-objects."""
 
     def on_get(self, req, resp):
-        '''
-        Get all learning objects (maybe filtered, and paginated)
-        '''
+        """Get all learning-objects (maybe filtered, and paginated)."""
         if req.headers.get('AUTHORIZATION'):
             query_params = req.params
             if not query_params:
@@ -127,14 +117,12 @@ class LearningObjectCollection(object):
             resp.status = falcon.HTTP_401
 
     def on_post(self, req, resp):
-        '''
-        Create learning object.
-        '''
+        """Create learning-object."""
         # Notice that, the user id will come in the payload
         if req.headers.get('AUTHORIZATION'):
-            learning_object = req_to_json(req)
+            learning_object = req_to_dict(req)
             if not learning_object:
-                learning_object = xml_to_json(
+                learning_object = xml_to_dict(
                     req.get_param('xml_file').file.read()
                 )
             errors = is_valid_learning_object(learning_object)

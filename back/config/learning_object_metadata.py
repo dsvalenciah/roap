@@ -1,3 +1,9 @@
+
+"""
+Contains utility functions to populate database with a default
+learning-object-metadata-fields.
+"""
+
 import json
 import os
 from uuid import uuid4
@@ -12,6 +18,7 @@ db = client.roap
 
 
 def learning_object_schema_populate():
+    """Populate database with default learning-object-metadata-fields."""
     schema_fields = json.loads(dumps(db.learning_object_metadata.find()))
     if not schema_fields:
         schema_fields = json.load(

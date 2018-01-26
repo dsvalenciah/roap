@@ -1,36 +1,35 @@
+
+"""
+Contains necessary Resources to works with user CRUD operations.
+"""
+
 import json
-import re
 from uuid import uuid4
 from datetime import datetime
 
 from schemas.user import is_valid_user
-from utils.req_to_json import req_to_json
+from utils.req_to_dict import req_to_dict
+from utils.request_param import is_correct_parameter
 
 from bson.json_util import dumps
 import pymongo
 
 import falcon
 
-only_letters = re.compile(r'^[A-Z]+$', re.IGNORECASE)
-
 db = None
 
 
 def set_db_client(db_client):
+    """Obtain db client."""
     global db
     db = db_client
 
 
-def is_correct_parameter(param):
-    return bool(only_letters.match(param))
-
-
 class User(object):
+    """Deal with single user."""
 
     def on_get(self, req, resp, uid):
-        '''
-        Get a single user
-        '''
+        """Get a single user."""
         if req.headers.get('AUTHORIZATION'):
             result = db.users.find_one({'_id': uid})
             if not result:
@@ -42,11 +41,9 @@ class User(object):
             resp.status = falcon.HTTP_401
 
     def on_put(self, req, resp, uid):
-        '''
-        Update user
-        '''
+        """Update user."""
         if req.headers.get('AUTHORIZATION'):
-            user = req_to_json(req)
+            user = req_to_dict(req)
             # TODO: validate new user
 
             _, errors = is_valid_user(user)
@@ -66,9 +63,7 @@ class User(object):
             resp.status = falcon.HTTP_401
 
     def on_delete(self, req, resp, uid):
-        '''
-        Delete single user
-        '''
+        """Delete single user."""
         # TODO: make cascade delete for all data related to this user
         if req.headers.get('AUTHORIZATION'):
             result = db.users.delete_one({'_id': uid})
@@ -81,11 +76,10 @@ class User(object):
 
 
 class UserCollection(object):
+    """Deal with the whole collection of learning-object-metadata-fields."""
 
     def on_get(self, req, resp):
-        '''
-        Get all users (maybe filtered, and paginated)
-        '''
+        """Get all users (maybe filtered, and paginated)."""
         if req.headers.get('AUTHORIZATION'):
             query_params = req.params
             if not query_params:
@@ -118,11 +112,9 @@ class UserCollection(object):
             resp.status = falcon.HTTP_401
 
     def on_post(self, req, resp):
-        '''
-        Create user.
-        '''
+        """Create user."""
         if req.headers.get('AUTHORIZATION'):
-            user = req_to_json(req)
+            user = req_to_dict(req)
             if not user.get('_id') and not user.get('created'):
                 user.update({
                     '_id': str(uuid4().hex),
