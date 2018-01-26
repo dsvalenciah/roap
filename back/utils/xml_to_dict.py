@@ -1,13 +1,21 @@
-from xml.etree import ElementTree as ET
+
+"""
+Contains utility functions to work with learning-objects as a xml based
+on lom standard that parse from xml content to dict format.
+"""
+
+from xml.etree import ElementTree
 import re
 import json
 
+
 def delete_trash(trash, string, replace):
-    new_string = re.sub(trash, replace, string)
-    return new_string
+    """Replace a string contained in a string by another string."""
+    return re.sub(trash, replace, string)
 
 
-def parse_xml_to_json(xml):
+def parse_xml_to_dict(xml):
+    """Parse xml content to dumped no nested dict."""
     parents = []
     trash = '{http://ltsc.ieee.org/xsd/LOM}'
     my_dict = dict()
@@ -45,6 +53,13 @@ def parse_xml_to_json(xml):
     return my_dict
 
 
-def xml_to_json(xml_content):
-    xml = ET.ElementTree(ET.fromstring(xml_content)).getroot()
-    return json.loads(parse_xml_to_json(xml))
+def xml_to_dict(xml_content):
+    """
+    Parse learning-object in xml string format to no nested dict.
+
+    Nested dict is represented with keys delimited with underscores.
+    """
+    xml = ElementTree.ElementTree(
+        ElementTree.fromstring(xml_content)
+    ).getroot()
+    return json.loads(parse_xml_to_dict(xml))
