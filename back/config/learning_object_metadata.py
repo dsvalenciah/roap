@@ -4,9 +4,11 @@ Contains utility functions to populate database with a default
 learning-object-metadata-fields.
 """
 
+import collections
 import json
 import os
-from uuid import uuid4
+
+from marshmallowjson.marshmallowjson import Definition
 
 from bson.json_util import dumps
 
@@ -19,11 +21,15 @@ db = client.roap
 
 def learning_object_schema_populate():
     """Populate database with default learning-object-metadata-fields."""
-    schema_fields = json.loads(dumps(db.learning_object_metadata.find()))
-    if not schema_fields:
-        schema_fields = json.load(
-            open('config/default_learning_object_fields_schema.json')
+    lom_schema = json.loads(dumps(
+        db.learning_object_metadata.find({'_id': 'lom'})
+    ))
+    if not lom_schema:
+        lom_schema = json.load(
+            open('data/lom.json'),
+            object_pairs_hook=collections.OrderedDict
         )
-        for schema_field in schema_fields:
-            schema_field.update({'_id': uuid4().hex})
-            db.learning_object_metadata.insert_one(schema_field)
+        Definition(lom_schema).top()
+        db.learning_object_metadata.insert_one(
+            {'_id': 'lom', 'lom': lom_schema}
+        )
