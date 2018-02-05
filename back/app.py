@@ -41,12 +41,7 @@ class Roap():
         self.api.add_route('/back/object', lo.LearningObjectCollection())
         self.api.add_route('/back/object/{uid}', lo.LearningObject())
 
-        self.api.add_route(
-            '/back/object-meta', lom.LearningObjectMetadataCollection()
-        )
-        self.api.add_route(
-            '/back/object-meta/{uid}', lom.LearningObjectMetadata()
-        )
+        self.api.add_route('/back/object-meta', lom.LearningObjectMetadata())
 
     def get_db(self):
         """Obtain roap db."""
