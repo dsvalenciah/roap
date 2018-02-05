@@ -20,6 +20,21 @@ import falcon
 
 db = None
 
+'''
+{
+    "_id": uuid
+    "user_id": uuid
+    "created": date
+    "modified": date
+    "schema": jsonschema
+    "data": jsondata
+    "state": ["visible", "deleted", "unevaluated"]
+    "ranking1": [1-5]
+    "ranking2": [1-5]
+    "files": ["filepath"]
+}
+'''
+
 
 def set_db_client(db_client):
     """Obtain db client."""
