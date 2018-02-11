@@ -27,11 +27,9 @@ def test_post_with_authorization_with_valid_user(client):
     """Test post with authorization with valid user."""
     # TODO: set correct user schema
     user = {
-        '_id': uuid4().hex,
         'name': 'Daniel',
         'email': 'dsvalenciah@unal.edu.co',
         'role': 'administrator',
-        'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
     response = client.simulate_post(
@@ -47,11 +45,9 @@ def test_post_with_authorization_with_repeated_user(client):
     """Test post with authorization with repeated user."""
     # TODO: set correct user schema
     user = {
-        '_id': uuid4().hex,
         'name': 'Daniel',
         'email': 'dsvalenciah@unal.edu.co',
         'role': 'administrator',
-        'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
     response = client.simulate_post(
@@ -75,11 +71,9 @@ def test_post_with_authorization_invalid_user_email(client):
     """Test post with authorization invalid user email."""
     # TODO: set correct user schema
     user = {
-        '_id': uuid4().hex,
         'name': 'Daniel',
         'email': 'dsvalenciah',
         'role': 'administrator',
-        'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
     response = client.simulate_post(
@@ -96,11 +90,9 @@ def test_post_with_authorization_invalid_user_created(client):
     """Test post with authorization invalid user created."""
     # TODO: set correct user schema
     user = {
-        '_id': uuid4().hex,
         'name': 'Daniel',
         'email': 'dsvalenciah@unal.edu.co',
         'role': 'administrator',
-        'created': datetime.now().strftime('%Y-%m-%d %H:%M')
     }
 
     response = client.simulate_post(
@@ -116,11 +108,9 @@ def test_post_with_authorization_invalid_user_created(client):
 def test_get_with_existent_user_id(client):
     """Test get with existent user id."""
     user = {
-        '_id': uuid4().hex,
         'name': 'Daniel',
         'email': 'dsvalenciah@unal.edu.co',
         'role': 'administrator',
-        'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
     response = client.simulate_post(
@@ -152,11 +142,9 @@ def test_get_without_existent_user_id(client):
 def test_put_with_valid_user(client):
     """Test put with valid user."""
     user = {
-        '_id': uuid4().hex,
         'name': 'Daniel',
         'email': 'dsvalenciah@unal.edu.co',
         'role': 'administrator',
-        'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
     response = client.simulate_post(
@@ -180,11 +168,9 @@ def test_put_with_valid_user(client):
 def test_put_without_invalid_user_email(client):
     """Test put without invalid user email."""
     user = {
-        '_id': uuid4().hex,
         'name': 'Daniel',
         'email': 'dsvalenciah@unal.edu.co',
         'role': 'administrator',
-        'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
     response = client.simulate_post(
@@ -208,11 +194,9 @@ def test_put_without_invalid_user_email(client):
 def test_put_with_unmodified_user(client):
     """Test put with unmodified user."""
     user = {
-        '_id': uuid4().hex,
         'name': 'Daniel',
         'email': 'dsvalenciah@unal.edu.co',
         'role': 'administrator',
-        'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
     response = client.simulate_post(
@@ -235,11 +219,9 @@ def test_put_with_unmodified_user(client):
 def test_put_with_invalid_user_id(client):
     """Test put with invalid user id."""
     user = {
-        '_id': uuid4().hex,
         'name': 'Daniel',
         'email': 'dsvalenciah@unal.edu.co',
         'role': 'administrator',
-        'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
     response = client.simulate_put(
@@ -260,11 +242,9 @@ def test_delete_user_without_authorization(client):
 def test_delete_user_with_authorization(client):
     """Test delete user with authorization."""
     user = {
-        '_id': uuid4().hex,
         'name': 'Daniel',
         'email': 'dsvalenciah@unal.edu.co',
         'role': 'administrator',
-        'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
     response = client.simulate_post(
