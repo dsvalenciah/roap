@@ -115,14 +115,21 @@ class UserCollection(object):
         """Create user."""
         if req.headers.get('AUTHORIZATION'):
             user = req_to_dict(req)
-            if not user.get('_id') and not user.get('created'):
-                user.update({
-                    '_id': str(uuid4().hex),
-                    'created': str(
-                        datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    )
-                })
-            _, errors = is_valid_user(user)
+            user.update({
+                '_id': str(uuid4().hex),
+                'created': str(
+                    datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                ),
+                'modified': str(
+                    datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                ),
+                'last_activity': str(
+                    datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                ),
+                'status': 'active',
+                'role': 'unknown',
+            })
+            errors = is_valid_user(user)
             if errors:
                 resp.body = json.dumps({'errors': errors})
                 resp.status = falcon.HTTP_400
