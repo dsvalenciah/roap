@@ -8,7 +8,8 @@ from uuid import uuid4
 import re
 import json
 
-from schemas.learning_object_metadata import is_valid_learning_object
+from schemas.learning_object_metadata import is_valid_learning_object_metadata
+from schemas.learning_object import is_valid_learning_object
 from utils.req_to_dict import req_to_dict
 from utils.xml_to_dict import xml_to_dict
 from utils.request_param import is_correct_parameter
@@ -19,21 +20,6 @@ from bson.json_util import dumps
 import falcon
 
 db = None
-
-'''
-{
-    "_id": uuid
-    "user_id": uuid
-    "created": date
-    "modified": date
-    "schema": jsonschema
-    "data": jsondata
-    "state": ["visible", "deleted", "unevaluated"]
-    "ranking1": [1-5]
-    "ranking2": [1-5]
-    "files": ["filepath"]
-}
-'''
 
 
 def set_db_client(db_client):
@@ -135,26 +121,74 @@ class LearningObjectCollection(object):
         """Create learning-object."""
         # Notice that, the user id will come in the payload
         if req.headers.get('AUTHORIZATION'):
-            learning_object = req_to_dict(req)
-            if not learning_object:
-                learning_object = xml_to_dict(
-                    req.get_param('xml_file').file.read()
+            req_format = req.params.get('format')
+
+            learning_object_metadata = None
+            user_id = None
+
+            if req_format == 'xml':
+                learning_object_metadata = xml_to_dict(
+                    req.get_param('file').file.read()
                 )
-            errors = is_valid_learning_object(learning_object)
-            user = db.users.find_one({"_id": learning_object.get('userid')})
-            if errors or not user:
-                errors.update(
-                    {"userid": "specified user uid is not valid"}
-                    if not user and not errors.get("userid") else {}
+                user_id = req.get_param('user_id')
+            elif req_format == 'json':
+                request_content = req_to_dict(req)
+                learning_object_metadata = request_content.get('lom')
+                user_id = request_content.get('user_id')
+
+            if learning_object_metadata and user_id:
+                errors = is_valid_learning_object_metadata(
+                    learning_object_metadata
                 )
-                resp.body = json.dumps({'errors': errors, 'object': learning_object})
-                resp.status = falcon.HTTP_400
-            else:
-                learning_object.update({'_id': uuid4().hex})
-                try:
-                    result = db.learning_objects.insert_one(learning_object)
-                    resp.status = falcon.HTTP_201
-                except pymongo.errors.DuplicateKeyError:
+
+                user = db.users.find_one({"_id": user_id})
+
+                if not user:
+                    errors.update(
+                        {"userid": "specified user uid is not valid"}
+                    )
+
+                if user and user.get('status') != 'active':
+                    errors.update(
+                        {"userstatus": "specified user is not active"}
+                    )
+
+                if errors:
+                    resp.body = json.dumps({'errors': errors})
                     resp.status = falcon.HTTP_400
+                else:
+                    # TODO: add files-path manager
+                    learning_object = {
+                        '_id': uuid4().hex,
+                        'user_id': user.get('_id'),
+                        'created': str(
+                            datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        ),
+                        'modified': str(
+                            datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        ),
+                        'schema': db.learning_object_metadata.find_one(
+                            {'_id': 'lom'}
+                        ).get('lom'),
+                        'metadata': learning_object_metadata,
+                        'state': "unevaluated",
+                        'user_ranking': 0,
+                        'evaluator_ranking': 0,
+                        'files': [],
+                    }
+                    errors = is_valid_learning_object(learning_object)
+                    if errors:
+                        resp.body = json.dumps({'errors': errors})
+                        resp.status = falcon.HTTP_400
+                    else:
+                        try:
+                            result = db.learning_objects.insert_one(
+                                learning_object
+                            )
+                            resp.status = falcon.HTTP_201
+                        except pymongo.errors.DuplicateKeyError:
+                            resp.status = falcon.HTTP_400
+            else:
+                resp.status = falcon.HTTP_400
         else:
             resp.status = falcon.HTTP_401
