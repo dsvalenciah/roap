@@ -13,7 +13,9 @@ from schemas.learning_object import is_valid_learning_object
 from utils.req_to_dict import req_to_dict
 from utils.xml_to_dict import xml_to_dict
 from utils.request_param import is_correct_parameter
-from utils.dict_to_xml import no_nested_dict_to_dict, no_nested_dict_to_xml
+from utils.dict_to_xml import dict_to_xml
+
+from marshmallowjson.marshmallowjson import Definition
 
 from bson.json_util import dumps
 
@@ -34,16 +36,10 @@ class LearningObject(object):
     def on_get(self, req, resp, uid):
         """Get a single learning-object."""
         if req.headers.get('AUTHORIZATION'):
-            parsers = {
-                'xml': no_nested_dict_to_xml,
-                'json': no_nested_dict_to_dict
-            }
             query_params = req.params
             result = db.learning_objects.find_one({'_id': uid})
-            if query_params.get('format'):
-                result = parsers.get(
-                    query_params.get('format'), lambda v: v
-                )(result)
+            if query_params.get('format') == 'xml':
+                result = dict_to_xml(result.get('metadata'))
             if not result:
                 resp.status = falcon.HTTP_404
             else:
@@ -56,16 +52,39 @@ class LearningObject(object):
         """Update a single learning-object."""
         # Auth, check if the learing object belongs to the authorised user.
         if req.headers.get('AUTHORIZATION'):
-            learning_object = req_to_dict(req)
-            # TODO: validate new learning-object
-            result = db.learning_objects.update_one(
-                {'_id': uid},
-                {'$set': learning_object}
-            )
-            if not result.modified_count:
-                resp.status = falcon.HTTP_404
+            new_learning_object = req_to_dict(req)
+            learning_object = db.learning_objects.find_one({'_id': uid})
+            if not learning_object:
+                resp.body = json.dumps(
+                    {"loid": "specified lo uid is not valid"}
+                )
+                resp.status = falcon.HTTP_400
             else:
-                resp.status = falcon.HTTP_200
+                learning_object_schema = Definition(
+                    learning_object.get('schema')
+                ).top()
+                errors = learning_object_schema.validate(new_learning_object)
+                if errors:
+                    resp.body = json.dumps(
+                        {'errors': errors, 'lo': new_learning_object}
+                    )
+                    resp.status = falcon.HTTP_400
+                else:
+                    result = db.learning_objects.update_one(
+                        {'_id': uid},
+                        {
+                            '$set': {
+                                'metadata': new_learning_object,
+                                'modified': str(
+                                    datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                                ),
+                            }
+                        }
+                    )
+                    if not result.modified_count:
+                        resp.status = falcon.HTTP_404
+                    else:
+                        resp.status = falcon.HTTP_200
         else:
             resp.status = falcon.HTTP_401
 
@@ -121,7 +140,7 @@ class LearningObjectCollection(object):
         """Create learning-object."""
         # Notice that, the user id will come in the payload
         if req.headers.get('AUTHORIZATION'):
-            req_format = req.params.get('format')
+            req_format = req.params.get('format') or 'json'
 
             learning_object_metadata = None
             user_id = None
@@ -130,7 +149,7 @@ class LearningObjectCollection(object):
                 learning_object_metadata = xml_to_dict(
                     req.get_param('file').file.read()
                 )
-                user_id = req.get_param('user_id')
+                user_id = req.get_param('user_id').value.decode()
             elif req_format == 'json':
                 request_content = req_to_dict(req)
                 learning_object_metadata = request_content.get('lom')
@@ -154,7 +173,9 @@ class LearningObjectCollection(object):
                     )
 
                 if errors:
-                    resp.body = json.dumps({'errors': errors})
+                    resp.body = json.dumps(
+                        {'errors': errors, 'lom': learning_object_metadata}
+                    )
                     resp.status = falcon.HTTP_400
                 else:
                     # TODO: add files-path manager
@@ -178,7 +199,9 @@ class LearningObjectCollection(object):
                     }
                     errors = is_valid_learning_object(learning_object)
                     if errors:
-                        resp.body = json.dumps({'errors': errors})
+                        resp.body = json.dumps(
+                            {'errors': errors, 'lo': learning_object}
+                        )
                         resp.status = falcon.HTTP_400
                     else:
                         try:
