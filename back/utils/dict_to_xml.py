@@ -55,42 +55,6 @@ def deep_dict_to_xml(data, tag_name='lom', builder=None, prefix='lom_TP_'):
     return builder
 
 
-def learning_object_to_dicts(learning_object):
-    """Parse learning-object from no nested dict to list of dicts."""
-    dicts = list()
-    for key, value in learning_object.items():
-        temp_dict = value
-        for unique_key in reversed(key.split('_')):
-            temp_dict = {unique_key: temp_dict}
-        dicts.append(temp_dict)
-    return dicts
-
-
-def merge_dicts(list_dicts):
-    """Merge list of dicts into a single nested dict."""
-    def deep_update(source, target):
-        for key, value in source.items():
-            if isinstance(value, dict):
-                if not target.get(key):
-                    target.update({key: {}})
-                deep_update(value, target[key])
-            else:
-                target.update({key: value})
-    result = dict()
-    for dict_ in list_dicts:
-        deep_update(dict_, result)
-    return result
-
-
-def no_nested_dict_to_dict(learning_object):
-    """Parse learning-object from no nested dict to nested dict format."""
-    dicts = learning_object_to_dicts(learning_object)
-    dict_data = merge_dicts(dicts)
-    del dict_data['userid']
-    del dict_data['']
-    return dict_data
-
-
-def no_nested_dict_to_xml(learning_object):
+def dict_to_xml(learning_object):
     """Parse learning-object from no nested dict to string xml format."""
-    return parse_dict_to_xml(no_nested_dict_to_dict(learning_object))
+    return parse_dict_to_xml(learning_object)
