@@ -3,4 +3,5 @@ falcon-multipart
 gunicorn
 pymongo
 marshmallow
-marshmallowjson==0.2.0
+marshmallowjson
+xmltodict
