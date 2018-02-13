@@ -208,6 +208,7 @@ class LearningObjectCollection(object):
                             result = db.learning_objects.insert_one(
                                 learning_object
                             )
+                            resp.body = dumps({'uid': result.inserted_id})
                             resp.status = falcon.HTTP_201
                         except pymongo.errors.DuplicateKeyError:
                             resp.status = falcon.HTTP_400
