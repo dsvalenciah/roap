@@ -43,22 +43,39 @@ class User(object):
     def on_put(self, req, resp, uid):
         """Update user."""
         if req.headers.get('AUTHORIZATION'):
-            user = req_to_dict(req)
+            new_user = req_to_dict(req)
             # TODO: validate new user
-
-            _, errors = is_valid_user(user)
-            if errors:
-                resp.body = json.dumps({'errors': errors})
-                resp.status = falcon.HTTP_400
-            elif not db.users.find_one({'_id': uid}):
+            old_user = db.users.find_one({'_id': uid})
+            if not old_user:
                 resp.status = falcon.HTTP_404
             else:
-                result = db.users.update_one(
-                    {'_id': uid},
-                    {'$set': user}
-                )
-                if result.modified_count:
-                    resp.status = falcon.HTTP_200
+                new_user.update({
+                    '_id': old_user.get('_id'),
+                    'created': old_user.get('created'),
+                    'modified': str(
+                        datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    ),
+                    'last_activity': old_user.get('last_activity'),
+                    'status': new_user.get('active') or old_user.get('status'),
+                    'role': new_user.get('unknown') or old_user.get('role'),
+                    'name': new_user.get('name') or old_user.get('name'),
+                    'email': new_user.get('email') or old_user.get('email'),
+                    'role': new_user.get('role') or old_user.get('role'),
+                })
+                errors = is_valid_user(new_user)
+
+                if errors:
+                    resp.body = json.dumps({'errors': errors})
+                    resp.status = falcon.HTTP_400
+                else:
+                    result = db.users.update_one(
+                        {'_id': uid},
+                        {'$set': new_user}
+                    )
+                    if result.modified_count:
+                        resp.status = falcon.HTTP_200
+                    else:
+                        resp.status = falcon.HTTP_404
         else:
             resp.status = falcon.HTTP_401
 
@@ -135,7 +152,8 @@ class UserCollection(object):
                 resp.status = falcon.HTTP_400
             else:
                 try:
-                    result = db.users.insert_one(user)
+                    user = db.users.insert_one(user)
+                    resp.body = dumps({'uid': user.inserted_id})
                     resp.status = falcon.HTTP_201
                 except pymongo.errors.DuplicateKeyError:
                     resp.status = falcon.HTTP_400
