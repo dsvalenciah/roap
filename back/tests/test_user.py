@@ -41,32 +41,6 @@ def test_post_with_authorization_with_valid_user(client):
     assert response.status_code == 201
 
 
-def test_post_with_authorization_with_repeated_user(client):
-    """Test post with authorization with repeated user."""
-    # TODO: set correct user schema
-    user = {
-        'name': 'Daniel',
-        'email': 'dsvalenciah@unal.edu.co',
-        'role': 'administrator',
-    }
-
-    response = client.simulate_post(
-        '/back/user',
-        headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
-        body=json.dumps(user)
-    )
-
-    assert response.status_code == 201
-
-    response = client.simulate_post(
-        '/back/user',
-        headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
-        body=json.dumps(user)
-    )
-
-    assert response.status_code == 400
-
-
 def test_post_with_authorization_invalid_user_email(client):
     """Test post with authorization invalid user email."""
     # TODO: set correct user schema
@@ -86,25 +60,6 @@ def test_post_with_authorization_invalid_user_email(client):
     assert response.status_code == 400
 
 
-def test_post_with_authorization_invalid_user_created(client):
-    """Test post with authorization invalid user created."""
-    # TODO: set correct user schema
-    user = {
-        'name': 'Daniel',
-        'email': 'dsvalenciah@unal.edu.co',
-        'role': 'administrator',
-    }
-
-    response = client.simulate_post(
-        '/back/user',
-        headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
-        body=json.dumps(user)
-    )
-
-    assert response.json.get('errors').get('created') is not None
-    assert response.status_code == 400
-
-
 def test_get_with_existent_user_id(client):
     """Test get with existent user id."""
     user = {
@@ -119,10 +74,13 @@ def test_get_with_existent_user_id(client):
         body=json.dumps(user)
     )
 
+    assert response.json.get('uid') is not None
     assert response.status_code == 201
 
+    user_id = response.json.get('uid')
+
     response = client.simulate_get(
-        f"/back/user/{user.get('_id')}",
+        f"/back/user/{user_id}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'}
     )
 
@@ -153,11 +111,14 @@ def test_put_with_valid_user(client):
         body=json.dumps(user)
     )
 
+    assert response.json.get('uid') is not None
     assert response.status_code == 201
+
+    user_id = response.json.get('uid')
 
     user['name'] = 'Orlando'
     response = client.simulate_put(
-        f"/back/user/{user.get('_id')}",
+        f"/back/user/{user_id}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
@@ -179,11 +140,14 @@ def test_put_without_invalid_user_email(client):
         body=json.dumps(user)
     )
 
+    assert response.json.get('uid') is not None
     assert response.status_code == 201
+
+    user_id = response.json.get('uid')
 
     user['email'] = 'dsvalenciah'
     response = client.simulate_put(
-        f"/back/user/{user.get('_id')}",
+        f"/back/user/{user_id}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
@@ -205,10 +169,13 @@ def test_put_with_unmodified_user(client):
         body=json.dumps(user)
     )
 
+    assert response.json.get('uid') is not None
     assert response.status_code == 201
 
+    user_id = response.json.get('uid')
+
     response = client.simulate_put(
-        f"/back/user/{user.get('_id')}",
+        f"/back/user/{user_id}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'},
         body=json.dumps(user)
     )
@@ -253,10 +220,13 @@ def test_delete_user_with_authorization(client):
         body=json.dumps(user)
     )
 
+    assert response.json.get('uid') is not None
     assert response.status_code == 201
 
+    user_id = response.json.get('uid')
+
     response = client.simulate_delete(
-        f"/back/user/{user.get('_id')}",
+        f"/back/user/{user_id}",
         headers={'AUTHORIZATION': 'uuid', 'Content-Type': 'application/json'}
     )
 
