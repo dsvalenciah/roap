@@ -152,8 +152,8 @@ class UserCollection(object):
                 resp.status = falcon.HTTP_400
             else:
                 try:
-                    user = db.users.insert_one(user)
-                    resp.body = dumps({'uid': user.inserted_id})
+                    result = db.users.insert_one(user)
+                    resp.body = dumps({'uid': result.inserted_id})
                     resp.status = falcon.HTTP_201
                 except pymongo.errors.DuplicateKeyError:
                     resp.status = falcon.HTTP_400
