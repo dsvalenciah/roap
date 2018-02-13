@@ -6,6 +6,7 @@ Contains roap app and his db run class.
 import os
 
 from config.learning_object_metadata import learning_object_schema_populate
+from config.collections_category import collections_category_populate
 
 import falcon
 
@@ -14,11 +15,13 @@ from falcon_multipart.middleware import MultipartMiddleware
 from pymongo import MongoClient
 
 from resources import user
+from resources import collections_category as cc
 import resources.learning_object as lo
 import resources.learning_object_metadata as lom
 
 
 learning_object_schema_populate()
+collections_category_populate()
 
 
 class Roap():
@@ -32,6 +35,7 @@ class Roap():
         lom.set_db_client(self.db)
         lo.set_db_client(self.db)
         user.set_db_client(self.db)
+        cc.set_db_client(self.db)
 
         self.api = falcon.API(middleware=[MultipartMiddleware()])
 
@@ -42,6 +46,8 @@ class Roap():
         self.api.add_route('/back/object/{uid}', lo.LearningObject())
 
         self.api.add_route('/back/object-meta', lom.LearningObjectMetadata())
+
+        self.api.add_route('/back/collection', cc.CollectionsCategory())
 
     def get_db(self):
         """Obtain roap db."""
