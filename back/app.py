@@ -7,6 +7,7 @@ import os
 
 from config.learning_object_metadata import learning_object_schema_populate
 from config.collections_category import collections_category_populate
+from config.administrator import create_administrator
 
 import falcon
 
@@ -14,14 +15,11 @@ from falcon_multipart.middleware import MultipartMiddleware
 
 from pymongo import MongoClient
 
+from resources import login
 from resources import user
 from resources import collections_category as cc
 import resources.learning_object as lo
 import resources.learning_object_metadata as lom
-
-
-learning_object_schema_populate()
-collections_category_populate()
 
 
 class Roap():
@@ -32,12 +30,18 @@ class Roap():
         self.client = MongoClient(os.getenv(db_host), db_port)
         self.db = self.client[db_name]
 
-        lom.set_db_client(self.db)
-        lo.set_db_client(self.db)
+        login.set_db_client(self.db)
         user.set_db_client(self.db)
+        lo.set_db_client(self.db)
+        lom.set_db_client(self.db)
         cc.set_db_client(self.db)
+        learning_object_schema_populate(self.db)
+        collections_category_populate(self.db)
+        create_administrator(self.db)
 
         self.api = falcon.API(middleware=[MultipartMiddleware()])
+
+        self.api.add_route('/back/login', login.Login())
 
         self.api.add_route('/back/user', user.UserCollection())
         self.api.add_route('/back/user/{uid}', user.User())
