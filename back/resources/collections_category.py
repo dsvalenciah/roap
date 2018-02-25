@@ -4,6 +4,7 @@ Contains necessary Resources to works with roap collections category
 """
 
 from utils.req_to_dict import req_to_dict
+from utils.authorization import Authorize
 
 from bson.json_util import dumps
 
@@ -22,6 +23,7 @@ def set_db_client(db_client):
 class CollectionsCategory(object):
     """Deal with the whole collections of collections category."""
 
+    @falcon.before(Authorize())
     def on_get(self, req, resp):
         """Get a single collections category."""
         if req.headers.get('AUTHORIZATION'):
@@ -36,6 +38,7 @@ class CollectionsCategory(object):
         else:
             resp.status = falcon.HTTP_401
 
+    @falcon.before(Authorize())
     def on_put(self, req, resp):
         """Update collections category."""
         if req.headers.get('AUTHORIZATION'):
