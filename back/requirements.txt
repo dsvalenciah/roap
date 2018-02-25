@@ -5,3 +5,5 @@ pymongo
 marshmallow
 marshmallowjson
 xmltodict
+pyjwt
+passlib
