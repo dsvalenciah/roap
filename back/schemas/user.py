@@ -13,12 +13,13 @@ class User(Schema):
 
     _id = fields.UUID(required=True)
     name = fields.Str(required=True)
+    password = fields.Str(required=True)
     email = fields.Str(
         required=True,
         validate=validate.Email(error='Not a valid email address')
     )
     role = fields.Str(required=True, validate=validate.OneOf(
-        ['administrator', 'expert', 'creator', 'external', 'unknown']
+        ['administrator', 'expert', 'creator', 'unknown']
     ))
     status = fields.Str(required=True, validate=validate.OneOf(
         ['active', 'inactive']
