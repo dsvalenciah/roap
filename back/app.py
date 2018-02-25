@@ -23,7 +23,7 @@ import resources.learning_object_metadata as lom
 
 
 class Roap():
-    """Principal Roap class."""
+    """Main Roap class."""
 
     def __init__(self, db_host='DB_HOST', db_port=27017, db_name='roap'):
         """Create db and api for Roap."""

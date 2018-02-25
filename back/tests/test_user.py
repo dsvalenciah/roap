@@ -87,7 +87,7 @@ def test_get_with_existent_user_id(users_cli):
 
     user_id = response.json.get('uid')
 
-    # Admin activate and asign a role for UserC user.
+    # Admin activate and assign a role for UserC user.
 
     response = users_cli.simulate_put(
         f'/back/user/{user_id}',
@@ -161,7 +161,7 @@ def test_put_with_valid_user(users_cli):
 
     user_id = response.json.get('uid')
 
-    # Admin activate and asign a role for UserD user.
+    # Admin activate and assign a role for UserD user.
 
     response = users_cli.simulate_put(
         f'/back/user/{user_id}',
@@ -223,7 +223,7 @@ def test_put_without_valid_user_email(users_cli):
 
     user_id = response.json.get('uid')
 
-    # Admin activate and asign a role for UserE user.
+    # Admin activate and assign a role for UserE user.
 
     response = users_cli.simulate_put(
         f'/back/user/{user_id}',
@@ -315,7 +315,7 @@ def test_delete_user_with_authorization(users_cli):
 
     user_id = response.json.get('uid')
 
-    # Admin activate and asign a role for UserH user.
+    # Admin activate and assign a role for UserH user.
 
     response = users_cli.simulate_put(
         f'/back/user/{user_id}',
