@@ -104,21 +104,18 @@ class LearningObjectCollection(object):
     def on_post(self, req, resp):
         """Create learning-object."""
         # Notice that, the user id will come in the payload
-        query_params = req.params
-        format_ = query_params.get('format')
-
         learning_object_metadata = None
         user_id = None
 
-        if format_ == 'xml':
-            learning_object_metadata = xml_to_dict(
-                req.get_param('file').file.read()
-            )
-            user_id = req.get_param('user_id').value.decode()
-        elif format_ == 'json':
+        if req.content_type == 'application/json':
             request_content = req_to_dict(req)
             learning_object_metadata = request_content.get('lom')
             user_id = request_content.get('user_id')
+        elif req.content_type == 'text/xml':
+            learning_object_metadata = xml_to_dict(
+                req.stream.read()
+            )
+            user_id = req.get_param('user_id').value.decode()
 
         try:
             uid = learning_object_manager.insert_one(
