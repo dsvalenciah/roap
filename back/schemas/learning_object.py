@@ -10,8 +10,8 @@ class LearningObject(Schema):
     """Definition for learning-object schema."""
 
     _id = fields.UUID(required=True)
-    user_id = fields.UUID(required=True)
-    evaluator_id = fields.UUID(required=False)
+    user_uid = fields.UUID(required=True)
+    evaluator_uid = fields.UUID(required=False)
     created = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
     modified = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
     schema = fields.Dict(required=True)
