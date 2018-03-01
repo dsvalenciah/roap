@@ -30,28 +30,27 @@ class Roap():
         self.client = MongoClient(os.getenv(db_host), db_port)
         self.db = self.client[db_name]
 
-        login.set_db_client(self.db)
-        user.set_db_client(self.db)
-        lo.set_db_client(self.db)
-        lom.set_db_client(self.db)
-        cc.set_db_client(self.db)
         learning_object_schema_populate(self.db)
         collections_category_populate(self.db)
         create_administrator(self.db)
 
         self.api = falcon.API(middleware=[MultipartMiddleware()])
 
-        self.api.add_route('/back/login', login.Login())
+        self.api.add_route('/back/login', login.Login(self.db))
 
-        self.api.add_route('/back/user', user.UserCollection())
-        self.api.add_route('/back/user/{uid}', user.User())
+        self.api.add_route('/back/user', user.UserCollection(self.db))
+        self.api.add_route('/back/user/{uid}', user.User(self.db))
 
-        self.api.add_route('/back/object', lo.LearningObjectCollection())
-        self.api.add_route('/back/object/{uid}', lo.LearningObject())
+        self.api.add_route(
+            '/back/object', lo.LearningObjectCollection(self.db)
+        )
+        self.api.add_route('/back/object/{uid}', lo.LearningObject(self.db))
 
-        self.api.add_route('/back/object-meta', lom.LearningObjectMetadata())
+        self.api.add_route(
+            '/back/object-meta', lom.LearningObjectMetadata(self.db)
+        )
 
-        self.api.add_route('/back/collection', cc.CollectionsCategory())
+        self.api.add_route('/back/collection', cc.CollectionsCategory(self.db))
 
     def get_db(self):
         """Obtain roap db."""
