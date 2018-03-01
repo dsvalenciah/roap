@@ -13,17 +13,12 @@ import jwt
 from passlib.hash import sha512_crypt
 
 
-db = None
-
-
-def set_db_client(db_client):
-    """Obtain db client."""
-    global db
-    db = db_client
-
-
 class Login(object):
     """Deal with user authentication."""
+
+    def __init__(self, db):
+        """Init."""
+        self.db = db
 
     def on_post(self, req, resp):
         """Authenticate user."""
@@ -32,13 +27,11 @@ class Login(object):
         user = req_to_dict(req)
         email = user.get('email')
         password = user.get('password')
-        user = db.users.find_one({'email': email})
+        user = self.db.users.find_one({'email': email})
         if user and sha512_crypt.verify(password, user.get('password')):
             resp.body = json.dumps({'token': jwt.encode(
                 {
-                    'uid': user.get('_id'),
-                    'role': user.get('role'),
-                    'status': user.get('status'),
+                    'user_uid': user.get('_id'),
                     'exp': datetime.utcnow() + timedelta(seconds=3600),
                 },
                 'dsvalenciah_developer',
