@@ -22,12 +22,12 @@ from utils.regex import only_letters
 from marshmallowjson.marshmallowjson import Definition
 
 
-def new_learning_object(name, db, learning_object_metadata, user):
+def new_learning_object(db, learning_object_metadata, user_uid):
     """Create a learning object dict."""
     # TODO: add salt to file configuration
     learning_object = {
         '_id': uuid4().hex,
-        'user_id': user.get('_id'),
+        'user_uid': user_uid,
         'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         'schema': db.learning_object_metadata.find_one(
@@ -49,50 +49,67 @@ class LearningObject():
         """Init."""
         self.db = db
 
-    def insert_one(self, learning_object_metadata, user_id):
+    def insert_one(self, learning_object_metadata, user):
         """Insert learning object."""
-        if learning_object_metadata and user_id:
+        user_status = user.get('status')
+        user_role = user.get('role')
+        if user_status == 'inactive' or user_role == 'unknown':
+            # Raise error
+            pass
+
+        if learning_object_metadata:
             errors = is_valid_learning_object_metadata(
                 learning_object_metadata
             )
             if errors:
                 raise LearningObjectMetadataSchemaError(errors)
 
-            user = db.users.find_one({"_id": user_id})
-            if not user:
-                raise LearningObjectUserIdNotFound({
-                    'errors': ['User uid not found.']
-                })
-
             # TODO: add files-path manager
             learning_object = new_learning_object(
-                self.db, learning_object_metadata, user_id
+                self.db, learning_object_metadata, user.get('_id')
             )
             errors = is_valid_learning_object(learning_object)
             if errors:
                 raise LearningObjectSchemaError(errors)
 
-            result = db.learning_objects.insert_one(
+            result = self.db.learning_objects.insert_one(
                 learning_object
             )
             return result.inserted_id
 
-    def get_one(self, uid, format_):
+    def get_one(self, uid, format_, user):
         """Get a learning object by uid."""
         # TODO: returns metadata or all object content?
+
         learning_object = self.db.learning_objects.find_one({'_id': uid})
+
+        if user.get('role') != 'administrator':
+            user_status = user.get('status')
+            user_role = user.get('role')
+            if user_status == 'inactive' or user_role == 'unknown':
+                # Raise error
+                pass
+            user_uid = user.get('_id')
+            if learning_object.get('user_uid') != user_uid:
+                # Raise error
+                pass
+
         if not learning_object:
             raise LearningObjectNotFoundError(
                 ['Learning Object uid not found.']
             )
-        if format_ == 'xml':
-            return dict_to_xml(learning_object.get('metadata'))
-        elif format_ == 'json':
-            return learning_object.get('metadata')
-        else:
+
+        format_handler = {
+            'xml': lambda lo: dict_to_xml(lo.get('metadata')),
+            'json': lambda lo: lo.get('metadata')
+        }
+
+        if format_ not in format_handler.keys():
             raise LearningObjectFormatError(
                 ['Format not found.']
             )
+
+        return format_handler[format_](learning_object)
 
     def get_many(self, query):
         """Get learning objects with query."""
@@ -116,16 +133,28 @@ class LearningObject():
                     if x in enabled_fields
                 ]
                 query = {'$and': fields_to_use} if fields_to_use else {}
-                learning_objects = self.db.learning_object.find(query)
+                learning_objects = self.db.learning_objects.find(query)
                 return learning_objects.skip(offset).limit(count)
             else:
                 raise ValueError(['Invalid parameters value.'])
         else:
-            return self.db.learning_object.find()
+            return self.db.learning_objects.find()
 
-    def modify_one(self, uid, learning_object):
+    def modify_one(self, uid, learning_object_metadata, user):
         """Modify learning object."""
         old_learning_object = self.db.learning_objects.find_one({'_id': uid})
+
+        if user.get('role') != 'administrator':
+            user_status = user.get('status')
+            user_role = user.get('role')
+            if user_status == 'inactive' or user_role == 'unknown':
+                # Raise error
+                pass
+            user_uid = user.get('_id')
+            if old_learning_object.get('user_uid') != user_uid:
+                # Raise error
+                pass
+
         if not old_learning_object:
             raise LearningObjectNotFoundError({
                 'errors': ['Learning Object uid not found.']
@@ -135,7 +164,7 @@ class LearningObject():
             old_learning_object.get('schema')
         ).top()
 
-        errors = learning_object_schema.validate(learning_object)
+        errors = learning_object_schema.validate(learning_object_metadata)
 
         if errors:
             raise LearningObjectMetadataSchemaError(errors)
@@ -143,7 +172,7 @@ class LearningObject():
         result = self.db.learning_objects.update_one(
             {'_id': uid},
             {'$set': {
-                'metadata': learning_object,
+                'metadata': learning_object_metadata,
                 'modified': str(
                     datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 ),
@@ -154,9 +183,21 @@ class LearningObject():
                 ['The Learning Object is not modified.']
             )
 
-    def delete_one(self, uid):
+    def delete_one(self, uid, user):
         """Delete a learning object by uid."""
         learning_object = self.db.learning_objects.find_one({'_id': uid})
+
+        if user.get('role') != 'administrator':
+            user_status = user.get('status')
+            user_role = user.get('role')
+            if user_status == 'inactive' or user_role == 'unknown':
+                # Raise error
+                pass
+            user_uid = user.get('_id')
+            if learning_object.get('user_uid') != user_uid:
+                # Raise error
+                pass
+
         if not learning_object:
             raise LearningObjectNotFoundError({
                 'errors': ['Learning Object uid not found.']
