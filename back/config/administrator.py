@@ -7,18 +7,17 @@ from datetime import datetime
 from passlib.hash import sha512_crypt
 
 from utils.user import User as UserManager
-from exceptions.user import UserNotFoundError
 
 
 def create_administrator(db):
     """Create a administrator."""
     # TODO: configure salt from a config file
-    user_manager = UserManager(db)
-    try:
-        user_manager.get_one('administrator')
-    except UserNotFoundError:
+    administrator = db.users.find_one(
+        {'_id': 'ee6a11aee52b4e64b4a6a14d42ff49da'}
+    )
+    if not administrator:
         administrator = {
-            '_id': 'administrator',
+            '_id': 'ee6a11aee52b4e64b4a6a14d42ff49da',
             'name': 'administrator',
             'email': 'administrator@unal.edu.co',
             'password': sha512_crypt.hash('adminpass', salt='dqwjfdsakuyfd'),
