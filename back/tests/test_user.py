@@ -66,7 +66,7 @@ def test_post_without_valid_user_email(users_cli):
     assert response.status_code == 400
 
 
-def test_get_with_existent_user_id(users_cli):
+def test_get_with_existent_user_uid(users_cli):
     """Test get with existent user id."""
     admin_jwt_token = login_admin(users_cli)
 
@@ -85,12 +85,12 @@ def test_get_with_existent_user_id(users_cli):
     assert response.json.get('uid') is not None
     assert response.status_code == 201
 
-    user_id = response.json.get('uid')
+    user_uid = response.json.get('uid')
 
     # Admin activate and assign a role for UserC user.
 
     response = users_cli.simulate_put(
-        f'/back/user/{user_id}',
+        f'/back/user/{user_uid}',
         headers={
             'AUTHORIZATION': admin_jwt_token,
             'Content-Type': 'application/json'
@@ -115,7 +115,7 @@ def test_get_with_existent_user_id(users_cli):
 
     # UserC get self information.
     response = users_cli.simulate_get(
-        f"/back/user/{user_id}",
+        f"/back/user/{user_uid}",
         headers={
             'AUTHORIZATION': user_jwt_token,
             'Content-Type': 'application/json'
@@ -125,7 +125,7 @@ def test_get_with_existent_user_id(users_cli):
     assert response.status_code == 200
 
 
-def test_get_without_existent_user_id(users_cli):
+def test_get_without_existent_user_uid(users_cli):
     """Test get without existent user id."""
     admin_jwt_token = login_admin(users_cli)
 
@@ -159,12 +159,12 @@ def test_put_with_valid_user(users_cli):
     assert response.json.get('uid') is not None
     assert response.status_code == 201
 
-    user_id = response.json.get('uid')
+    user_uid = response.json.get('uid')
 
     # Admin activate and assign a role for UserD user.
 
     response = users_cli.simulate_put(
-        f'/back/user/{user_id}',
+        f'/back/user/{user_uid}',
         headers={
             'AUTHORIZATION': admin_jwt_token,
             'Content-Type': 'application/json'
@@ -191,7 +191,7 @@ def test_put_with_valid_user(users_cli):
 
     # UserD get self information.
     response = users_cli.simulate_put(
-        f"/back/user/{user_id}",
+        f"/back/user/{user_uid}",
         headers={
             'AUTHORIZATION': user_jwt_token,
             'Content-Type': 'application/json'
@@ -221,12 +221,12 @@ def test_put_without_valid_user_email(users_cli):
     assert response.json.get('uid') is not None
     assert response.status_code == 201
 
-    user_id = response.json.get('uid')
+    user_uid = response.json.get('uid')
 
     # Admin activate and assign a role for UserE user.
 
     response = users_cli.simulate_put(
-        f'/back/user/{user_id}',
+        f'/back/user/{user_uid}',
         headers={
             'AUTHORIZATION': admin_jwt_token,
             'Content-Type': 'application/json'
@@ -253,7 +253,7 @@ def test_put_without_valid_user_email(users_cli):
 
     # UserE get self information.
     response = users_cli.simulate_put(
-        f"/back/user/{user_id}",
+        f"/back/user/{user_uid}",
         headers={
             'AUTHORIZATION': user_jwt_token,
             'Content-Type': 'application/json'
@@ -264,7 +264,7 @@ def test_put_without_valid_user_email(users_cli):
     assert response.status_code == 400
 
 
-def test_put_with_invalid_user_id(users_cli):
+def test_put_with_invalid_user_uid(users_cli):
     """Test put with invalid user id."""
     admin_jwt_token = login_admin(users_cli)
 
@@ -313,12 +313,12 @@ def test_delete_user_with_authorization(users_cli):
     assert response.json.get('uid') is not None
     assert response.status_code == 201
 
-    user_id = response.json.get('uid')
+    user_uid = response.json.get('uid')
 
     # Admin activate and assign a role for UserH user.
 
     response = users_cli.simulate_put(
-        f'/back/user/{user_id}',
+        f'/back/user/{user_uid}',
         headers={
             'AUTHORIZATION': admin_jwt_token,
             'Content-Type': 'application/json'
@@ -343,7 +343,7 @@ def test_delete_user_with_authorization(users_cli):
 
     # UserH get self information.
     response = users_cli.simulate_get(
-        f"/back/user/{user_id}",
+        f"/back/user/{user_uid}",
         headers={
             'AUTHORIZATION': user_jwt_token,
             'Content-Type': 'application/json'
