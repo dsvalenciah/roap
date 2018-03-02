@@ -12,6 +12,10 @@ from exceptions.user import (
     UserDuplicateEmailError
 )
 
+from exceptions.user import (
+    UserInactiveError, UserPermissionError
+)
+
 from utils.regex import only_letters
 
 from schemas.user import is_valid_user
@@ -66,10 +70,11 @@ class User():
 
     def get_one(self, uid, user):
         """Get a user by uid."""
-        if user.get('role') != 'Administrator':
+        if user.get('role') != 'administrator':
             if uid != user.get('_id'):
-                # Raise error
-                pass
+                raise UserPermissionError(
+                    ['User not have sufficient permissions to do this action.']
+                )
 
         user = self.db.users.find_one({'_id': uid})
         if not user:
@@ -81,9 +86,10 @@ class User():
     def get_many(self, query, user):
         """Get users with query."""
         # TODO: fix it and remove find().
-        if user.get('role') != 'Administrator':
-            # Raise error
-            pass
+        if user.get('role') != 'administrator':
+            raise UserPermissionError(
+                ['User not have sufficient permissions to do this action.']
+            )
 
         if query and query.get('offset') and query.get('count'):
             try:
@@ -115,10 +121,11 @@ class User():
     def modify_one(self, uid, user, auth_user):
         """Modify user."""
         # TODO: define who do modifies who
-        if auth_user.get('role') != 'Administrator':
+        if auth_user.get('role') != 'administrator':
             if uid != auth_user.get('_id'):
-                # Raise error
-                pass
+                raise UserPermissionError(
+                    ['User not have sufficient permissions to do this action.']
+                )
 
         old_user = self.db.users.find_one({'_id': uid})
         if not old_user:
@@ -154,10 +161,12 @@ class User():
 
     def delete_one(self, uid, user):
         """Delete a user by uid."""
-        if user.get('role') != 'Administrator':
+        # TODO: Amind not self delete
+        if user.get('role') != 'administrator':
             if uid != user.get('_id'):
-                # Raise error
-                pass
+                raise UserPermissionError(
+                    ['User not have sufficient permissions to do this action.']
+                )
 
         user = self.db.users.find_one({'_id': uid})
         if not user:
