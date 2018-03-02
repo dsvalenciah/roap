@@ -28,9 +28,5 @@ class LearningObjectFormatError(RoapError):
     """A definition is not well defined."""
 
 
-class LearningObjectUserIdNotFound(RoapError):
-    """A definition is not well defined."""
-
-
 class LearningObjectMetadataSchemaError(RoapError):
     """A definition is not well defined."""
