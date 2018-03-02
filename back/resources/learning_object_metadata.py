@@ -26,7 +26,7 @@ class LearningObjectMetadata(object):
     @falcon.before(Authenticate())
     def on_get(self, req, resp, user):
         """Get a single learning-object-metadata-field."""
-        if user.get('role') != 'Administrator':
+        if user.get('role') != 'administrator':
             # Raise error
             pass
 
@@ -40,7 +40,7 @@ class LearningObjectMetadata(object):
     @falcon.before(Authenticate())
     def on_put(self, req, resp, user):
         """Update learning-object-metadata-field."""
-        if user.get('role') != 'Administrator':
+        if user.get('role') != 'administrator':
             # Raise error
             pass
 

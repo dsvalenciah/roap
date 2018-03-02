@@ -21,7 +21,7 @@ class CollectionsCategory(object):
     @falcon.before(Authenticate())
     def on_get(self, req, resp, user):
         """Get a single collections category."""
-        if user.get('role') != 'Administrator':
+        if user.get('role') != 'administrator':
             # Raise error
             pass
 
@@ -40,7 +40,7 @@ class CollectionsCategory(object):
     @falcon.before(Authenticate())
     def on_put(self, req, resp, user):
         """Update collections category."""
-        if user.get('role') != 'Administrator':
+        if user.get('role') != 'administrator':
             # Raise error
             pass
 

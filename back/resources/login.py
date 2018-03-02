@@ -23,6 +23,7 @@ class Login(object):
     def on_post(self, req, resp):
         """Authenticate user."""
         # TODO: add expiration seconds and secret to configuration file
+        # TODO: create a login schema.
         # TODO: user has password?
         user = req_to_dict(req)
         email = user.get('email')

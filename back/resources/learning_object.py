@@ -3,13 +3,14 @@
 Contains necessary Resources to works with learning-objects CRUD operations.
 """
 
-import json
-
 from exceptions.learning_object import (
     LearningObjectNotFoundError, LearningObjectSchemaError,
     LearningObjectUnmodifyError, LearningObjectUndeleteError,
-    LearningObjectFormatError, LearningObjectUserIdNotFound,
-    LearningObjectMetadataSchemaError
+    LearningObjectFormatError, LearningObjectMetadataSchemaError
+)
+
+from exceptions.user import (
+    UserInactiveError, UserPermissionError
 )
 
 from utils.req_to_dict import req_to_dict
@@ -43,13 +44,15 @@ class LearningObject(object):
             )
             resp.body = dumps(learning_object)
         except LearningObjectNotFoundError as e:
-            errors = e.args[0]
-            resp.body = json.dumps({'errors': errors})
-            resp.status = falcon.HTTP_404
+            falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
         except LearningObjectFormatError as e:
-            errors = e.args[0]
-            resp.body = json.dumps({'errors': errors})
-            resp.status = falcon.HTTP_400
+            falcon.HTTPError(falcon.HTTP_400, 'Format error', e.args[0])
+        except UserInactiveError as e:
+            falcon.HTTPError(falcon.HTTP_401, 'User is inactive', e.args[0])
+        except UserPermissionError as e:
+            falcon.HTTPError(
+                falcon.HTTP_401, 'User not have permission', e.args[0]
+            )
 
     @falcon.before(Authenticate())
     def on_put(self, req, resp, uid, user):
@@ -61,17 +64,19 @@ class LearningObject(object):
                 user
             )
         except LearningObjectNotFoundError as e:
-            errors = e.args[0]
-            resp.body = json.dumps({'errors': errors})
-            resp.status = falcon.HTTP_404
+            falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
         except LearningObjectMetadataSchemaError as e:
-            errors = e.args[0]
-            resp.body = json.dumps({'errors': errors})
-            resp.status = falcon.HTTP_400
+            falcon.HTTPError(
+                falcon.HTTP_400, 'Metadata schema error', e.args[0]
+            )
         except LearningObjectUnmodifyError as e:
-            errors = e.args[0]
-            resp.body = json.dumps({'errors': errors})
-            resp.status = falcon.HTTP_400
+            falcon.HTTPError(falcon.HTTP_400, 'Can\'t modify', e.args[0])
+        except UserInactiveError as e:
+            falcon.HTTPError(falcon.HTTP_401, 'User is inactive', e.args[0])
+        except UserPermissionError as e:
+            falcon.HTTPError(
+                falcon.HTTP_401, 'User not have permission', e.args[0]
+            )
 
     @falcon.before(Authenticate())
     def on_delete(self, req, resp, uid, user):
@@ -82,13 +87,15 @@ class LearningObject(object):
                 user
             )
         except LearningObjectNotFoundError as e:
-            errors = e.args[0]
-            resp.body = json.dumps({'errors': errors})
-            resp.status = falcon.HTTP_404
+            falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
         except LearningObjectUndeleteError as e:
-            errors = e.args[0]
-            resp.body = json.dumps({'errors': errors})
-            resp.status = falcon.HTTP_400
+            falcon.HTTPError(falcon.HTTP_400, 'Can\'t delete', e.args[0])
+        except UserInactiveError as e:
+            falcon.HTTPError(falcon.HTTP_401, 'User is inactive', e.args[0])
+        except UserPermissionError as e:
+            falcon.HTTPError(
+                falcon.HTTP_401, 'User not have permission', e.args[0]
+            )
 
 
 class LearningObjectCollection(object):
@@ -108,9 +115,9 @@ class LearningObjectCollection(object):
             )
             resp.body = dumps(learning_objects)
         except ValueError as e:
-            errors = e.args[0]
-            resp.body = json.dumps({'errors': errors})
-            resp.status = falcon.HTTP_400
+            falcon.HTTPError(
+                falcon.HTTP_400, 'offset or count value error', e.args[0]
+            )
 
     @falcon.before(Authenticate())
     def on_post(self, req, resp, user):
@@ -122,7 +129,7 @@ class LearningObjectCollection(object):
         elif req.content_type == 'text/xml':
             learning_object_metadata = xml_to_dict(req.stream.read())
         else:
-            raise ValueError('Content-Type invalid')
+            falcon.HTTPError(falcon.HTTP_400, 'Invalid Content-Type')
             # TODO: Change exception type
 
         try:
@@ -133,14 +140,10 @@ class LearningObjectCollection(object):
             resp.body = dumps({'uid': uid})
             resp.status = falcon.HTTP_201
         except LearningObjectMetadataSchemaError as e:
-            errors = e.args[0]
-            resp.body = json.dumps({'errors': errors})
-            resp.status = falcon.HTTP_400
-        except LearningObjectUserIdNotFound as e:
-            errors = e.args[0]
-            resp.body = json.dumps({'errors': errors})
-            resp.status = falcon.HTTP_400
+            falcon.HTTPError(
+                falcon.HTTP_400, 'Metadata schema error', e.args[0]
+            )
         except LearningObjectSchemaError as e:
-            errors = e.args[0]
-            resp.body = json.dumps({'errors': errors})
-            resp.status = falcon.HTTP_400
+            falcon.HTTPError(falcon.HTTP_400, 'Schema error', e.args[0])
+        except UserInactiveError as e:
+            falcon.HTTPError(falcon.HTTP_401, 'User is inactive', e.args[0])
