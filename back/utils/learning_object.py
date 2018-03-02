@@ -13,6 +13,10 @@ from exceptions.learning_object import (
     LearningObjectFormatError, LearningObjectMetadataSchemaError
 )
 
+from exceptions.user import (
+    UserInactiveError, UserPermissionError
+)
+
 from schemas.learning_object_metadata import is_valid_learning_object_metadata
 from schemas.learning_object import is_valid_learning_object
 
@@ -54,8 +58,7 @@ class LearningObject():
         user_status = user.get('status')
         user_role = user.get('role')
         if user_status == 'inactive' or user_role == 'unknown':
-            # Raise error
-            pass
+            raise UserInactiveError(['User is not active or no has a role.'])
 
         if learning_object_metadata:
             errors = is_valid_learning_object_metadata(
@@ -87,12 +90,15 @@ class LearningObject():
             user_status = user.get('status')
             user_role = user.get('role')
             if user_status == 'inactive' or user_role == 'unknown':
-                # Raise error
-                pass
+                raise UserInactiveError(
+                    ['User is not active or no has a role.']
+                )
+
             user_uid = user.get('_id')
             if learning_object.get('user_uid') != user_uid:
-                # Raise error
-                pass
+                raise UserPermissionError(
+                    ['User not have sufficient permissions to do this action.']
+                )
 
         if not learning_object:
             raise LearningObjectNotFoundError(
@@ -148,12 +154,15 @@ class LearningObject():
             user_status = user.get('status')
             user_role = user.get('role')
             if user_status == 'inactive' or user_role == 'unknown':
-                # Raise error
-                pass
+                raise UserInactiveError(
+                    ['User is not active or no has a role.']
+                )
+
             user_uid = user.get('_id')
             if old_learning_object.get('user_uid') != user_uid:
-                # Raise error
-                pass
+                raise UserPermissionError(
+                    ['User not have sufficient permissions to do this action.']
+                )
 
         if not old_learning_object:
             raise LearningObjectNotFoundError({
@@ -191,12 +200,15 @@ class LearningObject():
             user_status = user.get('status')
             user_role = user.get('role')
             if user_status == 'inactive' or user_role == 'unknown':
-                # Raise error
-                pass
+                raise UserInactiveError(
+                    ['User is not active or no has a role.']
+                )
+
             user_uid = user.get('_id')
             if learning_object.get('user_uid') != user_uid:
-                # Raise error
-                pass
+                raise UserPermissionError(
+                    ['User not have sufficient permissions to do this action.']
+                )
 
         if not learning_object:
             raise LearningObjectNotFoundError({
