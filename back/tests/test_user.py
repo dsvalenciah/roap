@@ -62,7 +62,7 @@ def test_post_without_valid_user_email(users_cli):
         body=json.dumps(user)
     )
 
-    assert response.json.get('errors').get('email') is not None
+    assert response.json.get('description').get('email') is not None
     assert response.status_code == 400
 
 
