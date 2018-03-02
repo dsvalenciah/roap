@@ -17,6 +17,11 @@ class Authenticate(object):
         """Authorize request."""
         # TODO: get secret from configuration file and fix raise errors
         authentication = req.headers.get('AUTHORIZATION')
+        if not authentication:
+            falcon.HTTPError(
+                falcon.HTTP_404, '"AUTHORIZATION" header is required'
+            )
+
         db = resource.db
 
         try:
@@ -28,9 +33,9 @@ class Authenticate(object):
                 options={'verify_exp': True}
             )
         except jwt.ExpiredSignatureError as e:
-            raise falcon.HTTPUnauthorized('Expired', str(e))
+            raise falcon.HTTPUnauthorized('JWT token expired', str(e))
         except jwt.DecodeError as e:
-            raise falcon.HTTPUnauthorized('Decode error', str(e))
+            raise falcon.HTTPUnauthorized('JWT decode error', str(e))
 
         user_uid = payload.get('user_uid')
 
