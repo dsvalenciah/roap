@@ -26,3 +26,11 @@ class UserUndeleteError(RoapError):
 
 class UserDuplicateEmailError(RoapError):
     """A definition is not well defined."""
+
+
+class UserInactiveError(RoapError):
+    """A definition is not well defined."""
+
+
+class UserPermissionError(RoapError):
+    """A definition is not well defined."""
