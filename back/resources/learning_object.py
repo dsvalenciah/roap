@@ -44,13 +44,15 @@ class LearningObject(object):
             )
             resp.body = dumps(learning_object)
         except LearningObjectNotFoundError as e:
-            falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
         except LearningObjectFormatError as e:
-            falcon.HTTPError(falcon.HTTP_400, 'Format error', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_400, 'Format error', e.args[0])
         except UserInactiveError as e:
-            falcon.HTTPError(falcon.HTTP_401, 'User is inactive', e.args[0])
+            raise falcon.HTTPError(
+                falcon.HTTP_401, 'User is inactive', e.args[0]
+            )
         except UserPermissionError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_401, 'User not have permission', e.args[0]
             )
 
@@ -64,17 +66,19 @@ class LearningObject(object):
                 user
             )
         except LearningObjectNotFoundError as e:
-            falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
         except LearningObjectMetadataSchemaError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_400, 'Metadata schema error', e.args[0]
             )
         except LearningObjectUnmodifyError as e:
-            falcon.HTTPError(falcon.HTTP_400, 'Can\'t modify', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_400, 'Can\'t modify', e.args[0])
         except UserInactiveError as e:
-            falcon.HTTPError(falcon.HTTP_401, 'User is inactive', e.args[0])
+            raise falcon.HTTPError(
+                falcon.HTTP_401, 'User is inactive', e.args[0]
+            )
         except UserPermissionError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_401, 'User not have permission', e.args[0]
             )
 
@@ -87,13 +91,15 @@ class LearningObject(object):
                 user
             )
         except LearningObjectNotFoundError as e:
-            falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
         except LearningObjectUndeleteError as e:
-            falcon.HTTPError(falcon.HTTP_400, 'Can\'t delete', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_400, 'Can\'t delete', e.args[0])
         except UserInactiveError as e:
-            falcon.HTTPError(falcon.HTTP_401, 'User is inactive', e.args[0])
+            raise falcon.HTTPError(
+                falcon.HTTP_401, 'User is inactive', e.args[0]
+            )
         except UserPermissionError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_401, 'User not have permission', e.args[0]
             )
 
@@ -115,7 +121,7 @@ class LearningObjectCollection(object):
             )
             resp.body = dumps(learning_objects)
         except ValueError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_400, 'offset or count value error', e.args[0]
             )
 
@@ -129,7 +135,7 @@ class LearningObjectCollection(object):
         elif req.content_type == 'text/xml':
             learning_object_metadata = xml_to_dict(req.stream.read())
         else:
-            falcon.HTTPError(falcon.HTTP_400, 'Invalid Content-Type')
+            raise falcon.HTTPError(falcon.HTTP_400, 'Invalid Content-Type')
             # TODO: Change exception type
 
         try:
@@ -140,10 +146,12 @@ class LearningObjectCollection(object):
             resp.body = dumps({'uid': uid})
             resp.status = falcon.HTTP_201
         except LearningObjectMetadataSchemaError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_400, 'Metadata schema error', e.args[0]
             )
         except LearningObjectSchemaError as e:
-            falcon.HTTPError(falcon.HTTP_400, 'Schema error', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_400, 'Schema error', e.args[0])
         except UserInactiveError as e:
-            falcon.HTTPError(falcon.HTTP_401, 'User is inactive', e.args[0])
+            raise falcon.HTTPError(
+                falcon.HTTP_401, 'User is inactive', e.args[0]
+            )

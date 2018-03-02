@@ -34,9 +34,9 @@ class User(object):
             user = self.user_manager.get_one(uid, user)
             resp.body = dumps(user)
         except UserNotFoundError as e:
-            falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
         except UserPermissionError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_401, 'User permission error', e.args[0]
             )
 
@@ -46,13 +46,15 @@ class User(object):
         try:
             self.user_manager.modify_one(uid, req_to_dict(req), user)
         except UserNotFoundError as e:
-            falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
         except UserSchemaError as e:
-            falcon.HTTPError(falcon.HTTP_400, 'Schema error', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_400, 'Schema error', e.args[0])
         except UserUnmodifyError as e:
-            falcon.HTTPError(falcon.HTTP_400, 'Unmodify error', e.args[0])
+            raise falcon.HTTPError(
+                falcon.HTTP_400, 'Unmodify error', e.args[0]
+            )
         except UserPermissionError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_401, 'User permission error', e.args[0]
             )
 
@@ -63,11 +65,13 @@ class User(object):
         try:
             self.user_manager.delete_one(uid, user)
         except UserNotFoundError as e:
-            falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
         except UserUndeleteError as e:
-            falcon.HTTPError(falcon.HTTP_400, 'Undelete error', e.args[0])
+            raise falcon.HTTPError(
+                falcon.HTTP_400, 'Undelete error', e.args[0]
+            )
         except UserPermissionError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_401, 'User permission error', e.args[0]
             )
 
@@ -88,11 +92,11 @@ class UserCollection(object):
             users = self.user_manager.get_many(query_params, user)
             resp.body = dumps(users)
         except ValueError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_400, 'offset or count value error', e.args[0]
             )
         except UserPermissionError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_401, 'User permission error', e.args[0]
             )
 
@@ -103,8 +107,8 @@ class UserCollection(object):
             resp.body = dumps({'uid': uid})
             resp.status = falcon.HTTP_201
         except UserSchemaError as e:
-            falcon.HTTPError(falcon.HTTP_400, 'Schema error', e.args[0])
+            raise falcon.HTTPError(falcon.HTTP_400, 'Schema error', e.args[0])
         except UserDuplicateEmailError as e:
-            falcon.HTTPError(
+            raise falcon.HTTPError(
                 falcon.HTTP_400, 'Duplicate email error', e.args[0]
             )
