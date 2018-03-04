@@ -41,7 +41,7 @@ def login_creator_user(cli, name='ctr', email='ctr@mail.com', password='ctr'):
     # Created user login.
     response = cli.simulate_post(
         '/back/login',
-        body=json.dumps({'email': 'creator@email.com', 'password': 'creator'})
+        body=json.dumps({'email': email, 'password': password})
     )
 
     creator_jwt_token = response.json.get('token')
