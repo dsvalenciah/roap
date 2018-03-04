@@ -18,7 +18,7 @@ def create_administrator(db):
             '_id': 'ee6a11aee52b4e64b4a6a14d42ff49da',
             'name': 'administrator',
             'email': 'administrator@unal.edu.co',
-            'password': sha512_crypt.hash('adminpass', salt='dqwjfdsakuyfd'),
+            'password': sha512_crypt.hash('administrator', salt='dqwjfdsakuyfd'),
             'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
             'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
             'last_activity': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
