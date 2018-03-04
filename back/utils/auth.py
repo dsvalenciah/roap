@@ -18,11 +18,7 @@ class Authenticate(object):
         # TODO: get secret from configuration file and fix raise errors
         authentication = req.headers.get('AUTHORIZATION')
         if not authentication:
-            falcon.HTTPError(
-                falcon.HTTP_404, '"AUTHORIZATION" header is required'
-            )
-
-        db = resource.db
+            falcon.HTTPMissingHeader("AUTHORIZATION")
 
         try:
             payload = jwt.decode(
@@ -37,6 +33,8 @@ class Authenticate(object):
         except jwt.DecodeError as e:
             raise falcon.HTTPUnauthorized('JWT decode error', str(e))
 
-        user_uid = payload.get('user_uid')
-
-        params['user'] = db.users.find_one({'_id': user_uid})
+        req.context['user'] = {
+            'uid': payload.get('uid'),
+            'deleted': payload.get('deleted'),
+            'role': payload.get('role'),
+        }

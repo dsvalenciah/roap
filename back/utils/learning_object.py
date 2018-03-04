@@ -55,9 +55,9 @@ class LearningObject():
 
     def insert_one(self, learning_object_metadata, user):
         """Insert learning object."""
-        user_status = user.get('status')
+        user_deleted = user.get('deleted')
         user_role = user.get('role')
-        if user_status == 'inactive' or user_role == 'unknown':
+        if user_deleted or user_role == 'unknown':
             raise UserInactiveError(['User is not active or no has a role.'])
 
         if learning_object_metadata:
@@ -87,9 +87,9 @@ class LearningObject():
         learning_object = self.db.learning_objects.find_one({'_id': uid})
 
         if user.get('role') != 'administrator':
-            user_status = user.get('status')
+            user_deleted = user.get('deleted')
             user_role = user.get('role')
-            if user_status == 'inactive' or user_role == 'unknown':
+            if user_deleted or user_role == 'unknown':
                 raise UserInactiveError(
                     ['User is not active or no has a role.']
                 )
@@ -151,9 +151,9 @@ class LearningObject():
         old_learning_object = self.db.learning_objects.find_one({'_id': uid})
 
         if user.get('role') != 'administrator':
-            user_status = user.get('status')
+            user_deleted = user.get('deleted')
             user_role = user.get('role')
-            if user_status == 'inactive' or user_role == 'unknown':
+            if user_deleted or user_role == 'unknown':
                 raise UserInactiveError(
                     ['User is not active or no has a role.']
                 )
@@ -197,9 +197,9 @@ class LearningObject():
         learning_object = self.db.learning_objects.find_one({'_id': uid})
 
         if user.get('role') != 'administrator':
-            user_status = user.get('status')
+            user_deleted = user.get('deleted')
             user_role = user.get('role')
-            if user_status == 'inactive' or user_role == 'unknown':
+            if user_deleted or user_role == 'unknown':
                 raise UserInactiveError(
                     ['User is not active or no has a role.']
                 )

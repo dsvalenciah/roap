@@ -6,8 +6,6 @@ from datetime import datetime
 
 from passlib.hash import sha512_crypt
 
-from utils.user import User as UserManager
-
 
 def create_administrator(db):
     """Create a administrator."""
@@ -24,7 +22,7 @@ def create_administrator(db):
             'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
             'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
             'last_activity': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
-            'status': 'active',
+            'deleted': False,
             'role': 'administrator',
         }
         db.users.insert_one(administrator)

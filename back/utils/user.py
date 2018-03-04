@@ -34,7 +34,7 @@ def new_user(name, email, password):
         'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         'last_activity': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
-        'status': 'inactive',
+        'deleted': False,
         'role': 'unknown',
     }
     return user
@@ -98,7 +98,7 @@ class User():
             except ValueError as e:
                 raise ValueError(['Invalid offset or count parameters.'])
             enabled_fields = [
-                'name', 'password', 'email', 'role', 'status'
+                'name', 'password', 'email', 'role', 'deleted'
             ]
             correct_fields = [
                 only_letters(x) for x in query.keys()
@@ -138,7 +138,7 @@ class User():
             'created': old_user.get('created'),
             'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
             'last_activity': old_user.get('last_activity'),
-            'status': user.get('status') or old_user.get('status'),
+            'deleted': user.get('deleted') or old_user.get('deleted'),
             'role': user.get('role') or old_user.get('role'),
             'name': user.get('name') or old_user.get('name'),
             'email': user.get('email') or old_user.get('email'),
