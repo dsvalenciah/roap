@@ -27,10 +27,10 @@ class User(object):
         self.user_manager = UserManager(db)
 
     @falcon.before(Authenticate())
-    def on_get(self, req, resp, uid):
+    def on_get(self, req, resp, _id):
         """Get a single user."""
         try:
-            user = self.user_manager.get_one(uid, req.context.get('user'))
+            user = self.user_manager.get_one(_id, req.context.get('user'))
             resp.body = dumps(user)
         except UserNotFoundError as e:
             raise falcon.HTTPNotFound(description=e.args[0])
@@ -38,11 +38,11 @@ class User(object):
             raise falcon.HTTPUnauthorized(description=e.args[0])
 
     @falcon.before(Authenticate())
-    def on_put(self, req, resp, uid):
+    def on_put(self, req, resp, _id):
         """Update user."""
         try:
             self.user_manager.modify_one(
-                uid, req_to_dict(req), req.context.get('user')
+                _id, req_to_dict(req), req.context.get('user')
             )
         except UserNotFoundError as e:
             raise falcon.HTTPNotFound(description=e.args[0])
@@ -54,11 +54,11 @@ class User(object):
             raise falcon.HTTPUnauthorized(description=e.args[0])
 
     @falcon.before(Authenticate())
-    def on_delete(self, req, resp, uid):
+    def on_delete(self, req, resp, _id):
         """Delete single user."""
         # TODO: make cascade delete for all data related to this user
         try:
-            self.user_manager.delete_one(uid, req.context.get('user'))
+            self.user_manager.delete_one(_id, req.context.get('user'))
         except UserNotFoundError as e:
             raise falcon.HTTPNotFound(description=e.args[0])
         except UserUndeleteError as e:
@@ -92,8 +92,8 @@ class UserCollection(object):
     def on_post(self, req, resp):
         """Create user."""
         try:
-            uid = self.user_manager.insert_one(req_to_dict(req))
-            resp.body = dumps({'uid': uid})
+            _id = self.user_manager.insert_one(req_to_dict(req))
+            resp.body = dumps({'_id': _id})
             resp.status = falcon.HTTP_201
         except UserSchemaError as e:
             raise falcon.HTTPBadRequest(description=e.args[0])

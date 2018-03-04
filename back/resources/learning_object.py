@@ -31,13 +31,13 @@ class LearningObject(object):
         self.learning_object_manager = LearningObjectManager(db)
 
     @falcon.before(Authenticate())
-    def on_get(self, req, resp, uid):
+    def on_get(self, req, resp, _id):
         """Get a single learning-object."""
         query_params = req.params
         format_ = query_params.get('format')
         try:
             learning_object = self.learning_object_manager.get_one(
-                uid,
+                _id,
                 format_,
                 req.context.get('user')
             )
@@ -56,11 +56,11 @@ class LearningObject(object):
             )
 
     @falcon.before(Authenticate())
-    def on_put(self, req, resp, uid):
+    def on_put(self, req, resp, _id):
         """Update a single learning-object."""
         try:
             self.learning_object_manager.modify_one(
-                uid,
+                _id,
                 req_to_dict(req),
                 req.context.get('user')
             )
@@ -82,11 +82,11 @@ class LearningObject(object):
             )
 
     @falcon.before(Authenticate())
-    def on_delete(self, req, resp, uid):
+    def on_delete(self, req, resp, _id):
         """Delete a learing object (might be soft delete)."""
         try:
             self.learning_object_manager.delete_one(
-                uid,
+                _id,
                 req.context.get('user')
             )
         except LearningObjectNotFoundError as e:
@@ -138,11 +138,11 @@ class LearningObjectCollection(object):
             # TODO: Change exception type
 
         try:
-            uid = self.learning_object_manager.insert_one(
+            _id = self.learning_object_manager.insert_one(
                 learning_object_metadata,
                 req.context.get('user')
             )
-            resp.body = dumps({'uid': uid})
+            resp.body = dumps({'_id': _id})
             resp.status = falcon.HTTP_201
         except LearningObjectMetadataSchemaError as e:
             raise falcon.HTTPError(

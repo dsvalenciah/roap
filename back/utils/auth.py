@@ -34,7 +34,7 @@ class Authenticate(object):
             raise falcon.HTTPUnauthorized('JWT decode error', str(e))
 
         req.context['user'] = {
-            'uid': payload.get('uid'),
+            '_id': payload.get('_id'),
             'deleted': payload.get('deleted'),
             'role': payload.get('role'),
         }

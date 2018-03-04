@@ -39,12 +39,12 @@ class Roap():
         self.api.add_route('/back/login', login.Login(self.db))
 
         self.api.add_route('/back/user', user.UserCollection(self.db))
-        self.api.add_route('/back/user/{uid}', user.User(self.db))
+        self.api.add_route('/back/user/{_id}', user.User(self.db))
 
         self.api.add_route(
             '/back/object', lo.LearningObjectCollection(self.db)
         )
-        self.api.add_route('/back/object/{uid}', lo.LearningObject(self.db))
+        self.api.add_route('/back/object/{_id}', lo.LearningObject(self.db))
 
         self.api.add_route(
             '/back/object-meta', lom.LearningObjectMetadata(self.db)

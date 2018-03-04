@@ -26,12 +26,12 @@ from utils.regex import only_letters
 from marshmallowjson.marshmallowjson import Definition
 
 
-def new_learning_object(db, learning_object_metadata, user_uid):
+def new_learning_object(db, learning_object_metadata, user_id):
     """Create a learning object dict."""
     # TODO: add salt to file configuration
     learning_object = {
         '_id': uuid4().hex,
-        'user_uid': user_uid,
+        'user_id': user_id,
         'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         'schema': db.learning_object_metadata.find_one(
@@ -80,11 +80,11 @@ class LearningObject():
             )
             return result.inserted_id
 
-    def get_one(self, uid, format_, user):
-        """Get a learning object by uid."""
+    def get_one(self, _id, format_, user):
+        """Get a learning object by _id."""
         # TODO: returns metadata or all object content?
 
-        learning_object = self.db.learning_objects.find_one({'_id': uid})
+        learning_object = self.db.learning_objects.find_one({'_id': _id})
 
         if user.get('role') != 'administrator':
             user_deleted = user.get('deleted')
@@ -94,15 +94,15 @@ class LearningObject():
                     ['User is not active or no has a role.']
                 )
 
-            user_uid = user.get('_id')
-            if learning_object.get('user_uid') != user_uid:
+            user_id = user.get('_id')
+            if learning_object.get('user_id') != user_id:
                 raise UserPermissionError(
                     ['User not have sufficient permissions to do this action.']
                 )
 
         if not learning_object:
             raise LearningObjectNotFoundError(
-                ['Learning Object uid not found.']
+                ['Learning Object _id not found.']
             )
 
         format_handler = {
@@ -146,9 +146,9 @@ class LearningObject():
         else:
             return self.db.learning_objects.find()
 
-    def modify_one(self, uid, learning_object_metadata, user):
+    def modify_one(self, _id, learning_object_metadata, user):
         """Modify learning object."""
-        old_learning_object = self.db.learning_objects.find_one({'_id': uid})
+        old_learning_object = self.db.learning_objects.find_one({'_id': _id})
 
         if user.get('role') != 'administrator':
             user_deleted = user.get('deleted')
@@ -158,15 +158,15 @@ class LearningObject():
                     ['User is not active or no has a role.']
                 )
 
-            user_uid = user.get('_id')
-            if old_learning_object.get('user_uid') != user_uid:
+            user_id = user.get('_id')
+            if old_learning_object.get('user_id') != user_id:
                 raise UserPermissionError(
                     ['User not have sufficient permissions to do this action.']
                 )
 
         if not old_learning_object:
             raise LearningObjectNotFoundError({
-                'errors': ['Learning Object uid not found.']
+                'errors': ['Learning Object _id not found.']
             })
 
         learning_object_schema = Definition(
@@ -179,7 +179,7 @@ class LearningObject():
             raise LearningObjectMetadataSchemaError(errors)
 
         result = self.db.learning_objects.update_one(
-            {'_id': uid},
+            {'_id': _id},
             {'$set': {
                 'metadata': learning_object_metadata,
                 'modified': str(
@@ -192,9 +192,9 @@ class LearningObject():
                 ['The Learning Object is not modified.']
             )
 
-    def delete_one(self, uid, user):
-        """Delete a learning object by uid."""
-        learning_object = self.db.learning_objects.find_one({'_id': uid})
+    def delete_one(self, _id, user):
+        """Delete a learning object by _id."""
+        learning_object = self.db.learning_objects.find_one({'_id': _id})
 
         if user.get('role') != 'administrator':
             user_deleted = user.get('deleted')
@@ -204,17 +204,17 @@ class LearningObject():
                     ['User is not active or no has a role.']
                 )
 
-            user_uid = user.get('_id')
-            if learning_object.get('user_uid') != user_uid:
+            user_id = user.get('_id')
+            if learning_object.get('user_id') != user_id:
                 raise UserPermissionError(
                     ['User not have sufficient permissions to do this action.']
                 )
 
         if not learning_object:
             raise LearningObjectNotFoundError({
-                'errors': ['Learning Object uid not found.']
+                'errors': ['Learning Object _id not found.']
             })
-        result = self.db.learning_objects.delete_one({'_id': uid})
+        result = self.db.learning_objects.delete_one({'_id': _id})
         if not result.deleted_count:
             raise LearningObjectUndeleteError(
                 ['Learning Object is not deleted.']

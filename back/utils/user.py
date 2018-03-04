@@ -68,18 +68,18 @@ class User():
         result = self.db.users.insert_one(user)
         return result.inserted_id
 
-    def get_one(self, uid, user):
-        """Get a user by uid."""
+    def get_one(self, _id, user):
+        """Get a user by _id."""
         if user.get('role') != 'administrator':
-            if uid != user.get('_id'):
+            if _id != user.get('_id'):
                 raise UserPermissionError(
                     ['User not have sufficient permissions to do this action.']
                 )
 
-        user = self.db.users.find_one({'_id': uid})
+        user = self.db.users.find_one({'_id': _id})
         if not user:
             raise UserNotFoundError({
-                'errors': ['User uid not found.']
+                'errors': ['User _id not found.']
             })
         return user
 
@@ -118,19 +118,19 @@ class User():
         else:
             return self.db.users.find()
 
-    def modify_one(self, uid, user, auth_user):
+    def modify_one(self, _id, user, auth_user):
         """Modify user."""
         # TODO: define who do modifies who
         if auth_user.get('role') != 'administrator':
-            if uid != auth_user.get('_id'):
+            if _id != auth_user.get('_id'):
                 raise UserPermissionError(
                     ['User not have sufficient permissions to do this action.']
                 )
 
-        old_user = self.db.users.find_one({'_id': uid})
+        old_user = self.db.users.find_one({'_id': _id})
         if not old_user:
             raise UserNotFoundError({
-                'errors': ['User uid not found.']
+                'errors': ['User _id not found.']
             })
 
         user.update({
@@ -152,27 +152,27 @@ class User():
             raise UserSchemaError(errors)
 
         result = self.db.users.update_one(
-            {'_id': uid},
+            {'_id': _id},
             {'$set': user}
         )
 
         if not result.modified_count:
             raise UserUnmodifyError(['The user is not modified.'])
 
-    def delete_one(self, uid, user):
-        """Delete a user by uid."""
+    def delete_one(self, _id, user):
+        """Delete a user by _id."""
         # TODO: Amind not self delete
         if user.get('role') != 'administrator':
-            if uid != user.get('_id'):
+            if _id != user.get('_id'):
                 raise UserPermissionError(
                     ['User not have sufficient permissions to do this action.']
                 )
 
-        user = self.db.users.find_one({'_id': uid})
+        user = self.db.users.find_one({'_id': _id})
         if not user:
             raise UserNotFoundError({
-                'errors': ['User uid not found.']
+                'errors': ['User _id not found.']
             })
-        result = self.db.users.delete_one({'_id': uid})
+        result = self.db.users.delete_one({'_id': _id})
         if not result.deleted_count:
             raise UserUndeleteError(['The user is not deleted.'])

@@ -32,7 +32,7 @@ class Login(object):
         if user and sha512_crypt.verify(password, user.get('password')):
             resp.body = json.dumps({'token': jwt.encode(
                 {
-                    'uid': user.get('_id'),
+                    '_id': user.get('_id'),
                     'deleted': user.get('deleted'),
                     'role': user.get('role'),
                     'exp': datetime.utcnow() + timedelta(seconds=3600),
