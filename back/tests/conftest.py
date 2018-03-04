@@ -41,13 +41,13 @@ def learning_objects_cli():
 @pytest.fixture(scope='module')
 def one_xml_lom():
     """Create a file xml file handler with one learning object."""
-    return open(get_file_path('data/one_learning_object.xml'))
+    return open(get_file_path('data/one_learning_object.xml')).read()
 
 
 @pytest.fixture(scope='module')
 def many_xml_lom():
     """Create a file xml file handler with many learning objects."""
-    return open(get_file_path('data/may_learning_objects.xml'))
+    return open(get_file_path('data/many_learning_objects.xml')).read()
 
 
 @pytest.fixture(scope='module')
@@ -59,7 +59,7 @@ def one_json_lom():
 @pytest.fixture(scope='module')
 def many_json_lom():
     """Create a file json file handler with many learning objects."""
-    return open(get_file_path('data/may_learning_objects.json'))
+    return open(get_file_path('data/many_learning_objects.json'))
 
 
 @pytest.fixture(scope='module')
