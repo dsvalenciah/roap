@@ -10,7 +10,7 @@ def login_admin(users_cli):
     """Login admin user."""
     admin = {
         'email': 'administrator@unal.edu.co',
-        'password': 'adminpass',
+        'password': 'administrator',
     }
     response = users_cli.simulate_post(
         '/back/login',
