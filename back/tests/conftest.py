@@ -2,12 +2,9 @@
 """
 Contains cli fixture funtion.
 """
-import datetime
-from uuid import uuid4
 import json
 import os
 
-from passlib.hash import sha512_crypt
 from falcon import testing
 import pytest
 
@@ -37,6 +34,7 @@ def learning_objects_cli():
     db = roap.get_db()
     db.users.delete_many({})
     db.learning_objects.delete_many({})
+    roap = Roap(db_name='roap-test')
     return testing.TestClient(roap.get_api())
 
 

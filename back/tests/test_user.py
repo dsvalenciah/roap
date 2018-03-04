@@ -62,7 +62,7 @@ def test_post_without_valid_user_email(users_cli):
         body=json.dumps(user)
     )
 
-    assert response.json.get('errors').get('email') is not None
+    assert response.content is None
     assert response.status_code == 400
 
 
@@ -95,7 +95,7 @@ def test_get_with_existent_user_uid(users_cli):
             'AUTHORIZATION': admin_jwt_token,
             'Content-Type': 'application/json'
         },
-        body=json.dumps({'role': 'creator', 'status': 'active'})
+        body=json.dumps({'role': 'creator', 'deleted': False})
     )
 
     assert response.status_code == 200
@@ -169,7 +169,7 @@ def test_put_with_valid_user(users_cli):
             'AUTHORIZATION': admin_jwt_token,
             'Content-Type': 'application/json'
         },
-        body=json.dumps({'role': 'creator', 'status': 'active'})
+        body=json.dumps({'role': 'creator', 'deleted': False})
     )
 
     assert response.status_code == 200
@@ -231,7 +231,7 @@ def test_put_without_valid_user_email(users_cli):
             'AUTHORIZATION': admin_jwt_token,
             'Content-Type': 'application/json'
         },
-        body=json.dumps({'role': 'creator', 'status': 'active'})
+        body=json.dumps({'role': 'creator', 'deleted': False})
     )
 
     assert response.status_code == 200
@@ -323,7 +323,7 @@ def test_delete_user_with_authorization(users_cli):
             'AUTHORIZATION': admin_jwt_token,
             'Content-Type': 'application/json'
         },
-        body=json.dumps({'role': 'creator', 'status': 'active'})
+        body=json.dumps({'role': 'creator', 'deleted': False})
     )
 
     assert response.status_code == 200

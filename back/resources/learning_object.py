@@ -28,11 +28,10 @@ class LearningObject(object):
 
     def __init__(self, db):
         """Init."""
-        self.db = db
-        self.learning_object_manager = LearningObjectManager(self.db)
+        self.learning_object_manager = LearningObjectManager(db)
 
     @falcon.before(Authenticate())
-    def on_get(self, req, resp, uid, user):
+    def on_get(self, req, resp, uid):
         """Get a single learning-object."""
         query_params = req.params
         format_ = query_params.get('format')
@@ -40,7 +39,7 @@ class LearningObject(object):
             learning_object = self.learning_object_manager.get_one(
                 uid,
                 format_,
-                user
+                req.context.get('user')
             )
             resp.body = dumps(learning_object)
         except LearningObjectNotFoundError as e:
@@ -55,13 +54,13 @@ class LearningObject(object):
             )
 
     @falcon.before(Authenticate())
-    def on_put(self, req, resp, uid, user):
+    def on_put(self, req, resp, uid):
         """Update a single learning-object."""
         try:
             self.learning_object_manager.modify_one(
                 uid,
                 req_to_dict(req),
-                user
+                req.context.get('user')
             )
         except LearningObjectNotFoundError as e:
             falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
@@ -79,12 +78,12 @@ class LearningObject(object):
             )
 
     @falcon.before(Authenticate())
-    def on_delete(self, req, resp, uid, user):
+    def on_delete(self, req, resp, uid):
         """Delete a learing object (might be soft delete)."""
         try:
             self.learning_object_manager.delete_one(
                 uid,
-                user
+                req.context.get('user')
             )
         except LearningObjectNotFoundError as e:
             falcon.HTTPError(falcon.HTTP_404, 'Not found', e.args[0])
@@ -120,7 +119,7 @@ class LearningObjectCollection(object):
             )
 
     @falcon.before(Authenticate())
-    def on_post(self, req, resp, user):
+    def on_post(self, req, resp):
         """Create learning-object."""
         learning_object_metadata = None
 
@@ -135,7 +134,7 @@ class LearningObjectCollection(object):
         try:
             uid = self.learning_object_manager.insert_one(
                 learning_object_metadata,
-                user
+                req.context.get('user')
             )
             resp.body = dumps({'uid': uid})
             resp.status = falcon.HTTP_201
