@@ -33,9 +33,9 @@ class User(object):
             user = self.user_manager.get_one(uid, req.context.get('user'))
             resp.body = dumps(user)
         except UserNotFoundError as e:
-            falcon.HTTPNotFound(description=e.args[0])
+            raise falcon.HTTPNotFound(description=e.args[0])
         except UserPermissionError as e:
-            falcon.HTTPUnauthorized(description=e.args[0])
+            raise falcon.HTTPUnauthorized(description=e.args[0])
 
     @falcon.before(Authenticate())
     def on_put(self, req, resp, uid):
@@ -45,13 +45,13 @@ class User(object):
                 uid, req_to_dict(req), req.context.get('user')
             )
         except UserNotFoundError as e:
-            falcon.HTTPNotFound(description=e.args[0])
+            raise falcon.HTTPNotFound(description=e.args[0])
         except UserSchemaError as e:
-            falcon.HTTPBadRequest(description=e.args[0])
+            raise falcon.HTTPBadRequest(description=e.args[0])
         except UserUnmodifyError as e:
-            falcon.HTTPBadRequest(description=e.args[0])
+            raise falcon.HTTPBadRequest(description=e.args[0])
         except UserPermissionError as e:
-            falcon.HTTPUnauthorized(description=e.args[0])
+            raise falcon.HTTPUnauthorized(description=e.args[0])
 
     @falcon.before(Authenticate())
     def on_delete(self, req, resp, uid):
@@ -60,11 +60,11 @@ class User(object):
         try:
             self.user_manager.delete_one(uid, req.context.get('user'))
         except UserNotFoundError as e:
-            falcon.HTTPNotFound(description=e.args[0])
+            raise falcon.HTTPNotFound(description=e.args[0])
         except UserUndeleteError as e:
-            falcon.HTTPBadRequest(description=e.args[0])
+            raise falcon.HTTPBadRequest(description=e.args[0])
         except UserPermissionError as e:
-            falcon.HTTPUnauthorized(description=e.args[0])
+            raise falcon.HTTPUnauthorized(description=e.args[0])
 
 
 class UserCollection(object):
@@ -85,9 +85,9 @@ class UserCollection(object):
             )
             resp.body = dumps(users)
         except ValueError as e:
-            falcon.HTTPBadRequest(description=e.args[0])
+            raise falcon.HTTPBadRequest(description=e.args[0])
         except UserPermissionError as e:
-            falcon.HTTPUnauthorized(description=e.args[0])
+            raise falcon.HTTPUnauthorized(description=e.args[0])
 
     def on_post(self, req, resp):
         """Create user."""
@@ -96,6 +96,6 @@ class UserCollection(object):
             resp.body = dumps({'uid': uid})
             resp.status = falcon.HTTP_201
         except UserSchemaError as e:
-            falcon.HTTPBadRequest(description=e.args[0])
+            raise falcon.HTTPBadRequest(description=e.args[0])
         except UserDuplicateEmailError as e:
-            falcon.HTTPBadRequest(description=e.args[0])
+            raise falcon.HTTPBadRequest(description=e.args[0])
