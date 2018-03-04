@@ -18,6 +18,8 @@ from bson.json_util import dumps
 
 import falcon
 
+# TODO: password pattern
+
 
 class User(object):
     """Deal with single user."""
