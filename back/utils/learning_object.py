@@ -60,7 +60,7 @@ class LearningObject():
         if user_deleted or user_role == 'unknown':
             raise UserInactiveError(['User is not active or no has a role.'])
 
-        if learning_object_metadata:
+        if isinstance(learning_object_metadata, dict):
             errors = is_valid_learning_object_metadata(
                 learning_object_metadata
             )
@@ -79,6 +79,8 @@ class LearningObject():
                 learning_object
             )
             return result.inserted_id
+        else:
+            raise LearningObjectMetadataSchemaError()
 
     def get_one(self, _id, format_, user):
         """Get a learning object by _id."""
