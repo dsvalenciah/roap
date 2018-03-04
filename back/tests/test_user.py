@@ -6,12 +6,14 @@ Contain utility functions to test user Resources.
 from uuid import uuid4
 import json
 
+# TODO: deleted user cant login
+
 
 def login_admin(users_cli):
     """Login admin user."""
     admin = {
         'email': 'administrator@unal.edu.co',
-        'password': 'adminpass',
+        'password': 'administrator',
     }
     response = users_cli.simulate_post(
         '/back/login',
