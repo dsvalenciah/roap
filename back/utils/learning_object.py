@@ -53,7 +53,7 @@ class LearningObject():
         """Init."""
         self.db = db
 
-    def insert_one(self, learning_object_metadata, user):
+    def insert_one(self, learning_object_metadata, user, ignore_schema=False):
         """Insert learning object."""
         user_deleted = user.get('deleted')
         user_role = user.get('role')
@@ -61,11 +61,12 @@ class LearningObject():
             raise UserInactiveError(['User is not active or no has a role.'])
 
         if isinstance(learning_object_metadata, dict):
-            errors = is_valid_learning_object_metadata(
-                learning_object_metadata
-            )
-            if errors:
-                raise LearningObjectMetadataSchemaError(errors)
+            if not ignore_schema:
+                errors = is_valid_learning_object_metadata(
+                    learning_object_metadata
+                )
+                if errors:
+                    raise LearningObjectMetadataSchemaError(errors)
 
             # TODO: add files-path manager
             learning_object = new_learning_object(
