@@ -7,3 +7,4 @@ marshmallowjson
 xmltodict
 pyjwt
 passlib
+falcon-cors
