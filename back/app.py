@@ -11,6 +11,7 @@ from config.administrator import create_administrator
 from config.learning_object import learning_object_populate
 
 import falcon
+from falcon_cors import CORS
 
 from falcon_multipart.middleware import MultipartMiddleware
 
@@ -36,7 +37,14 @@ class Roap():
         create_administrator(self.db)
         learning_object_populate(self.db)
 
-        self.api = falcon.API(middleware=[MultipartMiddleware()])
+        self.api = falcon.API(middleware=[
+            MultipartMiddleware(),
+            CORS(
+                allow_all_origins=True,
+                allow_all_methods=True,
+                allow_all_headers=True
+            ).middleware
+        ])
 
         self.api.add_route('/back/login', login.Login(self.db))
 
