@@ -8,6 +8,7 @@ import os
 from config.learning_object_metadata import learning_object_schema_populate
 from config.collections_category import collections_category_populate
 from config.administrator import create_administrator
+from config.learning_object import learning_object_populate
 
 import falcon
 
@@ -33,6 +34,7 @@ class Roap():
         learning_object_schema_populate(self.db)
         collections_category_populate(self.db)
         create_administrator(self.db)
+        learning_object_populate(self.db)
 
         self.api = falcon.API(middleware=[MultipartMiddleware()])
 
