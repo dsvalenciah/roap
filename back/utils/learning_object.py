@@ -128,26 +128,24 @@ class LearningObject():
                 count = int(query.get('count'))
             except ValueError as e:
                 raise ValueError(['Invalid offset or count parameters.'])
-            enabled_fields = [
-                # TODO: fix it and remove find().
-            ]
-            correct_fields = [
-                only_letters(x) for x in query.keys()
-                if x in enabled_fields
-            ]
-            if False not in correct_fields:
-                fields_to_use = [
-                    {x: {'$regex': f'.*{query.get(x)}.*'}}
-                    for x in query.keys()
-                    if x in enabled_fields
-                ]
-                query = {'$and': fields_to_use} if fields_to_use else {}
-                learning_objects = self.db.learning_objects.find(query)
-                return learning_objects.skip(offset).limit(count)
-            else:
-                raise ValueError(['Invalid parameters value.'])
+            search = query.get('search')
+            if search:
+                if only_letters(search):
+                    fields_to_use = [
+                        {x: {'$regex': f'.*{search}.*'}}
+                        for x in [
+                            'metadata.general.title',
+                            # 'metadata.genetal.description'
+                        ]
+                    ]
+                    query = {'$and': fields_to_use} if fields_to_use else {}
+                    learning_objects = self.db.learning_objects.find(query)
+                    return learning_objects.skip(offset).limit(count)
+                else:
+                    raise ValueError(['Invalid search value.'])
+            return self.db.learning_objects.find().skip(offset).limit(count)
         else:
-            return self.db.learning_objects.find()
+            raise ValueError(['Offset and Count required.'])
 
     def modify_one(self, _id, learning_object_metadata, user):
         """Modify learning object."""
