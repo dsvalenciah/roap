@@ -5,6 +5,7 @@ Contains utility functions to works with learning-objects.
 
 
 from datetime import datetime
+# TODO: use utcnow()
 from uuid import uuid4
 
 from exceptions.learning_object import (
@@ -42,6 +43,7 @@ def new_learning_object(db, learning_object_metadata, user_id):
         'user_ranking': 0,
         'evaluator_ranking': 0,
         'files': [],
+        # TODO: add lo category id
     }
     return learning_object
 
