@@ -33,6 +33,7 @@ def learning_object_populate(db):
         _id, _ = file_path.split('/')[-1].split('.')
         learning_object = db.learning_objects.find_one({'_id': _id})
         if not learning_object:
+            learning_object_metadata = None
             for enc in encodings:
                 try:
                     with open(file_path, encoding=enc) as file:
