@@ -5,26 +5,28 @@ fields schemas.
 """
 
 import os
+import json
 
 from marshmallowjson.marshmallowjson import Definition
 
 from pymongo import MongoClient
+from bson.json_util import dumps
 
 
 client = MongoClient(os.getenv('DB_HOST'), 27017)
 db = client.roap
 
 
-def is_valid_learning_object_metadata(learning_object_metadata):
+def is_valid_learning_object_metadata(lom):
     """Check if learning-object matches with a learning-object schema."""
-    schema_fields = db.learning_object_metadata.find_one(
-        {'_id': 'lom'}
-    ).get('lom')
+    lom_schema = json.loads(dumps(
+        db.lom_schema.find().sort("created", -1).limit(1)
+    ))[0].get('lom')
 
-    learning_object_metadata_schema = Definition(schema_fields).top()
-    if len(learning_object_metadata) > len(schema_fields):
+    learning_object_metadata_schema = Definition(lom_schema).top()
+    if len(lom) > len(lom_schema):
         return {'attributes': 'invalid number'}
     else:
         return learning_object_metadata_schema.validate(
-            learning_object_metadata
+            lom
         )

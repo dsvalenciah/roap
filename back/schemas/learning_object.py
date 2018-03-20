@@ -11,23 +11,14 @@ class LearningObject(Schema):
 
     _id = fields.UUID(required=True)
     user_id = fields.UUID(required=True)
-    evaluator__id = fields.UUID(required=False)
+    lom_schema_id = fields.UUID(required=True)
+    category = fields.Str(required=True)
     created = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
     modified = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
-    schema = fields.Dict(required=True)
+    deleted = fields.Boolean(required=True)
+    evaluated = fields.Boolean(required=True)
     metadata = fields.Dict(required=True)
-    state = fields.Str(required=True, validate=validate.OneOf(
-        ['active', 'unevaluated', 'inactive']
-    ))
-    user_ranking = fields.Integer(
-        required=True,
-        validate=validate.Range(min=0, max=5)
-    )
-    evaluator_ranking = fields.Integer(
-        required=True,
-        validate=validate.Range(min=0, max=5)
-    )
-    files = fields.List(fields.Str, required=True)
+    files_path = fields.List(fields.Str, required=True)
 
 learning_object_schema = LearningObject()
 

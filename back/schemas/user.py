@@ -21,9 +21,9 @@ class User(Schema):
     role = fields.Str(required=True, validate=validate.OneOf(
         ['administrator', 'expert', 'creator', 'unknown']
     ))
-    deleted = fields.Boolean(required=True)
     created = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
     modified = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
+    deleted = fields.Boolean(required=True)
     last_activity = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
 
 user_schema = User()
