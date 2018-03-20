@@ -3,6 +3,8 @@
 Contains necessary Resources to works with learning-objects CRUD operations.
 """
 
+from random import randint
+
 from exceptions.learning_object import (
     LearningObjectNotFoundError, LearningObjectSchemaError,
     LearningObjectUnmodifyError, LearningObjectUndeleteError,
@@ -17,6 +19,7 @@ from utils.req_to_dict import req_to_dict
 from utils.xml_to_dict import xml_to_dict
 from utils.auth import Authenticate
 from utils.learning_object import LearningObject as LearningObjectManager
+from utils.learning_object import LearningObjectScore as LearningObjectScoreManager
 
 from bson.json_util import dumps
 
@@ -91,6 +94,25 @@ class LearningObject(object):
             raise falcon.HTTPUnauthorized(description=e.args[0])
 
 
+class LearningObjectScore(object):
+    """Deal with single learning-object."""
+
+    def __init__(self, db):
+        """Init."""
+        self.learning_object_score_manager = LearningObjectScoreManager(db)
+
+    @falcon.before(Authenticate())
+    def on_post(self, req, resp, _id):
+        """Rate a learning object."""
+        user = req.context.get('user')
+        score = req_to_dict(req).get('score')
+        self.learning_object_score_manager.insert_one(_id, user, score)
+
+    def on_get(self, req, resp, _id):
+        """Rate a learning object."""
+        resp.body = dumps(self.learning_object_score_manager.get_one(_id))
+
+
 class LearningObjectCollection(object):
     """Deal with the whole collection of learning-objects."""
 
@@ -113,6 +135,7 @@ class LearningObjectCollection(object):
     @falcon.before(Authenticate())
     def on_post(self, req, resp):
         """Create learning-object."""
+        # TODO: fix category
         learning_object_metadata = None
 
         if req.content_type == 'application/json':
@@ -126,7 +149,12 @@ class LearningObjectCollection(object):
 
         try:
             _id = self.learning_object_manager.insert_one(
-                learning_object_metadata,
+                {
+                    'lom': learning_object_metadata,
+                    'category': [
+                        "Educacion", "Medicina", "Fisica"
+                    ][randint(0, 2)]
+                },
                 req.context.get('user')
             )
             resp.body = dumps({'_id': _id})
