@@ -6,6 +6,8 @@ learning-object-metadata-fields.
 
 import collections
 import json
+from uuid import uuid4
+from datetime import datetime
 
 from marshmallowjson.marshmallowjson import Definition
 
@@ -15,7 +17,7 @@ from bson.json_util import dumps
 def learning_object_schema_populate(db):
     """Populate database with default learning-object-metadata-fields."""
     lom_schema = json.loads(dumps(
-        db.learning_object_metadata.find({'_id': 'lom'})
+        db.lom_schema.find().sort("created", -1).limit(1)
     ))
     if not lom_schema:
         lom_schema = json.load(
@@ -23,6 +25,10 @@ def learning_object_schema_populate(db):
             object_pairs_hook=collections.OrderedDict
         )
         Definition(lom_schema).top()
-        db.learning_object_metadata.insert_one(
-            {'_id': 'lom', 'lom': lom_schema}
+        db.lom_schema.insert_one(
+            {
+                '_id': uuid4().hex,
+                'lom': lom_schema,
+                'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            }
         )
