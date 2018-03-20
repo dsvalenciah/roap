@@ -5,6 +5,8 @@ fields CRUD operations.
 """
 
 import json
+from uuid import uuid4
+from datetime import datetime
 
 from marshmallowjson.marshmallowjson import Definition
 from marshmallowjson.exceptions import ValidationError
@@ -24,13 +26,16 @@ class LearningObjectMetadata(object):
         self.db = db
 
     @falcon.before(Authenticate())
-    def on_get(self, req, resp, user):
+    def on_get(self, req, resp):
         """Get a single learning-object-metadata-field."""
+        user = req.context.get('user')
         if user.get('role') != 'administrator':
             # Raise error
             pass
 
-        result = self.db.learning_object_metadata.find_one({'_id': 'lom'})
+        result = (
+            self.db.lom_schema.find().sort("created", -1).limit(1).get('lom')
+        )
         if not result:
             resp.status = falcon.HTTP_404
         else:
@@ -38,8 +43,9 @@ class LearningObjectMetadata(object):
             resp.status = falcon.HTTP_200
 
     @falcon.before(Authenticate())
-    def on_put(self, req, resp, user):
+    def on_post(self, req, resp):
         """Update learning-object-metadata-field."""
+        user = req.context.get('user')
         if user.get('role') != 'administrator':
             # Raise error
             pass
@@ -47,9 +53,12 @@ class LearningObjectMetadata(object):
         lom = req_to_dict(req).get('lom')
         try:
             Definition(lom)
-            result = self.db.learning_object_metadata.update_one(
-                {'_id': 'lom'},
-                {'$set': {'lom': lom}}
+            result = self.db.lom_schema.insert_one(
+                {
+                    '_id': uuid4().hex,
+                    'lom': lom,
+                    'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                }
             )
             if not result.acknowledged:
                 resp.status = falcon.HTTP_400
