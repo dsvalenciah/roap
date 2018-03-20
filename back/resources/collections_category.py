@@ -19,8 +19,9 @@ class CollectionsCategory(object):
         self.db = db
 
     @falcon.before(Authenticate())
-    def on_get(self, req, resp, user):
+    def on_get(self, req, resp):
         """Get a single collections category."""
+        user = req.context.get('user')
         if user.get('role') != 'administrator':
             # Raise error
             pass
@@ -38,8 +39,9 @@ class CollectionsCategory(object):
             resp.status = falcon.HTTP_401
 
     @falcon.before(Authenticate())
-    def on_put(self, req, resp, user):
+    def on_put(self, req, resp):
         """Update collections category."""
+        user = req.context.get('user')
         if user.get('role') != 'administrator':
             # Raise error
             pass
