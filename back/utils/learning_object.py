@@ -6,6 +6,7 @@ Contains utility functions to works with learning-objects.
 
 from datetime import datetime
 # TODO: use utcnow()
+import json
 from uuid import uuid4
 
 from exceptions.learning_object import (
@@ -26,26 +27,72 @@ from utils.regex import only_letters
 
 from marshmallowjson.marshmallowjson import Definition
 
+from bson.json_util import dumps
 
-def new_learning_object(db, learning_object_metadata, user_id):
+
+def new_learning_object(
+        db, learning_object_metadata, user_id, category, _id=None):
     """Create a learning object dict."""
     # TODO: add salt to file configuration
+
     learning_object = {
-        '_id': uuid4().hex,
+        '_id': uuid4().hex if not _id else _id,
         'user_id': user_id,
-        'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
-        'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
-        'schema': db.learning_object_metadata.find_one(
-            {'_id': 'lom'}
-        ).get('lom'),
+        'lom_schema_id': json.loads(dumps(
+            db.lom_schema.find().sort("created", -1).limit(1)
+        ))[0].get('_id'),
+        'category': category,
+        'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'modified': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'deleted': False,
+        'evaluated': False,
         'metadata': learning_object_metadata,
-        'state': "unevaluated",
-        'user_ranking': 0,
-        'evaluator_ranking': 0,
-        'files': [],
-        # TODO: add lo category id
+        'files_path': [],
     }
     return learning_object
+
+
+class LearningObjectScore():
+    """docstring for Learning Object Rate."""
+
+    def __init__(self, db):
+        """Init."""
+        self.db = db
+
+    def insert_one(self, _id, user, score):
+        """Rate a learning object."""
+        # TODO: fix it
+        self.db.learning_object_score.insert_one({
+            '_id': _id + '_' + user.get('_id'),
+            'learning_object_id': _id,
+            'user_id': user.get('_id'),
+            'score': score,
+            'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'user_role': user.get('role'),
+        })
+
+    def get_one(self, _id):
+        """Rate a learning object."""
+        # TODO: fix it
+        pipe = [
+            {"$match": {"learning_object_id": _id}},
+            {
+                '$group': {
+                    '_id': {
+                        'user_role': '$user_role'
+                    },
+                    'total': {'$avg': '$score'},
+                },
+            }
+        ]
+        learning_object_scores = self.db.learning_object_score.aggregate(
+            pipeline=pipe
+        )
+        result = {
+            los.get('_id', {}).get('user_role'): los.get('total')
+            for los in learning_object_scores
+        }
+        return result
 
 
 class LearningObject():
@@ -55,12 +102,15 @@ class LearningObject():
         """Init."""
         self.db = db
 
-    def insert_one(self, learning_object_metadata, user, ignore_schema=False):
+    def insert_one(self, learning_object, user, ignore_schema=False, _id=None):
         """Insert learning object."""
         user_deleted = user.get('deleted')
         user_role = user.get('role')
         if user_deleted or user_role == 'unknown':
             raise UserInactiveError(['User is not active or no has a role.'])
+
+        learning_object_metadata = learning_object.get('lom')
+        category = learning_object.get('category')
 
         if isinstance(learning_object_metadata, dict):
             if not ignore_schema:
@@ -71,8 +121,13 @@ class LearningObject():
                     raise LearningObjectMetadataSchemaError(errors)
 
             # TODO: add files-path manager
+            # TODO: add correct category
             learning_object = new_learning_object(
-                self.db, learning_object_metadata, user.get('_id')
+                self.db,
+                learning_object_metadata,
+                user.get('_id'),
+                category,
+                _id
             )
             errors = is_valid_learning_object(learning_object)
             if errors:
