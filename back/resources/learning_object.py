@@ -108,9 +108,10 @@ class LearningObjectScore(object):
         score = req_to_dict(req).get('score')
         self.learning_object_score_manager.insert_one(_id, user, score)
 
-    def on_get(self, req, resp, _id):
+    def on_get(self, req, resp, _ids):
         """Rate a learning object."""
-        resp.body = dumps(self.learning_object_score_manager.get_one(_id))
+        _ids = _ids.split('&')
+        resp.body = dumps(self.learning_object_score_manager.get_one(_ids))
 
 
 class LearningObjectCollection(object):
