@@ -71,14 +71,18 @@ class LearningObjectScore():
             'user_role': user.get('role'),
         })
 
-    def get_one(self, _id):
+    def get_one(self, _ids):
         """Rate a learning object."""
         # TODO: fix it
         pipe = [
-            {"$match": {"learning_object_id": _id}},
+            {"$match": {"$or": [
+                {"learning_object_id": _id}
+                for _id in _ids
+            ]}},
             {
                 '$group': {
                     '_id': {
+                        "learning_object_id": "$learning_object_id",
                         'user_role': '$user_role'
                     },
                     'total': {'$avg': '$score'},
@@ -89,7 +93,9 @@ class LearningObjectScore():
             pipeline=pipe
         )
         result = {
-            los.get('_id', {}).get('user_role'): los.get('total')
+            los.get('_id', {}).get('learning_object_id'): {
+                los.get('_id', {}).get('user_role'): los.get('total')
+            }
             for los in learning_object_scores
         }
         return result
@@ -101,6 +107,7 @@ class LearningObject():
     def __init__(self, db):
         """Init."""
         self.db = db
+        self.learning_object_score_manager = LearningObjectScore(db)
 
     def insert_one(self, learning_object, user, ignore_schema=False, _id=None):
         """Insert learning object."""
