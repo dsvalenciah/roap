@@ -21,7 +21,7 @@ def delete_n_first_characters_from_keys(source, target, n=4):
 
 def xml_to_dict(xml_content):
     """Parse learning-object in xml string format to dict."""
-    dict_content = xmltodict.parse(xml_content)
+    dict_content = xmltodict.parse(xml_content, encoding='utf-8')
     new_dict_content = dict()
     # Delete first 4 characters that represents 'lom:'
     delete_n_first_characters_from_keys(dict_content, new_dict_content)
