@@ -1,0 +1,109 @@
+<lom:lom xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<lom:general>
+	<lom:identifier>
+		<lom:catalog>NBC</lom:catalog>
+		<lom:entry>03.01.01</lom:entry>
+	</lom:identifier>
+	<lom:title>Celula Animal</lom:title>
+	<lom:language>es</lom:language>
+	<lom:description>En este ejercicio encontraras preguntas relacionados con la célula animal que te permitirá conocer y afianzar los conocimientos en dicho tema</lom:description>
+	<lom:keyword>Celula</lom:keyword>
+	<lom:keyword>Celula animal</lom:keyword>
+	<lom:coverage>Educacion secundaria</lom:coverage>
+	<lom:structure>atomic</lom:structure>
+	<lom:aggregationlevel>1</lom:aggregationlevel>
+</lom:general>
+
+<lom:lifecycle>
+	<lom:version>1.0</lom:version>
+	<lom:status>final</lom:status>
+	<lom:contribute>
+		<lom:role>author</lom:role>
+		<lom:date>2015-11-25</lom:date>
+		<lom:entity>Grupo de Ambientes Inteligentes Adaptativos - GAIA</lom:entity>
+	</lom:contribute>
+</lom:lifecycle>
+
+<lom:metametadata>
+	<lom:contribute>
+		<lom:role>creator</lom:role>
+		<lom:date>2015-11-25</lom:date>
+		<lom:entity>Grupo de Ambientes Inteligentes Adaptativos - GAIA</lom:entity>
+	</lom:contribute>
+	<lom:metadataschema>LOMv1.0</lom:metadataschema>
+	<lom:language>es</lom:language>
+</lom:metametadata>
+
+<lom:technical>
+	<lom:format>html</lom:format>
+	<lom:size> </lom:size>
+	<lom:location>http://froac.manizales.unal.edu.co/GAIATools/controlador/verRecurso.php?id=2</lom:location>
+	<lom:installationremarks>Ingrese a la url que se encuentra en el objeto de aprendizaje y siga las instrucciones que se encuentran allí</lom:installationremarks>
+	<lom:otherplatformrequirements> </lom:otherplatformrequirements>
+	<lom:duration>PT30M</lom:duration>
+	<lom:requirements>
+		<lom:type>operating system</lom:type>
+		<lom:name>Google Chrome, Internet explorer</lom:name>
+		<lom:minimumversion>Todas las versiones</lom:minimumversion>
+		<lom:maximumversion>Todas las versiones</lom:maximumversion>
+	</lom:requirements>
+</lom:technical>
+
+<lom:educational>
+	<lom:interactivitytype>active</lom:interactivitytype>
+	<lom:learningresourcetype>exercise</lom:learningresourcetype>
+	<lom:interactivitylevel>medium</lom:interactivitylevel>
+	<lom:semanticdensity>medium</lom:semanticdensity>
+	<lom:intendedenduserrole>teacher</lom:intendedenduserrole>
+	<lom:intendedenduserrole>learner</lom:intendedenduserrole>
+	<lom:context>secundaria</lom:context>
+	<lom:typicalagerange>10-13 años</lom:typicalagerange>
+	<lom:difficulty>medium</lom:difficulty>
+	<lom:typicallearningtime>PT1H</lom:typicallearningtime>
+	<lom:description>VARK{Visual:25%; Auditivo:25%; Lector:24%; Kinestético:23%}</lom:description>
+	<lom:language>es</lom:language>
+</lom:educational>
+
+<lom:rights>
+	<lom:cost>no</lom:cost>
+	<lom:copyrightandotherrestrictions>no</lom:copyrightandotherrestrictions>
+	<lom:description> </lom:description>
+</lom:rights>
+
+<lom:relation>
+	<lom:kind> </lom:kind>
+<lom:resource>
+</lom:resource>
+</lom:relation>
+
+<lom:annotation>
+	<lom:entity> </lom:entity>
+	<lom:date> </lom:date>
+	<lom:description> </lom:description>
+</lom:annotation>
+
+<lom:classification>
+	<lom:purpose> </lom:purpose>
+	<lom:description> </lom:description>
+</lom:classification>
+
+<lom:accessibility>
+	<lom:presentationmode>
+			<lom:auditory> </lom:auditory>
+			<lom:textual> </lom:textual>
+			<lom:visual> </lom:visual>
+	</lom:presentationmode>
+	<lom:interactionmode>
+			<lom:keyboard> </lom:keyboard>
+			<lom:mouse> </lom:mouse>
+			<lom:voicerecognition> </lom:voicerecognition>
+	</lom:interactionmode>
+	<lom:adaptationtype>
+				<lom:audiodescription> </lom:audiodescription>
+				<lom:hearingalternative> </lom:hearingalternative>
+				<lom:textualalternative> </lom:textualalternative>
+				<lom:signlanguage> </lom:signlanguage>
+				<lom:subtitles> </lom:subtitles>
+	</lom:adaptationtype>
+</lom:accessibility>
+</lom:lom>

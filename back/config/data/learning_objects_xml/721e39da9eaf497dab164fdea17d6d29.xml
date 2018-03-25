@@ -1,0 +1,98 @@
+<lom:lom xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<lom:general>
+	<lom:title>Vídeo sobre la Nueva Granada a finales del siglo XVIII</lom:title>
+	<lom:language>es</lom:language>
+	<lom:description>Vídeo que muestra brevemente cuáles fueron las reformas, la expedición botánica y las ideas finales de lo que fue la Nueva Granada a finales del siglo XVIII.</lom:description>
+	<lom:keyword>nueva granada, reformas, expedición botánica</lom:keyword>
+	<lom:structure>networked</lom:structure>
+	<lom:aggregationlevel>1</lom:aggregationlevel>
+</lom:general>
+
+<lom:lifecycle>
+	<lom:version>1.0</lom:version>
+	<lom:status>final</lom:status>
+	<lom:contribute>
+		<lom:role>author</lom:role>
+		<lom:date>2016-05-30</lom:date>
+		<lom:entity>Grupo de Ambientes Inteligentes Adaptativos - GAIA</lom:entity>
+	</lom:contribute>
+</lom:lifecycle>
+
+<lom:metametadata>
+	<lom:contribute>
+		<lom:role>creator</lom:role>
+		<lom:date>2016-05-30</lom:date>
+		<lom:entity>Grupo de Ambientes Inteligentes Adaptativos - GAIA</lom:entity>
+	</lom:contribute>
+	<lom:metadataschema>LOMv1.0</lom:metadataschema>
+	<lom:language>es</lom:language>
+</lom:metametadata>
+
+<lom:technical>
+	<lom:format>rar</lom:format>
+	<lom:size>102968</lom:size>
+	<lom:location>http://froac.manizales.unal.edu.co/roapRAIM/control/download.php?id=1015</lom:location>
+	<lom:installationremarks> </lom:installationremarks>
+	<lom:otherplatformrequirements> </lom:otherplatformrequirements>
+	<lom:duration> </lom:duration>
+</lom:technical>
+
+<lom:educational>
+	<lom:interactivitytype>expositive</lom:interactivitytype>
+	<lom:learningresourcetype>diagram</lom:learningresourcetype>
+	<lom:interactivitylevel>low</lom:interactivitylevel>
+	<lom:semanticdensity>low</lom:semanticdensity>
+	<lom:intendedenduserrole>learner</lom:intendedenduserrole>
+	<lom:context>secundaria</lom:context>
+	<lom:typicalagerange>12-13 años</lom:typicalagerange>
+	<lom:difficulty>difficult</lom:difficulty>
+	<lom:typicallearningtime> </lom:typicallearningtime>
+	<lom:language>es</lom:language>
+</lom:educational>
+
+<lom:rights>
+	<lom:cost>no</lom:cost>
+	<lom:copyrightandotherrestrictions>no</lom:copyrightandotherrestrictions>
+	<lom:description> </lom:description>
+</lom:rights>
+
+<lom:relation>
+	<lom:kind> </lom:kind>
+<lom:resource>
+</lom:resource>
+</lom:relation>
+
+<lom:annotation>
+	<lom:entity> </lom:entity>
+	<lom:date> </lom:date>
+	<lom:description> </lom:description>
+</lom:annotation>
+
+<lom:classification>
+	<lom:purpose>educational objective</lom:purpose>
+	<lom:description>Los objetivos educativos de este objeto de aprendiza son: 
+•Identificas cuáles fueron las reformas de la Nueva Granada a finales del siglo XVIII  
+•Reconocer de que se trató la expedición botánica de la Nueva Granada a finales del siglo XVIII</lom:description>
+	<lom:keyword>nueva granada, reformas, expedición botánica</lom:keyword>
+</lom:classification>
+
+<lom:accessibility>
+	<lom:presentationmode>
+			<lom:auditory>voice</lom:auditory>
+			<lom:textual>yes</lom:textual>
+			<lom:visual>yes</lom:visual>
+	</lom:presentationmode>
+	<lom:interactionmode>
+			<lom:keyboard>yes</lom:keyboard>
+			<lom:mouse>yes</lom:mouse>
+			<lom:voicerecognition>no</lom:voicerecognition>
+	</lom:interactionmode>
+	<lom:adaptationtype>
+				<lom:audiodescription>yes</lom:audiodescription>
+				<lom:hearingalternative>yes</lom:hearingalternative>
+				<lom:textualalternative>no</lom:textualalternative>
+				<lom:signlanguage>no</lom:signlanguage>
+				<lom:subtitles>yes</lom:subtitles>
+	</lom:adaptationtype>
+</lom:accessibility>
+</lom:lom>

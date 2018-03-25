@@ -1,0 +1,112 @@
+<lom:lom xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<lom:general>
+	<lom:identifier>
+		<lom:catalog>NBC</lom:catalog>
+		<lom:entry>03.01.01</lom:entry>
+	</lom:identifier>
+	<lom:title>Sistema Circulatorio: El Corazón</lom:title>
+	<lom:language>es</lom:language>
+	<lom:description>El objeto de aprendizaje presenta la definición y componentes del corazón.</lom:description>
+	<lom:keyword>Sistema Circulatorio</lom:keyword>
+	<lom:keyword>Corazon</lom:keyword>
+	<lom:keyword>Sangre</lom:keyword>
+	<lom:coverage>Secundaria</lom:coverage>
+	<lom:structure>atomic</lom:structure>
+	<lom:aggregationlevel>1</lom:aggregationlevel>
+</lom:general>
+
+<lom:lifecycle>
+	<lom:version>1.0</lom:version>
+	<lom:status>final</lom:status>
+	<lom:contribute>
+		<lom:role>author</lom:role>
+		<lom:date>2015-05-08</lom:date>
+		<lom:entity>Grupo de Ambientes Inteligentes Adaptativos - GAIA</lom:entity>
+	</lom:contribute>
+</lom:lifecycle>
+
+<lom:metametadata>
+	<lom:contribute>
+		<lom:role>creator</lom:role>
+		<lom:date>2015-05-08</lom:date>
+		<lom:entity>Grupo de Ambientes Inteligentes Adaptativos - GAIA</lom:entity>
+	</lom:contribute>
+	<lom:metadataschema>LOMv1.0</lom:metadataschema>
+	<lom:language>es</lom:language>
+</lom:metametadata>
+
+<lom:technical>
+	<lom:format>mp4</lom:format>
+	<lom:size>21883195</lom:size>
+	<lom:location>http://froac.manizales.unal.edu.co/roapRAIM/control/download.php?id=688</lom:location>
+	<lom:installationremarks>Dar clic en el enlace y después en el vídeo.</lom:installationremarks>
+	<lom:otherplatformrequirements> </lom:otherplatformrequirements>
+	<lom:duration>PT3M</lom:duration>
+	<lom:requirements>
+		<lom:type>operating system</lom:type>
+		<lom:name>Windows</lom:name>
+		<lom:minimumversion>Win XP</lom:minimumversion>
+		<lom:maximumversion>Win 8</lom:maximumversion>
+	</lom:requirements>
+</lom:technical>
+
+<lom:educational>
+	<lom:interactivitytype>expositive</lom:interactivitytype>
+	<lom:learningresourcetype>slide</lom:learningresourcetype>
+	<lom:interactivitylevel>low</lom:interactivitylevel>
+	<lom:semanticdensity>medium</lom:semanticdensity>
+	<lom:intendedenduserrole>learner</lom:intendedenduserrole>
+	<lom:context>secundaria</lom:context>
+	<lom:typicalagerange>14-16</lom:typicalagerange>
+	<lom:difficulty>medium</lom:difficulty>
+	<lom:typicallearningtime>PT1H15M</lom:typicallearningtime>
+	<lom:description>VARK{Visual:50%; Auditivo:50%; Lector:1%; Kinestético:2%}</lom:description>
+	<lom:language>es</lom:language>
+</lom:educational>
+
+<lom:rights>
+	<lom:cost>no</lom:cost>
+	<lom:copyrightandotherrestrictions>no</lom:copyrightandotherrestrictions>
+	<lom:description>No</lom:description>
+</lom:rights>
+
+<lom:relation>
+	<lom:kind>haspart</lom:kind>
+<lom:resource>
+	<lom:description>EL vídeo muestra el corazón y sus componentes.</lom:description>
+</lom:resource>
+</lom:relation>
+
+<lom:annotation>
+	<lom:entity> </lom:entity>
+	<lom:date> </lom:date>
+	<lom:description> </lom:description>
+</lom:annotation>
+
+<lom:classification>
+	<lom:purpose>educational objective</lom:purpose>
+	<lom:description>El objeto de aprendizaje muestra el corazón y sus componentes.</lom:description>
+	<lom:keyword>Corazon</lom:keyword>
+	<lom:keyword>Sistema Circulatorio</lom:keyword>
+</lom:classification>
+
+<lom:accessibility>
+	<lom:presentationmode>
+			<lom:auditory> </lom:auditory>
+			<lom:textual> </lom:textual>
+			<lom:visual> </lom:visual>
+	</lom:presentationmode>
+	<lom:interactionmode>
+			<lom:keyboard> </lom:keyboard>
+			<lom:mouse> </lom:mouse>
+			<lom:voicerecognition> </lom:voicerecognition>
+	</lom:interactionmode>
+	<lom:adaptationtype>
+				<lom:audiodescription> </lom:audiodescription>
+				<lom:hearingalternative> </lom:hearingalternative>
+				<lom:textualalternative> </lom:textualalternative>
+				<lom:signlanguage> </lom:signlanguage>
+				<lom:subtitles> </lom:subtitles>
+	</lom:adaptationtype>
+</lom:accessibility>
+</lom:lom>

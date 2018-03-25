@@ -1,0 +1,113 @@
+<lom:lom xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<lom:general>
+	<lom:identifier>
+		<lom:catalog>NBC</lom:catalog>
+		<lom:entry>03.01.01</lom:entry>
+	</lom:identifier>
+	<lom:title>Corteza Cerebral</lom:title>
+	<lom:language>es</lom:language>
+	<lom:description>El objeto describe la corteza cerebral mostrando en tercera dimensión los hemisferios y los lóbulos cerebrales, explicando el uso de cada uno por medio de audio y subtítulos.</lom:description>
+	<lom:keyword>cerebro</lom:keyword>
+	<lom:keyword>lóbulo</lom:keyword>
+	<lom:keyword>sistema nervioso</lom:keyword>
+	<lom:keyword>corteza</lom:keyword>
+	<lom:keyword>hemisferios cerebrales</lom:keyword>
+	<lom:keyword>partes del cerebro</lom:keyword>
+	<lom:coverage>Secundaria</lom:coverage>
+	<lom:structure>atomic</lom:structure>
+	<lom:aggregationlevel>1</lom:aggregationlevel>
+</lom:general>
+
+<lom:lifecycle>
+	<lom:version>1.0</lom:version>
+	<lom:status>final</lom:status>
+	<lom:contribute>
+		<lom:role>author</lom:role>
+		<lom:date>2015-05-06</lom:date>
+		<lom:entity>Grupo de Ambientes Inteligentes Adaptativos - GAIA</lom:entity>
+	</lom:contribute>
+</lom:lifecycle>
+
+<lom:metametadata>
+	<lom:contribute>
+		<lom:role>creator</lom:role>
+		<lom:date>2015-05-07</lom:date>
+		<lom:entity>Grupo de Ambientes Inteligentes Adaptativos - GAIA</lom:entity>
+	</lom:contribute>
+	<lom:metadataschema>LOMv1.0</lom:metadataschema>
+	<lom:language>es</lom:language>
+</lom:metametadata>
+
+<lom:technical>
+	<lom:format>mp4</lom:format>
+	<lom:size>7,50 MB</lom:size>
+	<lom:location>http://froac.manizales.unal.edu.co/roapRAIM/control/download.php?id=670</lom:location>
+	<lom:installationremarks>Descargarlo, abrirlo y reproducirlo.</lom:installationremarks>
+	<lom:otherplatformrequirements> </lom:otherplatformrequirements>
+	<lom:duration>PT1M26S</lom:duration>
+	<lom:requirements>
+		<lom:type>operating system</lom:type>
+		<lom:name>Windows</lom:name>
+		<lom:minimumversion>Todas las versiones</lom:minimumversion>
+		<lom:maximumversion>Todas las versiones</lom:maximumversion>
+	</lom:requirements>
+</lom:technical>
+
+<lom:educational>
+	<lom:interactivitytype>expositive</lom:interactivitytype>
+	<lom:learningresourcetype>slide</lom:learningresourcetype>
+	<lom:interactivitylevel>low</lom:interactivitylevel>
+	<lom:semanticdensity>high</lom:semanticdensity>
+	<lom:intendedenduserrole>teacher</lom:intendedenduserrole>
+	<lom:intendedenduserrole>learner</lom:intendedenduserrole>
+	<lom:context>secundaria</lom:context>
+	<lom:typicalagerange>14-16 años</lom:typicalagerange>
+	<lom:difficulty>medium</lom:difficulty>
+	<lom:typicallearningtime>PT1H</lom:typicallearningtime>
+	<lom:description>VARK{Visual:100%; Auditivo:90%; Lector:80%; Kinestético:0%}</lom:description>
+	<lom:language>es</lom:language>
+</lom:educational>
+
+<lom:rights>
+	<lom:cost>no</lom:cost>
+	<lom:copyrightandotherrestrictions>no</lom:copyrightandotherrestrictions>
+	<lom:description> </lom:description>
+</lom:rights>
+
+<lom:relation>
+	<lom:kind> </lom:kind>
+<lom:resource>
+</lom:resource>
+</lom:relation>
+
+<lom:annotation>
+	<lom:entity> </lom:entity>
+	<lom:date> </lom:date>
+	<lom:description> </lom:description>
+</lom:annotation>
+
+<lom:classification>
+	<lom:purpose> </lom:purpose>
+	<lom:description> </lom:description>
+</lom:classification>
+
+<lom:accessibility>
+	<lom:presentationmode>
+			<lom:auditory> </lom:auditory>
+			<lom:textual> </lom:textual>
+			<lom:visual> </lom:visual>
+	</lom:presentationmode>
+	<lom:interactionmode>
+			<lom:keyboard> </lom:keyboard>
+			<lom:mouse> </lom:mouse>
+			<lom:voicerecognition> </lom:voicerecognition>
+	</lom:interactionmode>
+	<lom:adaptationtype>
+				<lom:audiodescription> </lom:audiodescription>
+				<lom:hearingalternative> </lom:hearingalternative>
+				<lom:textualalternative> </lom:textualalternative>
+				<lom:signlanguage> </lom:signlanguage>
+				<lom:subtitles> </lom:subtitles>
+	</lom:adaptationtype>
+</lom:accessibility>
+</lom:lom>

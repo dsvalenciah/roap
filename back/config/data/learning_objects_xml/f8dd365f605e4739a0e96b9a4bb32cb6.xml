@@ -1,0 +1,114 @@
+<lom:lom xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<lom:general>
+	<lom:identifier>
+		<lom:catalog>NBC</lom:catalog>
+		<lom:entry>03.01.05</lom:entry>
+	</lom:identifier>
+	<lom:title>Vídeo del Reciclaje</lom:title>
+	<lom:language>es</lom:language>
+	<lom:description>En este vídeo se muestra que es el reciclaje y cómo funciona el termino de las 3R las cuales son, reducir, reutilizar y reciclar, se dan a conocer con ello ejemplos para que se tengan en cuanta en la vida cotidiana, además de enseñar los tipos de basureros que ayudan al reciclaje, entre estos el amarillo, azul, verde y gris.</lom:description>
+	<lom:keyword>3r</lom:keyword>
+	<lom:keyword>reciclaje</lom:keyword>
+	<lom:keyword>reciclar</lom:keyword>
+	<lom:coverage>Cultura General</lom:coverage>
+	<lom:structure>networked</lom:structure>
+	<lom:aggregationlevel>2</lom:aggregationlevel>
+</lom:general>
+
+<lom:lifecycle>
+	<lom:version>1</lom:version>
+	<lom:status>final</lom:status>
+	<lom:contribute>
+		<lom:role> </lom:role>
+		<lom:date>2016-11-03</lom:date>
+		<lom:entity>Grupo de Ambientes Inteligentes Adaptativos - GAIA</lom:entity>
+	</lom:contribute>
+</lom:lifecycle>
+
+<lom:metametadata>
+	<lom:identifier>
+		<lom:catalog>URL</lom:catalog>
+		<lom:entry>http://www.ieee.org/descriptions/1234</lom:entry>
+	</lom:identifier>
+	<lom:contribute>
+		<lom:role>creator</lom:role>
+		<lom:date>2016-11-03</lom:date>
+		<lom:entity>Grupo de Ambientes Inteligentes Adaptativos - GAIA</lom:entity>
+	</lom:contribute>
+	<lom:metadataschema>LOMv1.0</lom:metadataschema>
+	<lom:language>es</lom:language>
+</lom:metametadata>
+
+<lom:technical>
+	<lom:format>png</lom:format>
+	<lom:size>1058381</lom:size>
+	<lom:location>http://froac.manizales.unal.edu.co/roapRAIM/control/download.php?id=1076</lom:location>
+	<lom:installationremarks> </lom:installationremarks>
+	<lom:otherplatformrequirements> </lom:otherplatformrequirements>
+	<lom:duration> </lom:duration>
+</lom:technical>
+
+<lom:educational>
+	<lom:interactivitytype>expositive</lom:interactivitytype>
+	<lom:learningresourcetype>narrative text</lom:learningresourcetype>
+	<lom:learningresourcetype>diagram</lom:learningresourcetype>
+	<lom:learningresourcetype>slide</lom:learningresourcetype>
+	<lom:interactivitylevel>high</lom:interactivitylevel>
+	<lom:semanticdensity>very low</lom:semanticdensity>
+	<lom:intendedenduserrole>learner</lom:intendedenduserrole>
+	<lom:context>secundaria</lom:context>
+	<lom:typicalagerange>10-13</lom:typicalagerange>
+	<lom:difficulty>medium</lom:difficulty>
+	<lom:typicallearningtime>PT30M</lom:typicallearningtime>
+	<lom:language>es</lom:language>
+</lom:educational>
+
+<lom:rights>
+	<lom:cost>no</lom:cost>
+	<lom:copyrightandotherrestrictions>no</lom:copyrightandotherrestrictions>
+	<lom:description> </lom:description>
+</lom:rights>
+
+<lom:relation>
+	<lom:kind> </lom:kind>
+<lom:resource>
+</lom:resource>
+</lom:relation>
+
+<lom:annotation>
+	<lom:entity> </lom:entity>
+	<lom:date> </lom:date>
+	<lom:description> </lom:description>
+</lom:annotation>
+
+<lom:classification>
+	<lom:purpose>educational objective</lom:purpose>
+	<lom:description>• Conocer:
+o Que es Reducir, Reutilizar y Reciclar.
+o Los beneficios del Reciclaje.
+o Tipos de Basureros para el reciclaje.</lom:description>
+	<lom:keyword>3r</lom:keyword>
+	<lom:keyword>reciclaje</lom:keyword>
+	<lom:keyword>reciclar</lom:keyword>
+</lom:classification>
+
+<lom:accessibility>
+	<lom:presentationmode>
+			<lom:auditory>voice</lom:auditory>
+			<lom:textual>yes</lom:textual>
+			<lom:visual>yes</lom:visual>
+	</lom:presentationmode>
+	<lom:interactionmode>
+			<lom:keyboard>yes</lom:keyboard>
+			<lom:mouse>yes</lom:mouse>
+			<lom:voicerecognition>no</lom:voicerecognition>
+	</lom:interactionmode>
+	<lom:adaptationtype>
+				<lom:audiodescription>yes</lom:audiodescription>
+				<lom:hearingalternative>yes</lom:hearingalternative>
+				<lom:textualalternative>yes</lom:textualalternative>
+				<lom:signlanguage>no</lom:signlanguage>
+				<lom:subtitles>yes</lom:subtitles>
+	</lom:adaptationtype>
+</lom:accessibility>
+</lom:lom>

@@ -1,0 +1,103 @@
+<lom:lom xmlns:lom="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<lom:general>
+	<lom:identifier>
+		<lom:catalog>NBC</lom:catalog>
+		<lom:entry>03.01.05</lom:entry>
+	</lom:identifier>
+	<lom:title>Célula Animal</lom:title>
+	<lom:language>es</lom:language>
+	<lom:description>En este objeto de aprendizaje se presenta la célula animal, que es un tipo de célula eucariota, la cual es uno de los que componen muchos tejidos de los animales.</lom:description>
+	<lom:keyword>Célula</lom:keyword>
+	<lom:keyword>Célula animal</lom:keyword>
+	<lom:keyword>Clases de célula</lom:keyword>
+	<lom:keyword>Tejido Animal</lom:keyword>
+	<lom:structure>atomic</lom:structure>
+	<lom:aggregationlevel>1</lom:aggregationlevel>
+</lom:general>
+
+<lom:lifecycle>
+	<lom:version>1.0</lom:version>
+	<lom:status>final</lom:status>
+	<lom:contribute>
+		<lom:role>author</lom:role>
+		<lom:date>2015-04-07</lom:date>
+	</lom:contribute>
+</lom:lifecycle>
+
+<lom:metametadata>
+	<lom:metadataschema>LOMv1.0</lom:metadataschema>
+	<lom:language>es</lom:language>
+</lom:metametadata>
+
+<lom:technical>
+	<lom:format>zip</lom:format>
+	<lom:size>18157615</lom:size>
+	<lom:location>http://froac.manizales.unal.edu.co/roapRAIM/control/download.php?id=820</lom:location>
+	<lom:installationremarks>Descomprima el .zip y siga las instrucciones que se encuentran en la misma.</lom:installationremarks>
+	<lom:otherplatformrequirements>camara</lom:otherplatformrequirements>
+	<lom:duration> </lom:duration>
+	<lom:requirements>
+		<lom:type>operating system</lom:type>
+		<lom:name>Android</lom:name>
+		<lom:minimumversion>Android 2.3.1</lom:minimumversion>
+		<lom:maximumversion>Android 6.0</lom:maximumversion>
+	</lom:requirements>
+</lom:technical>
+
+<lom:educational>
+	<lom:interactivitytype>expositive</lom:interactivitytype>
+	<lom:learningresourcetype>graph</lom:learningresourcetype>
+	<lom:interactivitylevel>medium</lom:interactivitylevel>
+	<lom:semanticdensity>medium</lom:semanticdensity>
+	<lom:intendedenduserrole>learner</lom:intendedenduserrole>
+	<lom:context>secundaria</lom:context>
+	<lom:typicalagerange>10-13 años</lom:typicalagerange>
+	<lom:difficulty>easy</lom:difficulty>
+	<lom:typicallearningtime> </lom:typicallearningtime>
+	<lom:description>Dar a conocer la célula animal, como componentes de los tejidos de los animales.</lom:description>
+	<lom:language>es</lom:language>
+</lom:educational>
+
+<lom:rights>
+	<lom:cost> </lom:cost>
+	<lom:copyrightandotherrestrictions> </lom:copyrightandotherrestrictions>
+	<lom:description> </lom:description>
+</lom:rights>
+
+<lom:relation>
+	<lom:kind> </lom:kind>
+<lom:resource>
+</lom:resource>
+</lom:relation>
+
+<lom:annotation>
+	<lom:entity> </lom:entity>
+	<lom:date> </lom:date>
+	<lom:description> </lom:description>
+</lom:annotation>
+
+<lom:classification>
+	<lom:purpose>educational objective</lom:purpose>
+	<lom:description>Dar a conocer la célula animal, como componentes de los tejidos de los animales.</lom:description>
+</lom:classification>
+
+<lom:accessibility>
+	<lom:presentationmode>
+			<lom:auditory> </lom:auditory>
+			<lom:textual> </lom:textual>
+			<lom:visual> </lom:visual>
+	</lom:presentationmode>
+	<lom:interactionmode>
+			<lom:keyboard> </lom:keyboard>
+			<lom:mouse> </lom:mouse>
+			<lom:voicerecognition> </lom:voicerecognition>
+	</lom:interactionmode>
+	<lom:adaptationtype>
+				<lom:audiodescription> </lom:audiodescription>
+				<lom:hearingalternative> </lom:hearingalternative>
+				<lom:textualalternative> </lom:textualalternative>
+				<lom:signlanguage> </lom:signlanguage>
+				<lom:subtitles> </lom:subtitles>
+	</lom:adaptationtype>
+</lom:accessibility>
+</lom:lom>
