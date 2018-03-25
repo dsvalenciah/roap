@@ -55,7 +55,7 @@ class Roap():
             '/back/object', lo.LearningObjectCollection(self.db)
         )
         self.api.add_route(
-            '/back/object-rate/{_id}', lo.LearningObjectScore(self.db)
+            '/back/object-rate/{_ids}', lo.LearningObjectScore(self.db)
         )
         self.api.add_route('/back/object/{_id}', lo.LearningObject(self.db))
 
