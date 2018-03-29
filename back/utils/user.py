@@ -16,8 +16,6 @@ from exceptions.user import (
     UserInactiveError, UserPermissionError
 )
 
-from utils.regex import only_letters
-
 from schemas.user import is_valid_user
 
 from passlib.hash import sha512_crypt
@@ -100,11 +98,7 @@ class User():
             enabled_fields = [
                 'name', 'password', 'email', 'role', 'deleted'
             ]
-            correct_fields = [
-                only_letters(x) for x in query.keys()
-                if x in enabled_fields
-            ]
-            if False not in correct_fields:
+            if False not in enabled_fields:
                 fields_to_use = [
                     {x: {'$regex': f'.*{query.get(x)}.*'}}
                     for x in query.keys()
