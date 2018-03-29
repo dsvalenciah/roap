@@ -23,7 +23,6 @@ from schemas.learning_object_metadata import is_valid_learning_object_metadata
 from schemas.learning_object import is_valid_learning_object
 
 from utils.dict_to_xml import dict_to_xml
-from utils.regex import only_letters
 
 from marshmallowjson.marshmallowjson import Definition
 
@@ -71,18 +70,14 @@ class LearningObjectScore():
             'user_role': user.get('role'),
         })
 
-    def get_one(self, _ids):
+    def get_one(self, _id):
         """Rate a learning object."""
         # TODO: fix it
         pipe = [
-            {"$match": {"$or": [
-                {"learning_object_id": _id}
-                for _id in _ids
-            ]}},
+            {"$match": {"learning_object_id": _id}},
             {
                 '$group': {
                     '_id': {
-                        "learning_object_id": "$learning_object_id",
                         'user_role': '$user_role'
                     },
                     'total': {'$avg': '$score'},
@@ -93,9 +88,7 @@ class LearningObjectScore():
             pipeline=pipe
         )
         result = {
-            los.get('_id', {}).get('learning_object_id'): {
-                los.get('_id', {}).get('user_role'): los.get('total')
-            }
+            los.get('_id', {}).get('user_role'): los.get('total')
             for los in learning_object_scores
         }
         return result
@@ -186,6 +179,13 @@ class LearningObject():
 
     def get_many(self, query):
         """Get learning objects with query."""
+        def insert_score(learning_objects):
+            for i in range(len(learning_objects)):
+                learning_objects[i]['user_scores'] = (
+                    self.learning_object_score_manager.get_one(
+                        learning_objects[i].get('_id')
+                    )
+                )
         if query and query.get('offset') and query.get('count'):
             try:
                 offset = int(query.get('offset'))
@@ -194,20 +194,27 @@ class LearningObject():
                 raise ValueError(['Invalid offset or count parameters.'])
             search = query.get('search')
             if search:
-                if only_letters(search):
-                    fields_to_use = [
-                        {x: {'$regex': f'.*{search}.*'}}
-                        for x in [
-                            'metadata.general.title',
-                            # 'metadata.genetal.description'
-                        ]
-                    ]
-                    query = {'$and': fields_to_use} if fields_to_use else {}
-                    learning_objects = self.db.learning_objects.find(query)
-                    return learning_objects.skip(offset).limit(count)
-                else:
-                    raise ValueError(['Invalid search value.'])
-            return self.db.learning_objects.find().skip(offset).limit(count)
+                learning_objects = list(self.db.learning_objects.find(
+                    {'$text': {
+                        '$search': search,
+                        '$diacriticSensitive': False,
+                        '$caseSensitive': False,
+                    }},
+                    {'score': {'$meta': "textScore"}}
+                ).sort(
+                    [('score', {'$meta': "textScore"})]
+                ).skip(offset).limit(count))
+                insert_score(learning_objects)
+                return learning_objects
+
+            learning_objects = list(
+                self.db.learning_objects.find()
+                    .sort([('created', 1)])
+                    .skip(offset)
+                    .limit(count)
+            )
+            insert_score(learning_objects)
+            return learning_objects
         else:
             raise ValueError(['Offset and Count required.'])
 
