@@ -99,6 +99,7 @@ class LearningObjectScore(object):
 
     def __init__(self, db):
         """Init."""
+        # TODO fix it
         self.learning_object_score_manager = LearningObjectScoreManager(db)
 
     @falcon.before(Authenticate())
@@ -108,10 +109,9 @@ class LearningObjectScore(object):
         score = req_to_dict(req).get('score')
         self.learning_object_score_manager.insert_one(_id, user, score)
 
-    def on_get(self, req, resp, _ids):
+    def on_get(self, req, resp, _id):
         """Rate a learning object."""
-        _ids = _ids.split('&')
-        resp.body = dumps(self.learning_object_score_manager.get_one(_ids))
+        resp.body = dumps(self.learning_object_score_manager.get_one(_id))
 
 
 class LearningObjectCollection(object):
