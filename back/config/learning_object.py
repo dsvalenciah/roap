@@ -21,6 +21,17 @@ def learning_object_populate(db):
     learning_object_manager = LearningObject(db)
     learning_object_score_manager = LearningObjectScore(db)
     list_files_path = glob.glob("config/data/learning_objects_xml/*.xml")
+
+    db.learning_objects.drop_indexes()
+
+    db.learning_objects.create_index(
+        [
+            ("metadata.general.description", "text"),
+            ("metadata.general.title", "text")
+        ],
+        language_override='es'
+    )
+
     for file_path in list_files_path:
         _id, _ = file_path.split('/')[-1].split('.')
         learning_object = db.learning_objects.find_one({'_id': _id})
