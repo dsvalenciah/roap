@@ -25,6 +25,7 @@ class User(Schema):
     modified = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
     deleted = fields.Boolean(required=True)
     last_activity = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
+    validated = fields.Boolean(required=True)
 
 user_schema = User()
 
