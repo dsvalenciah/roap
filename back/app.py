@@ -22,6 +22,7 @@ from resources import user
 from resources import collections_category as cc
 import resources.learning_object as lo
 import resources.learning_object_metadata as lom
+import resources.user_validation as user_val
 
 
 class Roap():
@@ -45,6 +46,10 @@ class Roap():
                 allow_all_headers=True
             ).middleware
         ])
+
+        self.api.add_route(
+            '/back/user-validate/{token}', user_val.UserValidate(self.db)
+        )
 
         self.api.add_route('/back/login', login.Login(self.db))
 
