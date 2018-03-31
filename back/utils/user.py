@@ -6,6 +6,9 @@ Contains utility functions to works with user.
 
 from datetime import datetime
 from uuid import uuid4
+import smtplib
+
+import jwt
 
 from exceptions.user import (
     UserNotFoundError, UserSchemaError, UserUnmodifyError, UserUndeleteError,
@@ -27,13 +30,14 @@ def new_user(name, email, password):
     user = {
         '_id': str(uuid4().hex),
         'name': name,
-        'email': email,
         'password': sha512_crypt.hash(password, salt='dqwjfdsakuyfd'),
+        'email': email,
+        'role': 'unknown',
         'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
-        'last_activity': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         'deleted': False,
-        'role': 'unknown',
+        'last_activity': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
+        'validated': False,
     }
     return user
 
@@ -64,6 +68,37 @@ class User():
             raise UserSchemaError(errors)
 
         result = self.db.users.insert_one(user)
+
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        sender = 'roap.unal.master@gmail.com'
+        receiver = user.get('email')
+        server.login(sender, "@roap@unal@master")
+
+        token = jwt.encode(
+            {
+                '_id': user.get('_id'),
+            },
+            'dsvalenciah_developer',
+            algorithm='HS512'
+        ).decode('utf-8')
+
+        message = f"""
+            From: Roap unal <{sender}>
+            To: To Person <{receiver}>
+            MIME-Version: 1.0
+            Content-type: text/html
+            Subject: Roap account validation
+            <h1>Go to this link.</h1>
+            <link>{token}</link>
+        """
+
+        server.sendmail(
+            sender,
+            "dsvalenciah@unal.edu.co",
+            message
+        )
+
         return result.inserted_id
 
     def get_one(self, _id, user):
@@ -96,7 +131,7 @@ class User():
             except ValueError as e:
                 raise ValueError(['Invalid offset or count parameters.'])
             enabled_fields = [
-                'name', 'email', 'role', 'deleted'
+                'name', 'email', 'role', 'deleted', 'validated'
             ]
             if False not in enabled_fields:
                 fields_to_use = [
@@ -115,6 +150,7 @@ class User():
     def modify_one(self, _id, user, auth_user):
         """Modify user."""
         # TODO: define who do modifies who
+        # TODO: fix password
         if auth_user.get('role') != 'administrator':
             if _id != auth_user.get('_id'):
                 raise UserPermissionError(
@@ -129,15 +165,15 @@ class User():
 
         user.update({
             '_id': old_user.get('_id'),
+            'name': user.get('name') or old_user.get('name'),
+            'password': user.get('password') or old_user.get('password'),
+            'email': user.get('email') or old_user.get('email'),
+            'role': user.get('role') or old_user.get('role'),
             'created': old_user.get('created'),
             'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
-            'last_activity': old_user.get('last_activity'),
             'deleted': user.get('deleted') or old_user.get('deleted'),
-            'role': user.get('role') or old_user.get('role'),
-            'name': user.get('name') or old_user.get('name'),
-            'email': user.get('email') or old_user.get('email'),
-            'password': user.get('password') or old_user.get('password'),
-            'role': user.get('role') or old_user.get('role'),
+            'last_activity': old_user.get('last_activity'),
+            'validated':  user.get('validated') or old_user.get('validated')
         })
 
         errors = is_valid_user(user)
