@@ -30,16 +30,20 @@ class Login(object):
         password = user.get('password')
         user = self.db.users.find_one({'email': email})
         if user and sha512_crypt.verify(password, user.get('password')):
-            resp.body = json.dumps({'token': jwt.encode(
+            token = jwt.encode(
                 {
                     '_id': user.get('_id'),
                     'deleted': user.get('deleted'),
                     'role': user.get('role'),
+                    'name': user.get('name'),
                     'exp': datetime.utcnow() + timedelta(seconds=3600),
                 },
                 'dsvalenciah_developer',
                 algorithm='HS512'
-            ).decode('utf-8')})
+            ).decode('utf-8')
+            resp.body = json.dumps({
+                'token': token
+            })
         else:
             resp.status = falcon.HTTP_400
             # TODO: show message with not sesion
