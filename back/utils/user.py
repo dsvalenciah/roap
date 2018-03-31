@@ -96,11 +96,11 @@ class User():
             except ValueError as e:
                 raise ValueError(['Invalid offset or count parameters.'])
             enabled_fields = [
-                'name', 'password', 'email', 'role', 'deleted'
+                'name', 'email', 'role', 'deleted'
             ]
             if False not in enabled_fields:
                 fields_to_use = [
-                    {x: {'$regex': f'.*{query.get(x)}.*'}}
+                    {x: query.get(x)}
                     for x in query.keys()
                     if x in enabled_fields
                 ]
