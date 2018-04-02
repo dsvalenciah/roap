@@ -13,12 +13,15 @@ class User(Schema):
 
     _id = fields.UUID(required=True)
     name = fields.Str(required=True)
-    password = fields.Str(required=True)
+    password = fields.Str(required=True, load_only=True)
     email = fields.Str(
         required=True,
         validate=validate.Email(error='Not a valid email address')
     )
     role = fields.Str(required=True, validate=validate.OneOf(
+        ['administrator', 'expert', 'creator', 'unknown']
+    ))
+    requested_role = fields.Str(required=True, validate=validate.OneOf(
         ['administrator', 'expert', 'creator', 'unknown']
     ))
     created = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
