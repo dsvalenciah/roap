@@ -44,6 +44,9 @@ class Login(object):
             resp.body = json.dumps({
                 'token': token
             })
+        elif not user:
+            # User not exists
+            raise falcon.HTTPBadRequest()
         else:
-            resp.status = falcon.HTTP_400
-            # TODO: show message with not sesion
+            # Incorrect password
+            raise falcon.HTTPBadRequest()
