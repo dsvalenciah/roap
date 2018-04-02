@@ -24,7 +24,7 @@ from schemas.user import is_valid_user
 from passlib.hash import sha512_crypt
 
 
-def new_user(name, email, password):
+def new_user(name, email, password, requested_role):
     """Create a user dict."""
     # TODO: add salt to file configuration
     user = {
@@ -33,6 +33,7 @@ def new_user(name, email, password):
         'password': sha512_crypt.hash(password, salt='dqwjfdsakuyfd'),
         'email': email,
         'role': 'unknown',
+        'requested_role': requested_role,
         'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         'deleted': False,
@@ -52,6 +53,8 @@ class User():
     def insert_one(self, user):
         """Insert user."""
         # TODO: validate password and initial schema
+        # TODO: add rq for process email sending
+        # TODO: add resource for re try email sending if it fails
         user_with_similar_email = self.db.users.find_one(
             {'email': user.get('email')}
         )
@@ -61,7 +64,8 @@ class User():
         user = new_user(
             user.get('name'),
             user.get('email'),
-            user.get('password')
+            user.get('password'),
+            user.get('requested_role')
         )
         errors = is_valid_user(user)
         if errors:
