@@ -3,6 +3,12 @@
 Contains necessary Resources to works with user validation.
 """
 
+from exceptions.user import (
+    UserNotFoundError, UserSchemaError, UserUnmodifyError, UserUndeleteError,
+    UserDuplicateEmailError, UserPermissionError
+)
+
+
 from utils.user import User as UserManager
 
 import falcon

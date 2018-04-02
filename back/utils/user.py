@@ -173,6 +173,7 @@ class User():
             'password': user.get('password') or old_user.get('password'),
             'email': user.get('email') or old_user.get('email'),
             'role': user.get('role') or old_user.get('role'),
+            'requested_role': user.get('role') or old_user.get('role'),
             'created': old_user.get('created'),
             'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
             'deleted': user.get('deleted') or old_user.get('deleted'),
