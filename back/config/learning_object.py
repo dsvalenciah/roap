@@ -27,10 +27,13 @@ def learning_object_populate(db):
     db.learning_objects.create_index(
         [
             ("metadata.general.description", "text"),
-            ("metadata.general.title", "text")
+            ("metadata.general.title", "text"),
+            ("metadata.general.keyword", "text")
         ],
         language_override='es'
     )
+
+    # TODO: manage more languages than espanish.
 
     for file_path in list_files_path:
         _id, _ = file_path.split('/')[-1].split('.')
