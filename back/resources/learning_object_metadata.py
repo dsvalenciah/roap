@@ -33,9 +33,8 @@ class LearningObjectMetadata(object):
             # Raise error
             pass
 
-        result = (
-            self.db.lom_schema.find().sort("created", -1).limit(1).get('lom')
-        )
+        result = self.db.lom_schema.find().sort("created", -1).limit(1)
+
         if not result:
             resp.status = falcon.HTTP_404
         else:
