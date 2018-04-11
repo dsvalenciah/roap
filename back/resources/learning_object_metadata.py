@@ -33,12 +33,17 @@ class LearningObjectMetadata(object):
             # Raise error
             pass
 
-        result = self.db.lom_schema.find().sort("created", -1).limit(1)
+        result = json.loads(dumps(
+            self.db.lom_schema.find().sort("created", -1).limit(1)
+        ))
+        lom = result[0].get('lom')
+        full_nested_lom_schema = Definition(lom).to_full_nested()
+        result[0]['lom'] = full_nested_lom_schema
 
         if not result:
             resp.status = falcon.HTTP_404
         else:
-            resp.body = dumps(result)
+            resp.body = dumps(result[0])
             resp.status = falcon.HTTP_200
 
     @falcon.before(Authenticate())
@@ -49,7 +54,7 @@ class LearningObjectMetadata(object):
             # Raise error
             pass
 
-        lom = req_to_dict(req).get('lom')
+        lom = req_to_dict(req)
         try:
             Definition(lom)
             result = self.db.lom_schema.insert_one(
