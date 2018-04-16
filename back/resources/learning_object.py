@@ -18,6 +18,7 @@ from exceptions.user import (
 from utils.req_to_dict import req_to_dict
 from utils.xml_to_dict import xml_to_dict
 from utils.auth import Authenticate
+from utils.storage import StorageUnit
 from utils.learning_object import LearningObject as LearningObjectManager
 from utils.learning_object import LearningObjectScore as LearningObjectScoreManager
 
@@ -137,18 +138,19 @@ class LearningObjectCollection(object):
     def on_post(self, req, resp):
         """Create learning-object."""
         # TODO: fix category
-        learning_object_metadata = None
-
-        if req.content_type == 'application/json':
-            learning_object_metadata = req_to_dict(req)
-        elif req.content_type == 'text/xml':
-            learning_object_metadata = xml_to_dict(req.stream.read())
-        else:
-            raise falcon.HTTPInvalidHeader(
-                'Only json and xml', 'Content-Type'
-            )
+        import json
+        learning_object_metadata = req.get_param('learningObjectMetadata')
+        learning_object_file = req.get_param('file')
+        file_name_extension = learning_object_file.filename.split('.')[-1]
+        file_content = learning_object_file.file.read().decode()
 
         try:
+            learning_object_metadata = json.loads(learning_object_metadata)
+        except:
+            learning_object_metadata = xml_to_dict(req.stream.read())
+
+        try:
+            storage = StorageUnit()
             _id = self.learning_object_manager.insert_one(
                 {
                     'lom': learning_object_metadata,
@@ -158,11 +160,17 @@ class LearningObjectCollection(object):
                 },
                 req.context.get('user')
             )
-            resp.body = dumps({'_id': _id})
+            filename, filecreated = storage.store_unique(
+                file_content,
+                file_name_extension
+            )
+            resp.body = dumps(
+                {'_id': _id, 'filename': filename, 'filecreated': filecreated}
+            )
             resp.status = falcon.HTTP_201
         except LearningObjectMetadataSchemaError as e:
             raise falcon.HTTPBadRequest(description=e.args[0])
         except LearningObjectSchemaError as e:
-            raise falcon.HTTPError(falcon.HTTP_400, 'Schema error', e.args[0])
+            raise falcon.HTTPBadRequest(description=e.args[0])
         except UserInactiveError as e:
             raise falcon.HTTPUnauthorized(description=e.args[0])
