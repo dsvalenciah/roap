@@ -138,11 +138,12 @@ class LearningObjectCollection(object):
     def on_post(self, req, resp):
         """Create learning-object."""
         # TODO: fix category
+        # TODO: fix file manage
         import json
         learning_object_metadata = req.get_param('learningObjectMetadata')
         learning_object_file = req.get_param('file')
-        file_name_extension = learning_object_file.filename.split('.')[-1]
-        file_content = learning_object_file.file.read().decode()
+        file_extension = learning_object_file.filename.split('.')[-1]
+        file_content = learning_object_file.file.read()
 
         try:
             learning_object_metadata = json.loads(learning_object_metadata)
@@ -158,14 +159,16 @@ class LearningObjectCollection(object):
                         "Educacion", "Medicina", "Fisica"
                     ][randint(0, 2)]
                 },
-                req.context.get('user')
+                req.context.get('user'),
+                file_extension
             )
-            filename, filecreated = storage.store_unique(
+            filename = storage.store_unique(
                 file_content,
-                file_name_extension
+                _id,
+                file_extension
             )
             resp.body = dumps(
-                {'_id': _id, 'filename': filename, 'filecreated': filecreated}
+                {'_id': _id, 'filename': filename}
             )
             resp.status = falcon.HTTP_201
         except LearningObjectMetadataSchemaError as e:

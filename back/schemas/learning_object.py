@@ -3,7 +3,7 @@
 Contains learning-object schema.
 """
 
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema, fields
 
 
 class LearningObject(Schema):
@@ -18,7 +18,7 @@ class LearningObject(Schema):
     deleted = fields.Boolean(required=True)
     evaluated = fields.Boolean(required=True)
     metadata = fields.Dict(required=True)
-    files_path = fields.List(fields.Str, required=True)
+    file_path = fields.Str(required=True)
 
 learning_object_schema = LearningObject()
 

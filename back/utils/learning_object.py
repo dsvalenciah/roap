@@ -30,12 +30,13 @@ from bson.json_util import dumps
 
 
 def new_learning_object(
-        db, learning_object_metadata, user_id, category, _id=None):
+        db, learning_object_metadata, user_id, category, file_extension,
+        _id=None):
     """Create a learning object dict."""
     # TODO: add salt to file configuration
-
+    learning_object_id = uuid4().hex if not _id else _id
     learning_object = {
-        '_id': uuid4().hex if not _id else _id,
+        '_id': learning_object_id,
         'user_id': user_id,
         'lom_schema_id': json.loads(dumps(
             db.lom_schema.find().sort("created", -1).limit(1)
@@ -46,7 +47,7 @@ def new_learning_object(
         'deleted': False,
         'evaluated': False,
         'metadata': learning_object_metadata,
-        'files_path': [],
+        'file_path': learning_object_id + '.' + file_extension,
     }
     return learning_object
 
@@ -102,7 +103,9 @@ class LearningObject():
         self.db = db
         self.learning_object_score_manager = LearningObjectScore(db)
 
-    def insert_one(self, learning_object, user, ignore_schema=False, _id=None):
+    def insert_one(
+            self, learning_object, user, file_extension,
+            ignore_schema=False, _id=None):
         """Insert learning object."""
         user_deleted = user.get('deleted')
         user_role = user.get('role')
@@ -112,13 +115,12 @@ class LearningObject():
         learning_object_metadata = learning_object.get('lom')
         category = learning_object.get('category')
 
-        if isinstance(learning_object_metadata, dict):
-            if not ignore_schema:
-                errors = is_valid_learning_object_metadata(
-                    learning_object_metadata
-                )
-                if errors:
-                    raise LearningObjectMetadataSchemaError(errors)
+        if not ignore_schema:
+            errors = is_valid_learning_object_metadata(
+                learning_object_metadata
+            )
+            if errors:
+                raise LearningObjectMetadataSchemaError(errors)
 
             # TODO: add files-path manager
             # TODO: add correct category
@@ -127,6 +129,7 @@ class LearningObject():
                 learning_object_metadata,
                 user.get('_id'),
                 category,
+                file_extension,
                 _id
             )
             errors = is_valid_learning_object(learning_object)

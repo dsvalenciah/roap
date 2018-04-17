@@ -1,6 +1,4 @@
 """Abstract an storage unit."""
-import binascii
-import hashlib
 import os
 
 
@@ -14,7 +12,7 @@ class StorageUnit(object):
         else:
             self.root = root
 
-    def open(self, name, mode='r'):
+    def open(self, name, mode='rb'):
         """Open a file from the storage unit."""
         return open(self.path(name), mode)
 
@@ -22,13 +20,10 @@ class StorageUnit(object):
         """Create a path relative to the storage units root."""
         return os.path.join(self.root, name)
 
-    def store_unique(self, text, extension):
+    def store_unique(self, text, _id, extension):
         """Store the file with a sha1 of its contents to avoid duplication."""
-        sha1 = hashlib.pbkdf2_hmac('sha1', text.encode(), b'', 100000)
-        name = binascii.hexlify(sha1).decode() + extension
-        created = os.path.isfile(self.path(name))
-        if not created:
-            with self.open(name, 'a+') as file:
-                file.write(text)
+        name = _id + '.' + extension
+        with self.open(name, 'wb') as file:
+            file.write(text)
 
-        return name, created
+        return name
