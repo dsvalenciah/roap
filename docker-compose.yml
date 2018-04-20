@@ -19,6 +19,19 @@ services:
     depends_on:
       - db
 
+  files:
+    image: files
+    build: ./files
+    command: gunicorn -b 0.0.0.0:80 app:api
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/files/*"
+      VIRTUAL_HOST_WEIGHT: 10
+      FILE_STORAGE: /run/files
+    volumes:
+      - file-storage:/run/files
+
   db:
     image: mongo:latest
     volumes:
@@ -45,6 +58,7 @@ services:
       - back
       - db
       - ui
+      - files
 
 volumes:
     file-storage:
