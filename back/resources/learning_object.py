@@ -18,7 +18,6 @@ from exceptions.user import (
 from utils.req_to_dict import req_to_dict
 from utils.xml_to_dict import xml_to_dict
 from utils.auth import Authenticate
-from utils.storage import StorageUnit
 from utils.learning_object import LearningObject as LearningObjectManager
 from utils.learning_object import LearningObjectScore as LearningObjectScoreManager
 
@@ -151,7 +150,6 @@ class LearningObjectCollection(object):
             learning_object_metadata = xml_to_dict(req.stream.read())
 
         try:
-            storage = StorageUnit()
             _id = self.learning_object_manager.insert_one(
                 {
                     'lom': learning_object_metadata,
@@ -160,15 +158,13 @@ class LearningObjectCollection(object):
                     ][randint(0, 2)]
                 },
                 req.context.get('user'),
-                file_extension
-            )
-            filename = storage.store_unique(
-                file_content,
-                _id,
-                file_extension
+                {
+                    'file_extension': file_extension,
+                    'file_content': file_content
+                }
             )
             resp.body = dumps(
-                {'_id': _id, 'filename': filename}
+                {'_id': _id}
             )
             resp.status = falcon.HTTP_201
         except LearningObjectMetadataSchemaError as e:
