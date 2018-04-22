@@ -22,6 +22,7 @@ from exceptions.user import (
 from schemas.learning_object_metadata import is_valid_learning_object_metadata
 from schemas.learning_object import is_valid_learning_object
 
+from utils.storage import StorageUnit
 from utils.dict_to_xml import dict_to_xml
 
 from marshmallowjson.marshmallowjson import Definition
@@ -104,11 +105,12 @@ class LearningObject():
         self.learning_object_score_manager = LearningObjectScore(db)
 
     def insert_one(
-            self, learning_object, user, file_extension,
+            self, learning_object, user, file,
             ignore_schema=False, _id=None):
         """Insert learning object."""
         user_deleted = user.get('deleted')
         user_role = user.get('role')
+        storage = StorageUnit()
         if user_deleted or user_role == 'unknown':
             raise UserInactiveError(['User is not active or no has a role.'])
 
@@ -122,26 +124,29 @@ class LearningObject():
             if errors:
                 raise LearningObjectMetadataSchemaError(errors)
 
-            # TODO: add files-path manager
-            # TODO: add correct category
-            learning_object = new_learning_object(
-                self.db,
-                learning_object_metadata,
-                user.get('_id'),
-                category,
-                file_extension,
-                _id
-            )
-            errors = is_valid_learning_object(learning_object)
-            if errors:
-                raise LearningObjectSchemaError(errors)
+        # TODO: add files-path manager
+        # TODO: add correct category
+        learning_object = new_learning_object(
+            self.db,
+            learning_object_metadata,
+            user.get('_id'),
+            category,
+            file.get('file_extension'),
+            _id
+        )
+        errors = is_valid_learning_object(learning_object)
+        if errors:
+            raise LearningObjectSchemaError(errors)
 
-            result = self.db.learning_objects.insert_one(
-                learning_object
-            )
-            return result.inserted_id
-        else:
-            raise LearningObjectMetadataSchemaError()
+        result = self.db.learning_objects.insert_one(
+            learning_object
+        )
+        storage.store_unique(
+            file.get('file_content'),
+            result.inserted_id,
+            file.get('file_extension')
+        )
+        return result.inserted_id
 
     def get_one(self, _id, format_, user):
         """Get a learning object by _id."""
