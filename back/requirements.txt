@@ -3,7 +3,7 @@ falcon-multipart
 gunicorn
 pymongo
 marshmallow
-marshmallowjson
+marshmallowjson==0.3
 xmltodict
 pyjwt
 passlib
