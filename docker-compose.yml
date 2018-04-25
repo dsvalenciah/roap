@@ -47,6 +47,15 @@ services:
     environment:
       VIRTUAL_HOST: "*/ui, */ui*"
 
+  renderer:
+    image: nginx
+    volumes:
+      - file-storage:/usr/share/nginx/html/renderer:ro
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/renderer*"
+
   lb:
     image: dockercloud/haproxy
     volumes:
@@ -59,6 +68,7 @@ services:
       - db
       - ui
       - files
+      - renderer
 
 volumes:
     file-storage:
