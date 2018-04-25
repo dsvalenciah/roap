@@ -1,4 +1,5 @@
 """Abstract an storage unit."""
+from zipfile import ZipFile
 import os
 
 
@@ -25,5 +26,9 @@ class StorageUnit(object):
         name = _id + '.' + extension
         with self.open(name, 'wb') as file:
             file.write(text)
+        if extension == 'zip':
+            zip_ref = ZipFile(self.path(name), 'r')
+            zip_ref.extractall(os.path.join(self.root, _id))
+            zip_ref.close()
 
         return name
