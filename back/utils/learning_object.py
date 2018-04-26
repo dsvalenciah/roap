@@ -217,7 +217,7 @@ class LearningObject():
 
             learning_objects = list(
                 self.db.learning_objects.find()
-                    .sort([('created', 1)])
+                    .sort([('created', -1)])
                     .skip(offset)
                     .limit(count)
             )
