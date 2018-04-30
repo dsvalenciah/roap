@@ -53,21 +53,21 @@ def new_learning_object(
     return learning_object
 
 
-class LearningObjectScore():
+class LearningObjectRating():
     """docstring for Learning Object Rate."""
 
     def __init__(self, db):
         """Init."""
         self.db = db
 
-    def insert_one(self, _id, user, score):
+    def insert_one(self, _id, user, rating):
         """Rate a learning object."""
         # TODO: fix it
-        self.db.learning_object_score.insert_one({
+        self.db.learning_object_rating.insert_one({
             '_id': _id + '_' + user.get('_id'),
             'learning_object_id': _id,
             'user_id': user.get('_id'),
-            'score': score,
+            'rating': rating,
             'created': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'user_role': user.get('role'),
         })
@@ -82,16 +82,16 @@ class LearningObjectScore():
                     '_id': {
                         'user_role': '$user_role'
                     },
-                    'total': {'$avg': '$score'},
+                    'total': {'$avg': '$rating'},
                 },
             }
         ]
-        learning_object_scores = self.db.learning_object_score.aggregate(
+        learning_object_ratings = self.db.learning_object_rating.aggregate(
             pipeline=pipe
         )
         result = {
             los.get('_id', {}).get('user_role'): los.get('total')
-            for los in learning_object_scores
+            for los in learning_object_ratings
         }
         return result
 
@@ -102,7 +102,7 @@ class LearningObject():
     def __init__(self, db):
         """Init."""
         self.db = db
-        self.learning_object_score_manager = LearningObjectScore(db)
+        self.learning_object_rating_manager = LearningObjectRating(db)
 
     def insert_one(
             self, learning_object, user, file,
@@ -187,10 +187,10 @@ class LearningObject():
 
     def get_many(self, query):
         """Get learning objects with query."""
-        def insert_score(learning_objects):
+        def insert_rating(learning_objects):
             for i in range(len(learning_objects)):
-                learning_objects[i]['user_scores'] = (
-                    self.learning_object_score_manager.get_one(
+                learning_objects[i]['user_ratings'] = (
+                    self.learning_object_rating_manager.get_one(
                         learning_objects[i].get('_id')
                     )
                 )
@@ -208,11 +208,11 @@ class LearningObject():
                         '$diacriticSensitive': False,
                         '$caseSensitive': False,
                     }},
-                    {'score': {'$meta': "textScore"}}
+                    {'rating': {'$meta': "textRating"}}
                 ).sort(
-                    [('score', {'$meta': "textScore"})]
+                    [('rating', {'$meta': "textRating"})]
                 ).skip(offset).limit(count))
-                insert_score(learning_objects)
+                insert_rating(learning_objects)
                 return learning_objects
 
             learning_objects = list(
@@ -221,7 +221,7 @@ class LearningObject():
                     .skip(offset)
                     .limit(count)
             )
-            insert_score(learning_objects)
+            insert_rating(learning_objects)
             return learning_objects
         else:
             raise ValueError(['Offset and Count required.'])

@@ -1,17 +1,17 @@
 
 """
-Contains user-score schema.
+Contains user-rating schema.
 """
 
 from marshmallow import Schema, fields, validate
 
 
-class LearningObjectScore(Schema):
+class LearningObjectRating(Schema):
     """Definition for learning-object schema."""
-
+    # TODO: use this.
     learning_object_id = fields.UUID(required=True)
     user_id = fields.UUID(required=True)
-    score = fields.Integer(
+    rating = fields.Integer(
         required=True,
         validate=validate.Range(min=0, max=5)
     )

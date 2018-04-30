@@ -12,7 +12,7 @@ from exceptions.learning_object import (
 
 from utils.storage import StorageUnit
 from utils.learning_object import LearningObject
-from utils.learning_object import LearningObjectScore
+from utils.learning_object import LearningObjectRating
 from utils.xml_to_dict import xml_to_dict
 
 
@@ -21,7 +21,7 @@ def learning_object_populate(db):
     # TODO: fix category
     storage = StorageUnit()
     learning_object_manager = LearningObject(db)
-    learning_object_score_manager = LearningObjectScore(db)
+    learning_object_rating_manager = LearningObjectRating(db)
     list_files_path = glob.glob("config/data/learning_objects_xml/*.xml")
 
     db.learning_objects.drop_indexes()
@@ -80,7 +80,7 @@ def learning_object_populate(db):
                         ignore_schema=True,
                         _id=_id
                     )
-                    learning_object_score_manager.insert_one(
+                    learning_object_rating_manager.insert_one(
                         _id,
                         {
                             'deleted': False,

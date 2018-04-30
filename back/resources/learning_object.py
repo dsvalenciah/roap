@@ -19,7 +19,7 @@ from utils.req_to_dict import req_to_dict
 from utils.xml_to_dict import xml_to_dict
 from utils.auth import Authenticate
 from utils.learning_object import LearningObject as LearningObjectManager
-from utils.learning_object import LearningObjectScore as LearningObjectScoreManager
+from utils.learning_object import LearningObjectRating as LearningObjectRatingManager
 
 from bson.json_util import dumps
 
@@ -94,24 +94,24 @@ class LearningObject(object):
             raise falcon.HTTPUnauthorized(description=e.args[0])
 
 
-class LearningObjectScore(object):
+class LearningObjectRating(object):
     """Deal with single learning-object."""
 
     def __init__(self, db):
         """Init."""
         # TODO fix it
-        self.learning_object_score_manager = LearningObjectScoreManager(db)
+        self.learning_object_rating_manager = LearningObjectRatingManager(db)
 
     @falcon.before(Authenticate())
     def on_post(self, req, resp, _id):
         """Rate a learning object."""
         user = req.context.get('user')
-        score = req_to_dict(req).get('score')
-        self.learning_object_score_manager.insert_one(_id, user, score)
+        rating = req_to_dict(req).get('rating')
+        self.learning_object_rating_manager.insert_one(_id, user, rating)
 
     def on_get(self, req, resp, _id):
         """Rate a learning object."""
-        resp.body = dumps(self.learning_object_score_manager.get_one(_id))
+        resp.body = dumps(self.learning_object_rating_manager.get_one(_id))
 
 
 class LearningObjectCollection(object):
