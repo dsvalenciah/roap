@@ -1,37 +1,6 @@
 version: "3"
 
 services:
-  back:
-    image: back
-    build: ./back
-    command: gunicorn -b 0.0.0.0:80 app:api
-    ports:
-      - 80
-    environment:
-      VIRTUAL_HOST: "*/back/*"
-      VIRTUAL_HOST_WEIGHT: 10
-      DB_HOST: db
-      FILE_STORAGE: /run/files
-    links:
-      - db
-    volumes:
-      - file-storage:/run/files
-    depends_on:
-      - db
-
-  files:
-    image: files
-    build: ./files
-    command: gunicorn -b 0.0.0.0:80 app:api
-    ports:
-      - 80
-    environment:
-      VIRTUAL_HOST: "*/files/*"
-      VIRTUAL_HOST_WEIGHT: 10
-      FILE_STORAGE: /run/files
-    volumes:
-      - file-storage:/run/files
-
   db:
     image: mongo:latest
     volumes:
@@ -39,22 +8,110 @@ services:
     ports:
       - 27017:27017
 
-  ui:
-    image: ui
-    build: ./ui
+  learning_object_metadata_schema:
+    image: learning_object_metadata_schema
+    build: ./learning_object/metadata_schema
+    command: gunicorn -b 0.0.0.0:80 app:api
     ports:
       - 80
     environment:
-      VIRTUAL_HOST: "*/ui, */ui*"
+      VIRTUAL_HOST: "*/learning-object-metadata-schema, */learning-object-metadata-schema/*"
+      VIRTUAL_HOST_WEIGHT: 10
+      DB_HOST: db
+    links:
+      - db
+    depends_on:
+      - db
 
-  renderer:
+  learning_object_file_manager:
+    image: learning_object_file_manager
+    build: ./learning_object/file_manager
+    command: gunicorn -b 0.0.0.0:80 app:api
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/learning-object-file-manager, */learning-object-file-manager/*"
+      VIRTUAL_HOST_WEIGHT: 10
+      FILE_STORAGE: /run/files
+    volumes:
+      - file-storage:/run/files
+
+  learning_object_default_files:
+    image: learning_object_default_files
+    build:
+      context: ./learning_object/default_files
+      dockerfile: Dockerfile
+    volumes:
+      - file-storage:/run/files
+
+  learning_object_collection:
+    image: learning_object_collection
+    build: ./learning_object/collection
+    command: gunicorn -b 0.0.0.0:80 app:api
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/learning-object-collection, */learning-object-collection/*"
+      VIRTUAL_HOST_WEIGHT: 10
+      DB_HOST: db
+    links:
+      - db
+    depends_on:
+      - learning_object_metadata_schema
+
+  learning_object_file_renderer:
     image: nginx
     volumes:
-      - file-storage:/usr/share/nginx/html/renderer:ro
+      - file-storage:/usr/share/nginx/html/learning-object-file-renderer:ro
     ports:
       - 80
     environment:
-      VIRTUAL_HOST: "*/renderer*"
+      VIRTUAL_HOST: "*/learning-object-file-renderer/*"
+
+  user_collection:
+    image: user_collection
+    build: ./user/collection
+    command: gunicorn -b 0.0.0.0:80 app:api
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/user-collection, */user-collection/*"
+      VIRTUAL_HOST_WEIGHT: 10
+      DB_HOST: db
+    links:
+      - db
+    depends_on:
+      - db
+
+  user_login:
+    image: user_login
+    build: ./user/login
+    command: gunicorn -b 0.0.0.0:80 app:api
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/user-login, */user-login/*"
+      VIRTUAL_HOST_WEIGHT: 10
+      DB_HOST: db
+    links:
+      - db
+    depends_on:
+      - db
+
+  user_account_validation:
+    image: user_account_validation
+    build: ./user/account_validation
+    command: gunicorn -b 0.0.0.0:80 app:api
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/user-account, */user-account/*"
+      VIRTUAL_HOST_WEIGHT: 10
+      DB_HOST: db
+    links:
+      - db
+    depends_on:
+      - db
 
   lb:
     image: dockercloud/haproxy
@@ -64,11 +121,14 @@ services:
       - '80:80'
       - '1936:1936'
     links:
-      - back
       - db
-      - ui
-      - files
-      - renderer
+      - learning_object_metadata_schema
+      - learning_object_file_manager
+      - learning_object_collection
+      - learning_object_file_renderer
+      - user_collection
+      - user_login
+      - user_account_validation
 
 volumes:
     file-storage:
