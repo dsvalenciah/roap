@@ -1,0 +1,6 @@
+falcon
+gunicorn
+pymongo
+pyjwt
+falcon-cors
+passlib
