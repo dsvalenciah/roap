@@ -1,6 +1,6 @@
 
-learning_object/collection/config/data/learning_object_xml
-learning_object/default_files/files
+learning_object/collection/config/data/learning_object_xml/*
+learning_object/default_files/files/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
