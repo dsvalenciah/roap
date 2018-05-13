@@ -67,6 +67,7 @@ services:
       - 80
     environment:
       VIRTUAL_HOST: "*/learning-object-file-renderer/*"
+      VIRTUAL_HOST_WEIGHT: 10
 
   user_collection:
     image: user_collection
@@ -113,12 +114,21 @@ services:
     depends_on:
       - db
 
+  ui:
+    image: ui
+    build: ./ui
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/*"
+      VIRTUAL_HOST_WEIGHT: 0
+
   lb:
     image: dockercloud/haproxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - '80:80'
+      - '8080:80'
       - '1936:1936'
     links:
       - db
@@ -129,6 +139,7 @@ services:
       - user_collection
       - user_login
       - user_account_validation
+      - ui
 
 volumes:
     file-storage:
