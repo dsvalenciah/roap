@@ -28,13 +28,15 @@ class UserEmail(object):
         message['From'] = sender
         message['To'] = receiver
 
+        # TODO: fix host.
+
         html = f"""
             <html>
                 <head></head>
                 <body>
                     <p>
                         Hi! Please, click on this <a
-                            href="http://localhost:6075/user-validate/{token}"
+                            href="http://localhost:8080/user-validate/{token}"
                         >
                             link
                         </a> to validate your account.
