@@ -24,7 +24,7 @@ def learning_object_populate(db):
         [
             ("metadata.general.description", "text"),
             ("metadata.general.title", "text"),
-            ("metadata.general.keyword", "text")
+            # ("metadata.general.keyword", "text")
         ],
         language_override='es'
     )

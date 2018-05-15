@@ -14,9 +14,9 @@ def get_many(db_client, offset, count, search=None):
                     '$diacriticSensitive': False,
                     '$caseSensitive': False,
                 }},
-                {'rating': {'$meta': "textRating"}}
+                {'rating': {'$meta': "textScore"}}
             ).sort(
-                [('rating', {'$meta': "textRating"})]
+                [('rating', {'$meta': "textScore"})]
             ).skip(offset).limit(count)
         )
 
