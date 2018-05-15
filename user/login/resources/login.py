@@ -29,6 +29,23 @@ class Login(object):
         email = user.get('email')
         password = user.get('password')
         user = self.db.users.find_one({'email': email})
+
+        if not user:
+            # User not exists.
+            raise falcon.HTTPBadRequest(description=['User not found.'])
+
+        if not user.get('validated'):
+            # User email is not validated.
+            raise falcon.HTTPBadRequest(
+                description=['User email is not validated.']
+            )
+
+        if not user.get('aproved_by_admin'):
+            # User is not validated by admin.
+            raise falcon.HTTPBadRequest(
+                description=['User is not validated by admin.']
+            )
+
         if user and sha512_crypt.verify(password, user.get('password')):
             token = jwt.encode(
                 {
@@ -46,9 +63,6 @@ class Login(object):
             resp.body = json.dumps({
                 'token': token
             })
-        elif not user:
-            # User not exists
-            raise falcon.HTTPBadRequest()
         else:
-            # Incorrect password
-            raise falcon.HTTPBadRequest()
+            # Incorrect password.
+            raise falcon.HTTPBadRequest(description=['Invalid password.'])

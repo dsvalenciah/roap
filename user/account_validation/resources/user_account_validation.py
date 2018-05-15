@@ -24,7 +24,7 @@ class UserValidate(object):
                 algorithms=['HS512'],
             )
             self.db_client.users.find_one_and_update(
-                {'_id': user.get('_id')},
+                {'email': user.get('email')},
                 {'$set': {'validated': True}},
             )
         except jwt.ExpiredSignatureError as e:

@@ -38,17 +38,13 @@ def insert_one(db_client, user):
     # TODO: validate password and initial schema
     # TODO: add rq for process email sending
     # TODO: add resource for re try email sending if it fails
-    if None in user.values():
-        raise ValueError("Field not found.")
-
     user_with_similar_email = db_client.users.find_one(
         {'email': user.get('email')}
     )
     if user_with_similar_email:
-        raise UserDuplicateEmailError({
-            'error': 'Duplicate email.',
-            'user_id': user_with_similar_email.get('_id')
-        })
+        raise UserDuplicateEmailError([
+            'User with speciffied email already exist.'
+        ])
 
     user = new_user(
         user.get('name'),

@@ -50,7 +50,5 @@ class UserCollection(object):
             )
             resp.body = dumps({'_id': _id})
             resp.status = falcon.HTTP_201
-        except UserSchemaError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
         except UserDuplicateEmailError as e:
             raise falcon.HTTPBadRequest(description=e.args[0])

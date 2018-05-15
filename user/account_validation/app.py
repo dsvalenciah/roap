@@ -35,7 +35,7 @@ class Roap():
         )
 
         self.api.add_route(
-            '/user-account/send-email/{_id}/{email}', UserEmail()
+            '/user-account/send-email/{email}', UserEmail()
         )
 
     def get_db(self):

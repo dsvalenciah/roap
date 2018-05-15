@@ -8,7 +8,7 @@ import jwt
 class UserEmail(object):
     """Deal with user validation."""
 
-    def on_get(self, req, resp, _id, email):
+    def on_get(self, req, resp, email):
         """Send user account validation."""
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
@@ -17,7 +17,7 @@ class UserEmail(object):
         server.login(sender, "@roap@unal@master")
 
         token = jwt.encode(
-            {'email': receiver, '_id': _id},
+            {'email': receiver},
             'dsvalenciah_developer',
             algorithm='HS512'
         ).decode('utf-8')
