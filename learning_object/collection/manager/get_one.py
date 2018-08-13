@@ -8,9 +8,7 @@ from manager.exceptions.learning_object import LearningObjectFormatError
 
 from manager.utils.dict_to_xml import dict_to_xml
 
-def get_one(
-        db_client, learning_object_id, learning_object_format,
-        only_metadata=True):
+def get_one(db_client, learning_object_id, learning_object_format):
     """Get a learning object by _id."""
 
     learning_object = db_client.learning_objects.find_one({
@@ -20,7 +18,9 @@ def get_one(
     if not learning_object:
         raise LearningObjectNotFoundError(['Learning Object _id not found.'])
 
-    if only_metadata:
+    learning_object['id'] = learning_object.get('_id')
+
+    if learning_object_format:
         format_handler = {
             'xml': lambda lo: dict_to_xml(lo.get('metadata')),
             'json': lambda lo: lo.get('metadata')

@@ -2,316 +2,316 @@
     "identifier": {
         "catalog": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "entry": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "general": {
         "identifier": {
             "kind": "identifier",
-            "required": false
+            "required": true
         },
         "title": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "language": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "description": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "keyword": {
             "kind": "list",
             "items": "string",
-            "required": false
+            "required": true
         },
         "coverage": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "structure": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "aggregationlevel": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "contribute": {
         "role": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "date": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "entity": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "lifecycle": {
         "version": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "status": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "contribute": {
             "kind": "contribute",
-            "required": false
+            "required": true
         }
     },
     "metametadata": {
         "identifier": {
             "kind": "identifier",
-            "required": false
+            "required": true
         },
         "contribute": {
             "kind": "contribute",
-            "required": false
+            "required": true
         },
         "metadataschema": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "language": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "orcomposite": {
         "type": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "name": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "minimumversion": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "maximumversion": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "requirements": {
         "orcomposite": {
             "kind": "orcomposite",
-            "required": false
+            "required": true
         }
     },
     "technical": {
         "format": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "size": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "location": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "requirements": {
             "kind": "requirements",
-            "required": false
+            "required": true
         },
         "installationremarks": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "otherplatformrequirements": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "duration": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "educational": {
         "interactivitytype": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "learningresourcetype": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "interactivitylevel": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "semanticdensity": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "intendedenduserrole": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "context": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "typicalagerange": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "difficulty": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "typicallearningtime": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "description": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "language": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "rights": {
         "cost": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "copyrightandotherrestrictions": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "description": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "resource": {
         "identifier": {
             "kind": "identifier",
-            "required": false
+            "required": true
         },
         "description": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "relation": {
         "kind": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "resource": {
             "kind": "resource",
-            "required": false
+            "required": true
         }
     },
     "annotation": {
         "entity": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "date": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "description": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "taxon": {
         "id": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "entry": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "taxonPath": {
         "source": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "taxon": {
             "kind":"taxon",
-            "required": false
+            "required": true
         }
     },
     "classification": {
         "purpose": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "taxonPath": {
             "kind": "taxonPath",
-            "required": false
+            "required": true
         },
         "description": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "keyword": {
             "kind": "string",
-            "required": false
+            "required": true
         }
     },
     "learningObject": {
         "general": {
             "kind": "general",
-            "required": false
+            "required": true
         },
         "lifecycle": {
             "kind": "lifecycle",
-            "required": false
+            "required": true
         },
         "metametadata": {
             "kind": "metametadata",
-            "required": false
+            "required": true
         },
         "technical": {
             "kind": "technical",
-            "required": false
+            "required": true
         },
         "educational": {
             "kind": "educational",
-            "required": false
+            "required": true
         },
         "rights": {
             "kind": "rights",
-            "required": false
+            "required": true
         },
         "relation": {
             "kind": "relation",
-            "required": false
+            "required": true
         },
         "annotation": {
             "kind": "annotation",
-            "required": false
+            "required": true
         },
         "classification": {
             "kind": "classification",
-            "required": false
+            "required": true
         }
     }
 }

@@ -43,7 +43,6 @@ class LearningObject(object):
                 db_client=self.db_client,
                 learning_object_id=_id,
                 learning_object_format=learning_object_format,
-                only_metadata=True,
             )
             resp.body = dumps(learning_object)
         except LearningObjectNotFoundError as e:

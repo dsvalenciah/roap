@@ -32,17 +32,17 @@ class Login(object):
 
         if not user:
             # User not exists.
-            raise falcon.HTTPBadRequest(description=['User not found.'])
+            raise falcon.HTTPUnauthorized(description=['User not found.'])
 
         if not user.get('validated'):
             # User email is not validated.
-            raise falcon.HTTPBadRequest(
+            raise falcon.HTTPUnauthorized(
                 description=['User email is not validated.']
             )
 
         if not user.get('aproved_by_admin'):
             # User is not validated by admin.
-            raise falcon.HTTPBadRequest(
+            raise falcon.HTTPUnauthorized(
                 description=['User is not validated by admin.']
             )
 
@@ -65,4 +65,4 @@ class Login(object):
             })
         else:
             # Incorrect password.
-            raise falcon.HTTPBadRequest(description=['Invalid password.'])
+            raise falcon.HTTPUnauthorized(description=['Invalid password.'])

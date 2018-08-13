@@ -3,6 +3,8 @@
 Contains necessary Resources to works with user CRUD operations.
 """
 
+import json
+
 from manager.exceptions.user import (
     UserNotFoundError, UserSchemaError, UserUnmodifyError, UserUndeleteError,
     UserDuplicateEmailError, UserPermissionError
@@ -28,15 +30,32 @@ class UserCollection(object):
     @falcon.before(Authenticate())
     def on_get(self, req, resp):
         """Get all users (maybe filtered, and paginated)."""
+        query_params = {
+            k: json.loads(v)
+            for k, v in req.params.items()
+        }
         try:
-            query_params = req.params
             auth_user = req.context.get('user')
-            users = get_many(
+            filter_ = query_params.get('filter')
+            range_ = query_params.get('range')
+            sorted_ = query_params.get('sort')
+            users, total_count = get_many(
                 db_client=self.db_client,
+                filter_=filter_,
+                range_=range_,
+                sorted_=sorted_,
                 auth_user=auth_user,
-                query=query_params,
             )
+            for user in users:
+                user['id'] = user['_id']
             resp.body = dumps(users)
+            len_users = len(users)
+            resp.content_range = (
+                range_[0],
+                len_users - range_[0],
+                total_count,
+                'users'
+            )
         except UserPermissionError as e:
             raise falcon.HTTPUnauthorized(description=e.args[0])
 
@@ -51,4 +70,6 @@ class UserCollection(object):
             resp.body = dumps({'_id': _id})
             resp.status = falcon.HTTP_201
         except UserDuplicateEmailError as e:
+            raise falcon.HTTPBadRequest(description=e.args[0])
+        except UserSchemaError as e:
             raise falcon.HTTPBadRequest(description=e.args[0])

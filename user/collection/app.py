@@ -30,7 +30,10 @@ class Roap():
             CORS(
                 allow_all_origins=True,
                 allow_all_methods=True,
-                allow_all_headers=True
+                allow_all_headers=True,
+                expose_headers_list=[
+                    "Content-Range",
+                ],
             ).middleware
         ])
 

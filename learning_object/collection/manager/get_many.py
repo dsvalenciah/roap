@@ -3,30 +3,34 @@
 Contains utility functions to works with learning-object get many.
 """
 
-def get_many(db_client, offset, count, search=None):
+def get_many(db_client, filter_, range_, sorted_):
     """Get learning objects with query."""
 
-    if search:
-        learning_objects = list(
-            db_client.learning_objects.find(
-                {'$text': {
-                    '$search': search,
-                    '$diacriticSensitive': False,
-                    '$caseSensitive': False,
-                }},
-                {'rating': {'$meta': "textScore"}}
-            ).sort(
-                [('rating', {'$meta': "textScore"})]
-            ).skip(offset).limit(count)
+    start, end = range_
+    field, order = sorted_
+
+    if filter_.get('q'):
+        cursor = db_client.learning_objects.find(
+            {'$text': {
+                '$search': filter_.get('q'),
+                '$diacriticSensitive': False,
+                '$caseSensitive': False,
+            }},
+            {'rating': {'$meta': "textScore"}}
         )
+        return list(
+            cursor
+            .sort([('rating', {'$meta': "textScore"})])
+            .skip(start)
+            .limit(end - start)
+        ), cursor.count()
 
-        return learning_objects
+    cursor = db_client.learning_objects.find(filter_)
 
-    learning_objects = list(
-        db_client.learning_objects.find()
-            .sort([('created', -1)])
-            .skip(offset)
-            .limit(count)
-    )
 
-    return learning_objects
+    return list(
+        cursor
+        .sort([(field, -1 if order == 'DESC' else 1)])
+        .skip(start)
+        .limit(end - start)
+    ), cursor.count()

@@ -3,6 +3,11 @@
 Contains user schema.
 """
 
+from datetime import datetime
+from uuid import uuid4
+
+from passlib.hash import sha512_crypt
+
 from marshmallow import Schema, fields, validate
 
 
@@ -11,26 +16,34 @@ class User(Schema):
 
     # TODO: add keywords and notifications?
 
-    _id = fields.UUID(required=True)
+    _id = fields.Method('get_new_uuid')
     name = fields.Str(required=True)
-    password = fields.Str(required=True)
-    email = fields.Str(
+    password = fields.Method('get_encoded_password')
+    email = fields.Email(required=True)
+    role = fields.Str(
         required=True,
-        validate=validate.Email(error='Not a valid email address')
+        default='creator',
+        validate=validate.OneOf(['administrator', 'expert', 'creator'])
     )
-    role = fields.Str(required=True, validate=validate.OneOf(
-        ['administrator', 'expert', 'creator']
-    ))
-    aproved_by_admin = fields.Boolean(required=True)
-    created = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
-    modified = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
-    deleted = fields.Boolean(required=True)
-    validated = fields.Boolean(required=True)
-    last_activity = fields.DateTime(required=True, format='%Y-%m-%d %H:%M:%S')
+    status = fields.Str(
+        required=True,
+        default='pending',
+        validate=validate.OneOf(['accepted', 'rejected', 'pending'])
+    )
+    created = fields.Method('get_now')
+    modified = fields.Method('get_now')
+    deleted = fields.Boolean(required=True, default=False)
+    validated = fields.Boolean(required=True, default=False)
+    last_activity = fields.Method('get_now')
 
-user_schema = User()
+    def get_now(self, obj):
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+    def get_new_uuid(self, obj):
+        return str(uuid4())
 
-def is_valid_user(user):
-    """Check if user and his schema is matching."""
-    return user_schema.validate(user)
+    def get_encoded_password(self, obj):
+        return sha512_crypt.hash(
+            obj['password'],
+            salt='dqwjfdsakuyfd'
+        )

@@ -21,9 +21,7 @@ def parse_dict_to_xml(data):
     """Parse learning-object represented as a dict to string xml."""
     builder = deep_dict_to_xml(data)
     doc = builder.close()
-    return parseString(
-        tostring(doc, encoding="utf-8")
-    ).toprettyxml().replace('_TP_', ':')
+    return tostring(doc, encoding="utf-8").decode().replace('_TP_', ':')
 
 
 def deep_dict_to_xml(data, tag_name='lom', builder=None, prefix='lom_TP_'):
