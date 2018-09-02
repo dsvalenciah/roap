@@ -20,7 +20,7 @@ def get_last_learning_object_metadata_schema_id(db_client):
 def insert_one(
         db_client, learning_object_metadata, learning_object_category,
         learning_object_format, learning_object_id, file_extension,
-        user_id, ignore_schema=False):
+        creator_id, ignore_schema=False):
     """Insert learning object."""
 
     format_handler = {
@@ -60,7 +60,7 @@ def insert_one(
 
     learning_object_dict = dict(
         _id=learning_object_id,
-        user_id=user_id,
+        creator_id=creator_id,
         lom_schema_id=learning_object_metadata_schema_id,
         category=learning_object_category,
         metadata=learning_object_metadata,

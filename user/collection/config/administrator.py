@@ -20,7 +20,7 @@ def create_administrator(db):
             'password': sha512_crypt.hash('administrator', salt='dqwjfdsakuyfd'),
             'email': 'administrator@unal.edu.co',
             'role': 'administrator',
-            'aproved_by_admin': True,
+            'status': 'accepted',
             'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
             'modified': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
             'deleted': False,

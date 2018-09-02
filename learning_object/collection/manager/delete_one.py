@@ -7,10 +7,10 @@ from manager.exceptions.learning_object import LearningObjectNotFoundError
 from manager.exceptions.user import UserPermissionError
 
 def check_user_permission(user, learning_object):
-    learning_object_user_id = learning_object.get('user_id')
+    learning_object_creator = learning_object.get('creator_id')
     user_id = user.get('_id')
 
-    if user_id != learning_object_user_id:
+    if user_id != learning_object_creator:
         raise UserPermissionError(
             ['User is not own of this learning object.']
         )

@@ -9,10 +9,7 @@ from manager.schemas.user import User
 
 def modify_one(db_client, old_user_id, new_user, auth_user):
     """Modify user."""
-    # TODO: modify this code and implement this.
-    raise NotImplementedError()
 
-    # TODO: fix password
     if auth_user.get('role') != 'administrator':
         if old_user_id != auth_user.get('_id'):
             raise UserPermissionError(
@@ -27,11 +24,15 @@ def modify_one(db_client, old_user_id, new_user, auth_user):
         })
 
     new_user.update({
-        'name': new_user.get('name') or old_user.get('name'),
         'modified': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
     })
 
-    new_user, errors = User().dump(new_user)
+    new_user, errors = User(
+        exclude=[
+            '_id', 'password', 'email', 'created',
+            'modified', 'validated', 'last_activity'
+        ],
+    ).dump(new_user)
 
     if errors:
         raise UserSchemaError(errors)

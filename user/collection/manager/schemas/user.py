@@ -15,6 +15,7 @@ class User(Schema):
     """Definition for user schema."""
 
     # TODO: add keywords and notifications?
+    # TODO: fix salt to config file
 
     _id = fields.Method('get_new_uuid')
     name = fields.Str(required=True)
@@ -43,7 +44,9 @@ class User(Schema):
         return str(uuid4())
 
     def get_encoded_password(self, obj):
-        return sha512_crypt.hash(
-            obj['password'],
-            salt='dqwjfdsakuyfd'
-        )
+        password = obj.get('password')
+        if password:
+            return sha512_crypt.hash(
+                password,
+                salt='dqwjfdsakuyfd'
+            )

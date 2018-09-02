@@ -32,7 +32,7 @@ class Authenticate(object):
 
             user_deleted = user.get('deleted')
             user_validated = user.get('validated')
-            user_aproved_by_admin = user.get('aproved_by_admin')
+            user_aproved_by_admin = user.get('status') == 'accepted'
 
             if user_deleted:
                 raise falcon.HTTPUnauthorized('User deleted.')

@@ -19,7 +19,7 @@ def rating_one(db_client, learining_object_id, rating, user):
                 {
                     "$pull": {
                         f"rating.{user_role}.{rating_value}" : {
-                            "user_id": user.get('_id')
+                            "creator_id": user.get('_id')
                         }
                     }
                 }
@@ -30,7 +30,7 @@ def rating_one(db_client, learining_object_id, rating, user):
                 '$push': {
                     f"rating.{user_role}.{rating}": {
                         '_id': str(uuid4()),
-                        'user_id': user.get('_id'),
+                        'creator_id': user.get('_id'),
                         'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                     }
                 }

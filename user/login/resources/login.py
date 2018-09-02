@@ -37,10 +37,10 @@ class Login(object):
         if not user.get('validated'):
             # User email is not validated.
             raise falcon.HTTPUnauthorized(
-                description=['User email is not validated.']
+                description=[f'User email is not {user.get("status")}.']
             )
 
-        if not user.get('aproved_by_admin'):
+        if user.get('status') != 'accepted':
             # User is not validated by admin.
             raise falcon.HTTPUnauthorized(
                 description=['User is not validated by admin.']
@@ -52,7 +52,7 @@ class Login(object):
                     '_id': user.get('_id'),
                     'deleted': user.get('deleted'),
                     'validated': user.get('validated'),
-                    'aproved_by_admin': user.get('aproved_by_admin'),
+                    'status': user.get('status'),
                     'role': user.get('role'),
                     'name': user.get('name'),
                     # 'exp': datetime.utcnow() + timedelta(seconds=3600),

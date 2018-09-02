@@ -3,3 +3,4 @@ gunicorn
 pymongo
 pyjwt
 falcon-cors
+rq

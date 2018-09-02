@@ -54,6 +54,7 @@ class User(object):
                 new_user=new_user,
                 auth_user=auth_user,
             )
+            resp.body = dumps({'status': 'modified'})
         except UserNotFoundError as e:
             raise falcon.HTTPNotFound(description=e.args[0])
         except UserSchemaError as e:
@@ -74,6 +75,7 @@ class User(object):
                 user_id=_id,
                 auth_user=auth_user,
             )
+            resp.body = dumps({'status': 'deleted'})
         except UserNotFoundError as e:
             raise falcon.HTTPNotFound(description=e.args[0])
         except UserUndeleteError as e:

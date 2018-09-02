@@ -7,11 +7,13 @@ services:
       - database-storage:/run/db
     ports:
       - 27017:27017
+    logging:
+      driver: "none"
 
   learning_object_metadata_schema:
     image: learning_object_metadata_schema
     build: ./learning_object/metadata_schema
-    command: gunicorn -b 0.0.0.0:80 app:api
+    command: gunicorn -b 0.0.0.0:80 app:api --reload
     ports:
       - 80
     environment:
@@ -22,11 +24,13 @@ services:
       - db
     depends_on:
       - db
+    logging:
+      driver: "none"
 
   learning_object_file_manager:
     image: learning_object_file_manager
     build: ./learning_object/file_manager
-    command: gunicorn -b 0.0.0.0:80 app:api
+    command: gunicorn -b 0.0.0.0:80 app:api --reload
     ports:
       - 80
     environment:
@@ -43,11 +47,13 @@ services:
       dockerfile: Dockerfile
     volumes:
       - file-storage:/run/files
+    logging:
+      driver: "none"
 
   learning_object_collection:
     image: learning_object_collection
     build: ./learning_object/collection
-    command: gunicorn -b 0.0.0.0:80 app:api
+    command: gunicorn -b 0.0.0.0:80 app:api --reload
     ports:
       - 80
     environment:
@@ -68,11 +74,13 @@ services:
     environment:
       VIRTUAL_HOST: "*/learning-object-file-renderer/*"
       VIRTUAL_HOST_WEIGHT: 10
+    logging:
+      driver: "none"    
 
   user_collection:
     image: user_collection
     build: ./user/collection
-    command: gunicorn -b 0.0.0.0:80 app:api
+    command: gunicorn -b 0.0.0.0:80 app:api --reload
     ports:
       - 80
     environment:
@@ -87,7 +95,7 @@ services:
   user_login:
     image: user_login
     build: ./user/login
-    command: gunicorn -b 0.0.0.0:80 app:api
+    command: gunicorn -b 0.0.0.0:80 app:api --reload
     ports:
       - 80
     environment:
@@ -102,7 +110,7 @@ services:
   user_account_validation:
     image: user_account_validation
     build: ./user/account_validation
-    command: gunicorn -b 0.0.0.0:80 app:api
+    command: gunicorn -b 0.0.0.0:80 app:api --reload
     ports:
       - 80
     environment:
@@ -113,15 +121,31 @@ services:
       - db
     depends_on:
       - db
+      - redis
 
-  ui:
-    image: ui
-    build: ./ui
-    ports:
-      - 80
+  worker:
+    image: user_account_validation
+    build: ./user/account_validation
+    command: rq worker -u redis://redis
     environment:
-      VIRTUAL_HOST: "*/*"
-      VIRTUAL_HOST_WEIGHT: 0
+      VIRTUAL_HOST: "*/tasks, */tasks/*"
+    depends_on:
+      - db
+      - redis
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - queue-storage:/data
+
+  #ui:
+  #  image: ui
+  #  build: ./ui
+  #  ports:
+  #    - 80
+  #  environment:
+  #    VIRTUAL_HOST: "*/*"
+  #    VIRTUAL_HOST_WEIGHT: 0
 
   lb:
     image: dockercloud/haproxy
@@ -139,8 +163,11 @@ services:
       - user_collection
       - user_login
       - user_account_validation
-      - ui
+      #- ui
+    logging:
+      driver: "none"
 
 volumes:
     file-storage:
     database-storage:
+    queue-storage:

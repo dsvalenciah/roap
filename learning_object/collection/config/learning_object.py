@@ -54,7 +54,7 @@ def learning_object_populate(db):
                         learning_object_format='xml',
                         learning_object_id=learning_object_id,
                         file_extension=None,
-                        user_id='ee6a11aee52b4e64b4a6a14d42ff49da',
+                        creator_id='ee6a11aee52b4e64b4a6a14d42ff49da',
                         ignore_schema=True,
                     )
                 except LearningObjectMetadataSchemaError as e:

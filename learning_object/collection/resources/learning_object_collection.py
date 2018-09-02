@@ -38,9 +38,9 @@ class LearningObjectCollection(object):
             for k, v in req.params.items()
         }
         try:
-            filter_ = query_params.get('filter')
-            range_ = query_params.get('range')
-            sorted_ = query_params.get('sort')
+            filter_ = query_params.get('filter', {})
+            range_ = query_params.get('range', [0,9])
+            sorted_ = query_params.get('sort', ['id', 'desc'])
             learning_objects, total_count = get_many(
                 db_client=self.db_client,
                 filter_=filter_,
@@ -82,7 +82,7 @@ class LearningObjectCollection(object):
             )
             learning_object_dict = dict(
                 _id=str(uuid4()),
-                user_id=user.get('id'),
+                creator_id=user.get('id'),
                 lom_schema_id=learning_object_metadata_schema_id,
                 category=learning_object_category,
                 metadata=learning_object_metadata,

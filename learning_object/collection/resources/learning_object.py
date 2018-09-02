@@ -67,9 +67,10 @@ class LearningObject(object):
                 new_learning_object=new_learning_object,
                 user=user,
             )
+            resp.body = dumps({'status': 'modified'})
         except LearningObjectNotFoundError as e:
             raise falcon.HTTPNotFound(description=e.args[0])
-        except LearningObjectMetadataSchemaError as e:
+        except LearningObjectSchemaError as e:
             raise falcon.HTTPError(description=e.args[0])
         except LearningObjectUnmodifyError as e:
             raise falcon.HTTPBadRequest(description=e.args[0])
@@ -88,6 +89,7 @@ class LearningObject(object):
                 learning_object_id=_id,
                 user=user,
             )
+            resp.body = dumps({'status': 'deleted'})
         except LearningObjectNotFoundError as e:
             raise falcon.HTTPNotFound(description=e.args[0])
         except LearningObjectUndeleteError as e:

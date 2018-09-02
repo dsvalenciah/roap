@@ -12,17 +12,12 @@ class LearningObject(Schema):
     """Definition for learning-object schema."""
 
     _id = fields.UUID(required=True)
-    user_id = fields.UUID(required=True)
+    creator_id = fields.UUID(required=True)
+    evaluator_id = fields.UUID(required=False)
     lom_schema_id = fields.UUID(required=True)
     category = fields.Str(required=True)
-    created = fields.DateTime(
-        default=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        format='%Y-%m-%d %H:%M:%S'
-    )
-    modified = fields.DateTime(
-        default=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        format='%Y-%m-%d %H:%M:%S'
-    )
+    created = fields.Method('get_now')
+    modified = fields.Method('get_now')
     deleted = fields.Boolean(default=False)
     evaluated = fields.Boolean(default=False)
     metadata = fields.Dict(required=True)
@@ -31,6 +26,8 @@ class LearningObject(Schema):
         user_role: {str(i): [] for i in range(1, 6)}
         for user_role in ['expert', 'creator']
     })
+    def get_now(self, obj):
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 learning_object_schema = LearningObject()
 
