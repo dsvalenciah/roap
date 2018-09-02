@@ -24,8 +24,6 @@ services:
       - db
     depends_on:
       - db
-    logging:
-      driver: "none"
 
   learning_object_file_manager:
     image: learning_object_file_manager

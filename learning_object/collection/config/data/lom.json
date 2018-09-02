@@ -19,11 +19,13 @@
             "required": false
         },
         "language": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "description": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "keyword": {
@@ -32,16 +34,18 @@
             "required": false
         },
         "coverage": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "structure": {
             "kind": "string",
-            "required": false
+            "required": true
         },
         "aggregationlevel": {
             "kind": "string",
-            "required": false
+            "required": true,
+            "TODO": "This should be an enum"
         }
     },
     "contribute": {
@@ -50,11 +54,12 @@
             "required": false
         },
         "date": {
-            "kind": "string",
+            "kind": "datetime",
             "required": false
         },
         "entity": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         }
     },
@@ -86,7 +91,8 @@
             "required": false
         },
         "language": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         }
     },
@@ -116,7 +122,8 @@
     },
     "technical": {
         "format": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "size": {
@@ -124,7 +131,8 @@
             "required": false
         },
         "location": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "requirements": {
@@ -132,11 +140,13 @@
             "required": false
         },
         "installationremarks": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "otherplatformrequirements": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "duration": {
@@ -150,43 +160,52 @@
             "required": false
         },
         "learningresourcetype": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "interactivitylevel": {
             "kind": "string",
-            "required": false
+            "required": false,
+            "TODO": "This should be an enum"
         },
         "semanticdensity": {
             "kind": "string",
-            "required": false
+            "required": false,
+            "TODO": "This should be an enum"
         },
         "intendedenduserrole": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "context": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "typicalagerange": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "difficulty": {
             "kind": "string",
-            "required": false
+            "required": false,
+            "TODO": "This should be an enum"
         },
         "typicallearningtime": {
             "kind": "string",
             "required": false
         },
         "description": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         },
         "language": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         }
     },
@@ -210,7 +229,8 @@
             "required": false
         },
         "description": {
-            "kind": "string",
+            "kind": "list",
+            "items": "string",
             "required": false
         }
     },
@@ -230,7 +250,7 @@
             "required": false
         },
         "date": {
-            "kind": "string",
+            "kind": "datetime",
             "required": false
         },
         "description": {
@@ -272,7 +292,8 @@
             "required": false
         },
         "keyword": {
-            "kind": "string",
+            "items": "string",
+            "kind": "list",
             "required": false
         }
     },
