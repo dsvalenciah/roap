@@ -18,19 +18,19 @@ def get_many(db_client, filter_, range_, sorted_):
             }},
             {'rating': {'$meta': "textScore"}}
         )
-        return list(
+        learning_objects = list(
             cursor
             .sort([('rating', {'$meta': "textScore"})])
             .skip(start)
             .limit(end - start)
-        ), cursor.count()
+        )
+    else:
+        cursor = db_client.learning_objects.find(filter_)
+        learning_objects = list(
+            cursor
+            .sort([(field, -1 if order == 'DESC' else 1)])
+            .skip(start)
+            .limit(end - start)
+        )
 
-    cursor = db_client.learning_objects.find(filter_)
-
-
-    return list(
-        cursor
-        .sort([(field, -1 if order == 'DESC' else 1)])
-        .skip(start)
-        .limit(end - start)
-    ), cursor.count()
+    return learning_objects, cursor.count()

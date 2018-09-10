@@ -4,6 +4,7 @@ Contains utility functions to works with learning-object insert one.
 """
 
 import json
+from uuid import uuid4
 
 from manager.exceptions.learning_object import LearningObjectFormatError
 
@@ -19,8 +20,8 @@ def get_last_learning_object_metadata_schema_id(db_client):
 
 def insert_one(
         db_client, learning_object_metadata, learning_object_category,
-        learning_object_format, learning_object_id, file_extension,
-        creator_id, ignore_schema=False):
+        learning_object_format, creator_id, learning_object_id=None,
+        learning_object_file=None, ignore_schema=False, with_file=True):
     """Insert learning object."""
 
     format_handler = {
@@ -35,10 +36,15 @@ def insert_one(
         format_handler[learning_object_format](learning_object_metadata)
     )
 
+    learning_object_metadata2 = learning_object_metadata.copy()
+
     if not ignore_schema:
-        learning_object_metadata = LearningObjectMetadata().dump(
+        learning_object_metadata, errors = LearningObjectMetadata().dump(
             learning_object_metadata
         )
+        if errors:
+            pass
+            # TODO: manage errors
 
     learning_object_metadata_schema_id = (
         get_last_learning_object_metadata_schema_id(db_client)
@@ -46,7 +52,16 @@ def insert_one(
 
     # TODO: validate learning object category.
 
-    if not file_extension:
+    file_extension = ''
+    if not learning_object_id:
+        learning_object_id = str(uuid4())
+
+    if with_file:
+        if not learning_object_file:
+            raise ValueError(
+                'No have file'
+            )
+    else:
         file_extension = (learning_object_metadata
             .get('technical', {})
             .get('format')

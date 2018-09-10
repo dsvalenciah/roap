@@ -18,6 +18,7 @@ from manager.exceptions.user import (
 from manager.utils.req_to_dict import req_to_dict
 from manager.utils.auth import Authenticate
 from manager.insert_one import insert_one
+from manager.insert_one import get_last_learning_object_metadata_schema_id
 from manager.get_many import get_many
 
 from bson.json_util import dumps
@@ -65,51 +66,29 @@ class LearningObjectCollection(object):
         """Create learning-object."""
         # TODO: fix category
         # TODO: fix file manage
-        # learning_object_metadata = req.get_param('learningObjectMetadata')
-        # learning_object_category = req.get_param('learningObjectCategory')
-        # learning_object_format = req.get_param('learningObjectFormat')
-        # learning_object_file_metadata = req.get_param(
-        #     'learningObjectFileMetadata'
-        # )
+        post_params = req_to_dict(req)
+        metadata = post_params.get('metadata')
+        category = post_params.get('category')
+        # TODO: fix file format xml for example
+        _format = post_params.get('format')
+        base64_file = post_params.get('file')
+
+        if None in [metadata, category, base64_file]:
+            raise falcon.HTTPBadRequest(
+                description=['An metadata, category, and file is required']
+            )
 
         user = req.context['user']
 
         try:
-            from manager.schemas.learning_object import LearningObject
-            from uuid import uuid4
-            learning_object_metadata_schema_id = (
-                get_last_learning_object_metadata_schema_id(db_client)
-            )
-            learning_object_dict = dict(
-                _id=str(uuid4()),
-                creator_id=user.get('id'),
-                lom_schema_id=learning_object_metadata_schema_id,
-                category=learning_object_category,
-                metadata=learning_object_metadata,
-                file_name=learning_object_id + '.' + file_extension,
-            )
-
-            learning_object, errors = LearningObject().dump(learning_object_dict)
-
-            if errors:
-                # TODO: report response errors.
-                raise ValueError(errors)
-
-            result = db_client.learning_objects.insert_one(
-                learning_object
-            )
-            '''
             _id = insert_one(
                 db_client=self.db_client,
-                learning_object_metadata=learning_object_metadata,
-                learning_object_category=learning_object_category,
-                learning_object_format=learning_object_format,
-                learning_object_id=learning_object_file_metadata.get('_id'),
-                file_extension=learning_object_file_metadata.get('extension'),
-                user_id=user.get('_id'),
-                ignore_schema=False,
+                learning_object_metadata=metadata,
+                learning_object_category=category,
+                learning_object_format=_format or 'json',
+                creator_id=user.get('_id'),
+                learning_object_file=base64_file,
             )
-            '''
             resp.body = dumps(
                 {'_id': _id}
             )

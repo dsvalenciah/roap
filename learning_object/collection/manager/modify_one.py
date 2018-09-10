@@ -13,8 +13,6 @@ from manager.exceptions.user import UserPermissionError
 
 from manager.schemas.learning_object import LearningObject
 
-from marshmallowjson.marshmallowjson import Definition
-
 def check_user_permission(user, learning_object):
     learning_object_creator_id = learning_object.get('creator_id')
     user_id = user.get('_id')
