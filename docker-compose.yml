@@ -73,7 +73,7 @@ services:
       VIRTUAL_HOST: "*/learning-object-file-renderer/*"
       VIRTUAL_HOST_WEIGHT: 10
     logging:
-      driver: "none"    
+      driver: "none"
 
   user_collection:
     image: user_collection
