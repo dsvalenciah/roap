@@ -2,6 +2,7 @@
 learning_object/collection/config/data/learning_object_xml/*
 learning_object/default_files/files/*
 ui/build
+ui/roap-ui
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
