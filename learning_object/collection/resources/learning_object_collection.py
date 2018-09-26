@@ -59,7 +59,8 @@ class LearningObjectCollection(object):
                 'learning-objects'
             )
         except ValueError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
 
     @falcon.before(Authenticate())
     def on_post(self, req, resp):
@@ -71,11 +72,12 @@ class LearningObjectCollection(object):
         category = post_params.get('category')
         # TODO: fix file format xml for example
         _format = post_params.get('format')
-        base64_file = post_params.get('file')
+        file = post_params.get('file')
 
-        if None in [metadata, category, base64_file]:
-            raise falcon.HTTPBadRequest(
-                description=['An metadata, category, and file is required']
+        if None in [metadata, category, file]:
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps(
+                {'message': ['An metadata, category, and file is required']}
             )
 
         user = req.context['user']
@@ -87,15 +89,21 @@ class LearningObjectCollection(object):
                 learning_object_category=category,
                 learning_object_format=_format or 'json',
                 creator_id=user.get('_id'),
-                learning_object_file=base64_file,
+                learning_object_file=file,
             )
             resp.body = dumps(
-                {'_id': _id}
+                {'id': _id}
             )
             resp.status = falcon.HTTP_201
         except LearningObjectMetadataSchemaError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except LearningObjectSchemaError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserInactiveError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = dumps({'message': json.dumps(e.args[0])})
+        except LearningObjectFormatError as e:
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = dumps({'message': json.dumps(e.args[0])})

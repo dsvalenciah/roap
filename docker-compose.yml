@@ -58,8 +58,11 @@ services:
       VIRTUAL_HOST: "*/learning-object-collection, */learning-object-collection/*"
       VIRTUAL_HOST_WEIGHT: 10
       DB_HOST: db
+      FILE_STORAGE: /run/files
     links:
       - db
+    volumes:
+      - file-storage:/run/files
     depends_on:
       - learning_object_metadata_schema
 

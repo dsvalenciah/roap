@@ -28,6 +28,8 @@ class UserValidate(object):
                 {'$set': {'validated': True}},
             )
         except jwt.ExpiredSignatureError as e:
-            raise falcon.HTTPUnauthorized('JWT token expired', str(e))
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = dumps({'message': ['JWT token expired']})
         except jwt.DecodeError as e:
-            raise falcon.HTTPUnauthorized('JWT decode error', str(e))
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = dumps({'message': ['JWT decode error']})

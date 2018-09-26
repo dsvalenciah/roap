@@ -3,6 +3,8 @@
 Contains necessary Resources to works with learning-objects CRUD operations.
 """
 
+import json
+
 from random import randint
 
 from manager.exceptions.learning_object import (
@@ -46,13 +48,17 @@ class LearningObject(object):
             )
             resp.body = dumps(learning_object)
         except LearningObjectNotFoundError as e:
-            raise falcon.HTTPNotFound(description=e.args[0])
+            resp.status = falcon.HTTP_NOT_FOUND
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except LearningObjectFormatError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserInactiveError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserPermissionError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
 
     @falcon.before(Authenticate())
     def on_put(self, req, resp, _id):
@@ -69,15 +75,20 @@ class LearningObject(object):
             )
             resp.body = dumps({'status': 'modified'})
         except LearningObjectNotFoundError as e:
-            raise falcon.HTTPNotFound(description=e.args[0])
+            resp.status = falcon.HTTP_NOT_FOUND
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except LearningObjectSchemaError as e:
-            raise falcon.HTTPError(description=e.args[0])
-        except LearningObjectUnmodifyError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
+        except LearningObjectMetadataSchemaError as e:
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserInactiveError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserPermissionError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = dumps({'message': json.dumps(e.args[0])})
 
     @falcon.before(Authenticate())
     def on_delete(self, req, resp, _id):
@@ -91,13 +102,17 @@ class LearningObject(object):
             )
             resp.body = dumps({'status': 'deleted'})
         except LearningObjectNotFoundError as e:
-            raise falcon.HTTPNotFound(description=e.args[0])
+            resp.status = falcon.HTTP_NOT_FOUND
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except LearningObjectUndeleteError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserInactiveError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserPermissionError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
 
     @falcon.before(Authenticate())
     def on_patch(self, req, resp, _id):
@@ -113,10 +128,14 @@ class LearningObject(object):
                 user=user,
             )
         except LearningObjectNotFoundError as e:
-            raise falcon.HTTPNotFound(description=e.args[0])
+            resp.status = falcon.HTTP_NOT_FOUND
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except LearningObjectUndeleteError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserInactiveError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserPermissionError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})

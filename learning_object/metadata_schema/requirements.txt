@@ -2,6 +2,6 @@ falcon
 gunicorn
 pymongo
 marshmallow
-marshmallowjson>=0.4.2,<5.0
+marshmallowjson>=0.4.5
 pyjwt
 falcon-cors

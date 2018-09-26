@@ -67,5 +67,5 @@ class LearningObjectMetadata(object):
             else:
                 resp.status = falcon.HTTP_201
         except ValidationError as e:
-            resp.body = json.dumps({'errors': str(e)})
-            resp.status = falcon.HTTP_400
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})

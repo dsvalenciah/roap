@@ -4,9 +4,18 @@ Contains utility functions to works with learning-object and his metadata
 fields schemas.
 """
 
+from marshmallowjson.marshmallowjson import Definition
+
+def LearningObjectMetadata(db_client):
+    """Check if learning-object matches with a learning-object schema."""
+    lom_schema = list(
+        db_client.lom_schema.find().sort("created", -1).limit(1)
+    )[0].get('lom')
+    return Definition(lom_schema).top()
+
+"""
 # TODO: to add many nested fields, add many=True in all nested fields
 # handle it with @predump and add the multiple forms in the front end
-
 from marshmallow import Schema, fields, validate, pre_dump
 
 class Identifier(Schema):
@@ -162,3 +171,4 @@ class LearningObjectMetadata(Schema):
     relation = fields.Nested(Relation)
     annotation = fields.Nested(Annotation)
     classification = fields.Nested(Classification)
+"""

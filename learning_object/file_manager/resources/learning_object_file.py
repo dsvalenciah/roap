@@ -2,7 +2,7 @@
 """
 Contains necessary Resources to works with learning object files.
 """
-
+import json
 from utils.storage import StorageUnit
 
 import falcon
@@ -51,4 +51,5 @@ class LearningObjectFile(object):
                 "contentType": FILE_MIME_TYPES.get(file_extension),
             }
         except FileNotFoundError:
-            raise falcon.HTTPNotFound()
+            resp.status = falcon.HTTP_NOT_FOUND
+            resp.body = dumps({'message': json.dumps(e.args[0])})

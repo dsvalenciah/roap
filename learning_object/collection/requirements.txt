@@ -2,6 +2,7 @@ falcon
 gunicorn
 pymongo
 marshmallow
+marshmallowjson==0.4.5
 xmltodict
 pyjwt
 falcon-cors

@@ -32,19 +32,23 @@ class Login(object):
 
         if not user:
             # User not exists.
-            raise falcon.HTTPUnauthorized(description=['User not found.'])
+            resp.status = falcon.HTTP_NOT_FOUND
+            resp.body = json.dumps({'message': ['User not found.']})
+            return
 
         if not user.get('validated'):
             # User email is not validated.
-            raise falcon.HTTPUnauthorized(
-                description=[f'User email is not {user.get("status")}.']
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = json.dumps(
+                {'message': [f'User email is not {user.get("status")}.']}
             )
+            return
 
         if user.get('status') != 'accepted':
             # User is not validated by admin.
-            raise falcon.HTTPUnauthorized(
-                description=['User is not validated by admin.']
-            )
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = json.dumps({'message': ['User is not validated by admin.']})
+            return
 
         if user and sha512_crypt.verify(password, user.get('password')):
             token = jwt.encode(
@@ -64,5 +68,6 @@ class Login(object):
                 'token': token
             })
         else:
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = json.dumps({'message': ['Invalid password.']})
             # Incorrect password.
-            raise falcon.HTTPUnauthorized(description=['Invalid password.'])

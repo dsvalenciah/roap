@@ -6,8 +6,13 @@ Contains utility functions to works with learning-object modify.
 from datetime import datetime
 
 from manager.exceptions.learning_object import (
-    LearningObjectNotFoundError, LearningObjectSchemaError
+    LearningObjectNotFoundError, LearningObjectSchemaError,
+    LearningObjectMetadataSchemaError
 )
+
+import re
+
+from marshmallowjson.marshmallowjson import Definition
 
 from manager.exceptions.user import UserPermissionError
 
@@ -24,11 +29,8 @@ def check_user_permission(user, learning_object):
                 ['User is not own of this learning object.']
             )
 
-def get_learning_object_metadata_schema(
-        db_client, learning_object_metadata_schema_id):
-    return db_client.lom_schema.find_one({
-        '_id': learning_object_metadata_schema_id
-    })
+def get_lom_schema(db_client, lom_schema_id):
+    return db_client.lom_schema.find_one({'_id': lom_schema_id}).get('lom')
 
 def modify_one(db_client, old_learning_object_id, new_learning_object, user):
     """Modify learning object."""
@@ -37,31 +39,34 @@ def modify_one(db_client, old_learning_object_id, new_learning_object, user):
     })
 
     if not old_learning_object:
-        raise LearningObjectNotFoundError({
-            'errors': ['Learning Object _id not found.']
-        })
+        raise LearningObjectNotFoundError(
+            ['Learning Object _id not found.']
+        )
 
     check_user_permission(user, old_learning_object)
 
-    #old_learning_object_metadata_schema = get_learning_object_metadata_schema(
-    #    db_client,
-    #    old_learning_object.get('lom_schema_id')
-    #)
+    old_lom_schema = get_lom_schema(
+        db_client,
+        old_learning_object.get('lom_schema_id')
+    )
 
-    #LearningObjectMetadata = (
-    #    Definition(old_learning_object_metadata_schema).top()
-    #)
+    LearningObjectMetadata = Definition(old_lom_schema).top()
 
     new_learning_object, errors = LearningObject(
-        exclude=['_id']
+        exclude=['_id', 'creator_id', 'lom_schema_id']
     ).dump(new_learning_object)
 
     if errors:
         raise LearningObjectSchemaError(errors)
 
-    #new_learning_object_metadata = LearningObjectMetadata().dump(
-    #    new_learning_object.get('metadata')
-    #)
+    new_learning_object_metadata = new_learning_object.get('metadata')
+
+    errors = LearningObjectMetadata.validate(
+        new_learning_object_metadata
+    )
+
+    if errors:
+        raise LearningObjectMetadataSchemaError(errors)
 
     new_learning_object.update({
         'modified': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),

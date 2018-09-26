@@ -57,7 +57,8 @@ class UserCollection(object):
                 'users'
             )
         except UserPermissionError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = dumps({'message': json.dumps(e.args[0])})
 
     def on_post(self, req, resp):
         """Create user."""
@@ -70,6 +71,8 @@ class UserCollection(object):
             resp.body = dumps({'_id': _id})
             resp.status = falcon.HTTP_201
         except UserDuplicateEmailError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserSchemaError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})

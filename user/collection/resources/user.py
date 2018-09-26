@@ -3,6 +3,8 @@
 Contains necessary Resources to works with user CRUD operations.
 """
 
+import json
+
 from manager.exceptions.user import (
     UserNotFoundError, UserSchemaError, UserUnmodifyError, UserUndeleteError,
     UserDuplicateEmailError, UserPermissionError
@@ -38,9 +40,11 @@ class User(object):
             )
             resp.body = dumps(user)
         except UserNotFoundError as e:
-            raise falcon.HTTPNotFound(description=e.args[0])
+            resp.status = falcon.HTTP_NOT_FOUND
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserPermissionError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = dumps({'message': json.dumps(e.args[0])})
 
     @falcon.before(Authenticate())
     def on_put(self, req, resp, _id):
@@ -56,13 +60,17 @@ class User(object):
             )
             resp.body = dumps({'status': 'modified'})
         except UserNotFoundError as e:
-            raise falcon.HTTPNotFound(description=e.args[0])
+            resp.status = falcon.HTTP_NOT_FOUND
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserSchemaError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserUnmodifyError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserPermissionError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = dumps({'message': json.dumps(e.args[0])})
 
     @falcon.before(Authenticate())
     def on_delete(self, req, resp, _id):
@@ -77,8 +85,11 @@ class User(object):
             )
             resp.body = dumps({'status': 'deleted'})
         except UserNotFoundError as e:
-            raise falcon.HTTPNotFound(description=e.args[0])
+            resp.status = falcon.HTTP_NOT_FOUND
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserUndeleteError as e:
-            raise falcon.HTTPBadRequest(description=e.args[0])
+            resp.status = falcon.HTTP_BAD_REQUEST
+            resp.body = dumps({'message': json.dumps(e.args[0])})
         except UserPermissionError as e:
-            raise falcon.HTTPUnauthorized(description=e.args[0])
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = dumps({'message': json.dumps(e.args[0])})

@@ -4,16 +4,25 @@ Contains utility functions to works with learning-object insert one.
 """
 
 import json
+import mimetypes
 from uuid import uuid4
 
-from manager.exceptions.learning_object import LearningObjectFormatError
+mimetypes.init()
+
+from manager.exceptions.learning_object import (
+    LearningObjectFormatError, LearningObjectMetadataSchemaError,
+    LearningObjectSchemaError
+)
+
+import re
+
+from datetime import datetime
 
 from manager.schemas.learning_object import LearningObject
 from manager.schemas.learning_object_metadata import LearningObjectMetadata
 
 from manager.utils.xml_to_dict import xml_to_dict
-
-from bson.json_util import dumps
+from manager.utils.file_manager import StorageUnit
 
 def get_last_learning_object_metadata_schema_id(db_client):
     return db_client.lom_schema.find().sort("created", -1)[0].get('_id')
@@ -36,15 +45,12 @@ def insert_one(
         format_handler[learning_object_format](learning_object_metadata)
     )
 
-    learning_object_metadata2 = learning_object_metadata.copy()
-
     if not ignore_schema:
-        learning_object_metadata, errors = LearningObjectMetadata().dump(
-            learning_object_metadata
-        )
+        errors = LearningObjectMetadata(
+            db_client
+        ).validate(learning_object_metadata)
         if errors:
-            pass
-            # TODO: manage errors
+            raise LearningObjectMetadataSchemaError(errors)
 
     learning_object_metadata_schema_id = (
         get_last_learning_object_metadata_schema_id(db_client)
@@ -52,7 +58,6 @@ def insert_one(
 
     # TODO: validate learning object category.
 
-    file_extension = ''
     if not learning_object_id:
         learning_object_id = str(uuid4())
 
@@ -61,6 +66,21 @@ def insert_one(
             raise ValueError(
                 'No have file'
             )
+        file_metadata = {
+            '_id': learning_object_id,
+            'extension': mimetypes.guess_extension(
+                learning_object_file.get('mimeType')
+            ),
+            'name': learning_object_file.get('name'),
+            'mime_type': learning_object_file.get('mimeType'),
+            'size': learning_object_file.get('size'),
+            'last_modified': learning_object_file.get('lastModified')
+        }
+        storage_unit = StorageUnit()
+        storage_unit.store(
+            learning_object_file.get('base64File'),
+            file_metadata
+        )
     else:
         file_extension = (learning_object_metadata
             .get('technical', {})
@@ -72,24 +92,31 @@ def insert_one(
             raise ValueError(
                 f'{learning_object_id} no have extension'
             )
+        file_extension = '.' + file_extension
+        file_metadata = {
+            '_id': learning_object_id,
+            'extension': file_extension,
+            'name': learning_object_id + file_extension,
+            'mime_type': None,
+            'size': None,
+            'last_modified': None
+        }
+
 
     learning_object_dict = dict(
         _id=learning_object_id,
         creator_id=creator_id,
         lom_schema_id=learning_object_metadata_schema_id,
         category=learning_object_category,
-        metadata=learning_object_metadata,
-        file_name=learning_object_id + '.' + file_extension,
+        metadata= learning_object_metadata,
+        file_metadata=file_metadata
     )
 
     learning_object, errors = LearningObject().dump(learning_object_dict)
 
     if errors:
-        # TODO: report response errors.
-        raise ValueError(errors)
+        raise LearningObjectSchemaError(errors)
 
-    result = db_client.learning_objects.insert_one(
-        learning_object
-    )
+    result = db_client.learning_objects.insert_one(learning_object)
 
     return result.inserted_id

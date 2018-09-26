@@ -11,23 +11,34 @@
     },
     "general": {
         "identifier": {
-            "kind": "list",
-            "items": "identifier",
+            "kind": "identifier",
             "required": false
         },
         "title": {
             "kind": "string",
-            "required": false
+            "required": true,
+            "validate": {
+                "type": "length",
+                "params": {
+                    "min": 1,
+                    "error": "Requiredfield."
+                }
+            }
         },
         "language": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         },
         "description": {
-            "kind": "list",
-            "items": "string",
-            "required": false
+            "kind": "string",
+            "required": true,
+            "validate": {
+                "type": "length",
+                "params": {
+                    "min": 1,
+                    "error": "Requiredfield."
+                }
+            }
         },
         "keyword": {
             "kind": "list",
@@ -35,18 +46,27 @@
             "required": false
         },
         "coverage": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         },
         "structure": {
             "kind": "string",
-            "required": true
+            "required": false
         },
         "aggregationlevel": {
             "kind": "string",
-            "required": true,
-            "enum": ["1", "2", "3", "4"]
+            "required": false,
+            "validate": {
+                "type": "oneof",
+                "params": {
+                    "choices": [
+                        "1",
+                        "2",
+                        "3",
+                        "4"
+                    ]
+                }
+            }
         }
     },
     "contribute": {
@@ -55,12 +75,11 @@
             "required": false
         },
         "date": {
-            "kind": "datetime",
+            "kind": "date",
             "required": false
         },
         "entity": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         }
     },
@@ -74,20 +93,17 @@
             "required": false
         },
         "contribute": {
-            "kind": "list",
-            "items": "contribute",
+            "kind": "contribute",
             "required": false
         }
     },
     "metametadata": {
         "identifier": {
-            "kind": "list",
-            "items": "identifier",
+            "kind": "identifier",
             "required": false
         },
         "contribute": {
-            "kind": "list",
-            "items": "contribute",
+            "kind": "contribute",
             "required": false
         },
         "metadataschema": {
@@ -95,8 +111,7 @@
             "required": false
         },
         "language": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         }
     },
@@ -120,15 +135,13 @@
     },
     "requirements": {
         "orcomposite": {
-            "kind": "list",
-            "items": "orcomposite",
+            "kind": "orcomposite",
             "required": false
         }
     },
     "technical": {
         "format": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         },
         "size": {
@@ -136,23 +149,19 @@
             "required": false
         },
         "location": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         },
         "requirements": {
-            "kind": "list",
-            "items": "requirements",
+            "kind": "requirements",
             "required": false
         },
         "installationremarks": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         },
         "otherplatformrequirements": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         },
         "duration": {
@@ -173,45 +182,71 @@
         "interactivitylevel": {
             "kind": "string",
             "required": false,
-            "enum": ["active", "expositive", "mixed"]
+            "validate": {
+                "type": "oneof",
+                "params": {
+                    "choices": [
+                        "active",
+                        "expositive",
+                        "mixed"
+                    ]
+                }
+            }
         },
         "semanticdensity": {
             "kind": "string",
             "required": false,
-            "enum": ["very low", "low", "medium", "high", "very high"]
+            "validate": {
+                "type": "oneof",
+                "params": {
+                    "choices": [
+                        "verylow",
+                        "low",
+                        "medium",
+                        "high",
+                        "veryhigh"
+                    ]
+                }
+            }
         },
         "intendedenduserrole": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         },
         "context": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         },
         "typicalagerange": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         },
         "difficulty": {
             "kind": "string",
             "required": false,
-            "enum": ["very easy", "easy", "medium", "difficult", "very difficult"]
+            "validate": {
+                "type": "oneof",
+                "params": {
+                    "choices": [
+                        "veryeasy",
+                        "easy",
+                        "medium",
+                        "difficult",
+                        "verydifficult"
+                    ]
+                }
+            }
         },
         "typicallearningtime": {
             "kind": "string",
             "required": false
         },
         "description": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         },
         "language": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         }
     },
@@ -231,13 +266,11 @@
     },
     "resource": {
         "identifier": {
-            "kind": "list",
-            "items": "identifier",
+            "kind": "identifier",
             "required": false
         },
         "description": {
-            "kind": "list",
-            "items": "string",
+            "kind": "string",
             "required": false
         }
     },
@@ -257,7 +290,7 @@
             "required": false
         },
         "date": {
-            "kind": "datetime",
+            "kind": "date",
             "required": false
         },
         "description": {
@@ -281,8 +314,7 @@
             "required": false
         },
         "taxon": {
-            "kind": "list",
-            "items":"taxon",
+            "kind": "taxon",
             "required": false
         }
     },
@@ -292,8 +324,7 @@
             "required": false
         },
         "taxonPath": {
-            "kind": "list",
-            "items": "taxonPath",
+            "kind": "taxonPath",
             "required": false
         },
         "description": {
