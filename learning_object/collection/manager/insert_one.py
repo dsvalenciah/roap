@@ -11,7 +11,7 @@ mimetypes.init()
 
 from manager.exceptions.learning_object import (
     LearningObjectFormatError, LearningObjectMetadataSchemaError,
-    LearningObjectSchemaError
+    LearningObjectSchemaError, LearningObjectFileNotFound
 )
 
 import re
@@ -28,8 +28,8 @@ def get_last_learning_object_metadata_schema_id(db_client):
     return db_client.lom_schema.find().sort("created", -1)[0].get('_id')
 
 def insert_one(
-        db_client, learning_object_metadata, learning_object_category,
-        learning_object_format, creator_id, learning_object_id=None,
+        db_client, learning_object_metadata, learning_object_format,
+        creator_id, learning_object_category='', learning_object_id=None,
         learning_object_file=None, ignore_schema=False, with_file=True):
     """Insert learning object."""
 
@@ -39,7 +39,7 @@ def insert_one(
     }
 
     if learning_object_format not in format_handler.keys():
-        raise LearningObjectFormatError(['Unknown format.'])
+        raise LearningObjectFormatError('Unknown format.')
 
     learning_object_metadata = (
         format_handler[learning_object_format](learning_object_metadata)
@@ -63,9 +63,7 @@ def insert_one(
 
     if with_file:
         if not learning_object_file:
-            raise ValueError(
-                'No have file'
-            )
+            raise LearningObjectFileNotFound('File not found')
         file_metadata = {
             '_id': learning_object_id,
             'extension': mimetypes.guess_extension(
@@ -102,6 +100,9 @@ def insert_one(
             'last_modified': None
         }
 
+    learning_object_metadata['technical']['location'] = (
+        f'/learning-object-collection/{learning_object_id}/show'
+    )
 
     learning_object_dict = dict(
         _id=learning_object_id,

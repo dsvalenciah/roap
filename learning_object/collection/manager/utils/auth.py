@@ -45,8 +45,13 @@ class Authenticate(object):
             raise falcon.HTTPUnauthorized('JWT expired', str(e))
         except jwt.DecodeError as e:
             raise falcon.HTTPUnauthorized('JWT decode error', str(e))
-
-        req.context['user'] = {
-            '_id': user.get('_id'),
-            'role': user.get('role'),
-        }
+        except Exception:
+            req.context['user'] = {
+                '_id': None,
+                'role': 'external',
+            }
+        else:
+            req.context['user'] = {
+                '_id': user.get('_id'),
+                'role': user.get('role'),
+            }

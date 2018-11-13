@@ -58,7 +58,7 @@ class User(object):
                 new_user=new_user,
                 auth_user=auth_user,
             )
-            resp.body = dumps({'status': 'modified'})
+            resp.body = dumps({'data': new_user})
         except UserNotFoundError as e:
             resp.status = falcon.HTTP_NOT_FOUND
             resp.body = dumps({'message': json.dumps(e.args[0])})

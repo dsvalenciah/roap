@@ -17,8 +17,6 @@ def get_one(db_client, user_id):
         ]
     )
     if not user:
-        raise UserNotFoundError({
-            'errors': ['User _id not found.']
-        })
+        raise UserNotFoundError('User _id not found.')
     user['id'] = user.get('_id')
     return user

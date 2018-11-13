@@ -12,9 +12,9 @@ def insert_one(db_client, user):
         {'email': user.get('email')}
     )
     if user_with_similar_email:
-        raise UserDuplicateEmailError([
+        raise UserDuplicateEmailError(
             'User with speciffied email already exist.'
-        ])
+        )
 
     user, errors = User().dump(user)
 

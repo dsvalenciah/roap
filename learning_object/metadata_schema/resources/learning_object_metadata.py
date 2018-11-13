@@ -50,7 +50,7 @@ class LearningObjectMetadata(object):
         """Update learning-object-metadata-field."""
         user = req.context.get('user')
         if user.get('role') != 'administrator':
-            raise falcon.HTTPUnauthorized(description=['Only administrator.'])
+            raise falcon.HTTPUnauthorized('Only administrator.')
 
         lom = req_to_dict(req)
         try:

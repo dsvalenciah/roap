@@ -11,9 +11,7 @@ def check_user_permission(user, learning_object):
     user_id = user.get('_id')
 
     if user_id != learning_object_creator:
-        raise UserPermissionError(
-            ['User is not own of this learning object.']
-        )
+        raise UserPermissionError('User is not own of this learning object.')
 
 def delete_one(db_client, learning_object_id, user):
     """Delete a learning object by _id."""
@@ -24,9 +22,7 @@ def delete_one(db_client, learning_object_id, user):
     })
 
     if not learning_object:
-        raise LearningObjectNotFoundError({
-            'errors': ['Learning Object _id not found.']
-        })
+        raise LearningObjectNotFoundError('Learning Object _id not found.')
 
     check_user_permission(user, learning_object)
 

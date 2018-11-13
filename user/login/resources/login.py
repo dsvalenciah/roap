@@ -40,7 +40,7 @@ class Login(object):
             # User email is not validated.
             resp.status = falcon.HTTP_UNAUTHORIZED
             resp.body = json.dumps(
-                {'message': [f'User email is not {user.get("status")}.']}
+                {'message': ['User email is not validated.']}
             )
             return
 

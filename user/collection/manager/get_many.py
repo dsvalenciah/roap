@@ -5,7 +5,7 @@ def get_many(db_client, filter_, range_, sorted_, auth_user):
     # TODO: fix it and remove find().
     if auth_user.get('role') != 'administrator':
         raise UserPermissionError(
-            ['User not have sufficient permissions to do this action.']
+            'User not have sufficient permissions to do this action.'
         )
 
     start, end = range_

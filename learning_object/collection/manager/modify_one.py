@@ -26,7 +26,7 @@ def check_user_permission(user, learning_object):
     if user_role != 'administrator':
         if user_id != learning_object_creator_id:
             raise UserPermissionError(
-                ['User is not own of this learning object.']
+                'User is not own of this learning object.'
             )
 
 def get_lom_schema(db_client, lom_schema_id):
@@ -39,9 +39,7 @@ def modify_one(db_client, old_learning_object_id, new_learning_object, user):
     })
 
     if not old_learning_object:
-        raise LearningObjectNotFoundError(
-            ['Learning Object _id not found.']
-        )
+        raise LearningObjectNotFoundError('Learning Object _id not found.')
 
     check_user_permission(user, old_learning_object)
 

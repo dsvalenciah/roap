@@ -38,10 +38,10 @@ class Roap():
         ])
 
         self.api.add_route(
-            '/learning-object-collection', LearningObjectCollection(self.db)
+            '/v1/learning-object-collection', LearningObjectCollection(self.db)
         )
         self.api.add_route(
-            '/learning-object-collection/{_id}', LearningObject(self.db)
+            '/v1/learning-object-collection/{_id}', LearningObject(self.db)
         )
 
     def get_db(self):

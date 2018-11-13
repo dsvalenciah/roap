@@ -46,7 +46,7 @@ def send_email(receiver_email):
                 <body>
                     <p>
                         Hi! Please, click on this <a
-                            href="http://localhost:8080/user-validate/{token}"
+                            href="http://localhost:8081/user-validate/{token}"
                         >
                             link
                         </a> to validate your account.

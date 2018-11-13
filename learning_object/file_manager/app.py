@@ -27,7 +27,7 @@ class Roap():
         ])
 
         self.api.add_route(
-            '/learning-object-file-manager', LearningObjectFile()
+            '/v1/learning-object-file-manager', LearningObjectFile()
         )
 
     def get_api(self):

@@ -17,7 +17,7 @@ services:
     ports:
       - 80
     environment:
-      VIRTUAL_HOST: "*/learning-object-metadata-schema, */learning-object-metadata-schema/*"
+      VIRTUAL_HOST: "*/v1/learning-object-metadata-schema, */v1/learning-object-metadata-schema/*"
       VIRTUAL_HOST_WEIGHT: 10
       DB_HOST: db
     links:
@@ -32,7 +32,7 @@ services:
     ports:
       - 80
     environment:
-      VIRTUAL_HOST: "*/learning-object-file-manager, */learning-object-file-manager/*"
+      VIRTUAL_HOST: "*/v1/learning-object-file-manager, */v1/learning-object-file-manager/*"
       VIRTUAL_HOST_WEIGHT: 10
       FILE_STORAGE: /run/files
     volumes:
@@ -55,7 +55,7 @@ services:
     ports:
       - 80
     environment:
-      VIRTUAL_HOST: "*/learning-object-collection, */learning-object-collection/*"
+      VIRTUAL_HOST: "*/v1/learning-object-collection, */v1/learning-object-collection/*"
       VIRTUAL_HOST_WEIGHT: 10
       DB_HOST: db
       FILE_STORAGE: /run/files
@@ -69,11 +69,11 @@ services:
   learning_object_file_renderer:
     image: nginx
     volumes:
-      - file-storage:/usr/share/nginx/html/learning-object-file-renderer:ro
+      - file-storage:/usr/share/nginx/html/v1/learning-object-file-renderer:ro
     ports:
       - 80
     environment:
-      VIRTUAL_HOST: "*/learning-object-file-renderer/*"
+      VIRTUAL_HOST: "*/v1/learning-object-file-renderer/*"
       VIRTUAL_HOST_WEIGHT: 10
     logging:
       driver: "none"
@@ -85,7 +85,7 @@ services:
     ports:
       - 80
     environment:
-      VIRTUAL_HOST: "*/user-collection, */user-collection/*"
+      VIRTUAL_HOST: "*/v1/user-collection, */v1/user-collection/*"
       VIRTUAL_HOST_WEIGHT: 10
       DB_HOST: db
     links:
@@ -100,7 +100,7 @@ services:
     ports:
       - 80
     environment:
-      VIRTUAL_HOST: "*/user-login, */user-login/*"
+      VIRTUAL_HOST: "*/v1/user-login, */v1/user-login/*"
       VIRTUAL_HOST_WEIGHT: 10
       DB_HOST: db
     links:
@@ -115,7 +115,7 @@ services:
     ports:
       - 80
     environment:
-      VIRTUAL_HOST: "*/user-account, */user-account/*"
+      VIRTUAL_HOST: "*/v1/user-account, */v1/user-account/*"
       VIRTUAL_HOST_WEIGHT: 10
       DB_HOST: db
     links:
@@ -129,7 +129,7 @@ services:
     build: ./user/account_validation
     command: rq worker -u redis://redis
     environment:
-      VIRTUAL_HOST: "*/tasks, */tasks/*"
+      VIRTUAL_HOST: "*/v1/tasks, */v1/tasks/*"
     depends_on:
       - db
       - redis
@@ -139,21 +139,21 @@ services:
     volumes:
       - queue-storage:/data
 
-  ui:
-    image: ui
-    build: ./ui
-    ports:
-      - 80
-    environment:
-      VIRTUAL_HOST: "*/*"
-      VIRTUAL_HOST_WEIGHT: 0
+#   ui:
+#     image: ui
+#     build: ./ui
+#     ports:
+#       - 80
+#     environment:
+#       VIRTUAL_HOST: "*/*"
+#       VIRTUAL_HOST_WEIGHT: 0
 
   lb:
     image: dockercloud/haproxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - '8085:80'
+      - '8081:80'
       - '1936:1936'
     links:
       - db
@@ -164,7 +164,7 @@ services:
       - user_collection
       - user_login
       - user_account_validation
-      - ui
+      # - ui
     logging:
       driver: "none"
 

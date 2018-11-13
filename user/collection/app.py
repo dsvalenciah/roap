@@ -37,8 +37,8 @@ class Roap():
             ).middleware
         ])
 
-        self.api.add_route('/user-collection', UserCollection(self.db))
-        self.api.add_route('/user-collection/{_id}', User(self.db))
+        self.api.add_route('/v1/user-collection', UserCollection(self.db))
+        self.api.add_route('/v1/user-collection/{_id}', User(self.db))
 
     def get_db(self):
         """Obtain roap db."""

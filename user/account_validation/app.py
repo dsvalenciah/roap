@@ -31,11 +31,11 @@ class Roap():
         ])
 
         self.api.add_route(
-            '/user-account/validate/{token}', UserValidate(self.db)
+            '/v1/user-account/validate/{token}', UserValidate(self.db)
         )
 
         self.api.add_route(
-            '/user-account/send-email/{email}', UserEmail()
+            '/v1/user-account/send-email/{email}', UserEmail()
         )
 
     def get_db(self):

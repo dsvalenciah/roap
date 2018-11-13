@@ -30,3 +30,15 @@ class LearningObjectFormatError(RoapError):
 
 class LearningObjectMetadataSchemaError(RoapError):
     """A definition is not well defined."""
+
+class InvalidUserRaterRole(RoapError):
+    """A definition is not well defined."""
+
+class InvalidRatingValue(RoapError):
+    """A definition is not well defined."""
+
+class UserCannotRate(RoapError):
+    """docstring for UserCannotRate"""
+
+class LearningObjectFileNotFound(RoapError):
+    """docstring for UserCannotRate"""

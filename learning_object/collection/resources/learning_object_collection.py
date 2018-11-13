@@ -8,7 +8,8 @@ import json
 from manager.exceptions.learning_object import (
     LearningObjectNotFoundError, LearningObjectSchemaError,
     LearningObjectUnmodifyError, LearningObjectUndeleteError,
-    LearningObjectFormatError, LearningObjectMetadataSchemaError
+    LearningObjectFormatError, LearningObjectMetadataSchemaError,
+    LearningObjectFileNotFound
 )
 
 from manager.exceptions.user import (
@@ -32,6 +33,7 @@ class LearningObjectCollection(object):
         """Init."""
         self.db_client = db_client
 
+    @falcon.before(Authenticate())
     def on_get(self, req, resp):
         """Get all learning-objects (maybe filtered, and paginated)."""
         query_params = {
@@ -39,6 +41,7 @@ class LearningObjectCollection(object):
             for k, v in req.params.items()
         }
         try:
+            user = req.context.get('user')
             filter_ = query_params.get('filter', {})
             range_ = query_params.get('range', [0,9])
             sorted_ = query_params.get('sort', ['id', 'desc'])
@@ -47,6 +50,7 @@ class LearningObjectCollection(object):
                 filter_=filter_,
                 range_=range_,
                 sorted_=sorted_,
+                user=user,
             )
             for learning_object in learning_objects:
                 learning_object['id'] = learning_object['_id']
@@ -105,5 +109,8 @@ class LearningObjectCollection(object):
             resp.status = falcon.HTTP_UNAUTHORIZED
             resp.body = dumps({'message': json.dumps(e.args[0])})
         except LearningObjectFormatError as e:
+            resp.status = falcon.HTTP_UNAUTHORIZED
+            resp.body = dumps({'message': json.dumps(e.args[0])})
+        except LearningObjectFileNotFound as e:
             resp.status = falcon.HTTP_UNAUTHORIZED
             resp.body = dumps({'message': json.dumps(e.args[0])})

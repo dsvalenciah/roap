@@ -36,7 +36,7 @@ class Roap():
         ])
 
         self.api.add_route(
-            '/learning-object-metadata-schema',
+            '/v1/learning-object-metadata-schema',
             LearningObjectMetadata(self.db)
         )
 

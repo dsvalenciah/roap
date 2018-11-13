@@ -10,7 +10,8 @@ from random import randint
 from manager.exceptions.learning_object import (
     LearningObjectNotFoundError, LearningObjectSchemaError,
     LearningObjectUnmodifyError, LearningObjectUndeleteError,
-    LearningObjectFormatError, LearningObjectMetadataSchemaError
+    LearningObjectFormatError, LearningObjectMetadataSchemaError,
+    InvalidUserRaterRole, InvalidRatingValue, UserCannotRate
 )
 
 from manager.exceptions.user import (
@@ -36,6 +37,7 @@ class LearningObject(object):
         """Init."""
         self.db_client = db_client
 
+    @falcon.before(Authenticate())
     def on_get(self, req, resp, _id):
         """Get a single learning-object."""
         try:
@@ -45,6 +47,7 @@ class LearningObject(object):
                 db_client=self.db_client,
                 learning_object_id=_id,
                 learning_object_format=learning_object_format,
+                user=user,
             )
             resp.body = dumps(learning_object)
         except LearningObjectNotFoundError as e:
@@ -73,7 +76,7 @@ class LearningObject(object):
                 new_learning_object=new_learning_object,
                 user=user,
             )
-            resp.body = dumps({'status': 'modified'})
+            resp.body = dumps({'data': {'id': _id}})
         except LearningObjectNotFoundError as e:
             resp.status = falcon.HTTP_NOT_FOUND
             resp.body = dumps({'message': json.dumps(e.args[0])})
@@ -119,23 +122,23 @@ class LearningObject(object):
         """Rate a learning object."""
         # TODO: add exceptions.
         try:
+            request = req_to_dict(req)
             user = req.context.get('user')
-            rating = req.params.get('rating')
+            rating = request.get('rating')
+            rater_role = request.get('rater_role')
             rating_one(
                 db_client=self.db_client,
                 learining_object_id=_id,
+                rater_role=rater_role,
                 rating=rating,
                 user=user,
             )
-        except LearningObjectNotFoundError as e:
-            resp.status = falcon.HTTP_NOT_FOUND
-            resp.body = dumps({'message': json.dumps(e.args[0])})
-        except LearningObjectUndeleteError as e:
+        except InvalidUserRaterRole as e:
             resp.status = falcon.HTTP_BAD_REQUEST
             resp.body = dumps({'message': json.dumps(e.args[0])})
-        except UserInactiveError as e:
+        except InvalidRatingValue as e:
             resp.status = falcon.HTTP_BAD_REQUEST
             resp.body = dumps({'message': json.dumps(e.args[0])})
-        except UserPermissionError as e:
+        except UserCannotRate as e:
             resp.status = falcon.HTTP_BAD_REQUEST
             resp.body = dumps({'message': json.dumps(e.args[0])})

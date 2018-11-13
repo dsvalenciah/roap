@@ -4,7 +4,6 @@ Contains utility functions to populate database with a default
 learning objects.
 """
 import glob
-from random import randint
 
 from manager.insert_one import insert_one
 
@@ -43,9 +42,6 @@ def learning_object_populate(db):
                 insert_one(
                     db_client=db,
                     learning_object_metadata=learning_object_metadata,
-                    learning_object_category=[
-                        "Educacion", "Medicina", "Fisica"
-                    ][randint(0, 2)],
                     learning_object_id=learning_object_id,
                     learning_object_format='xml',
                     creator_id='ee6a11aee52b4e64b4a6a14d42ff49da',

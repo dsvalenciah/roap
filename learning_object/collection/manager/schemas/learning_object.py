@@ -5,7 +5,7 @@ Contains learning-object schema.
 
 from datetime import datetime
 
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validate
 
 
 class FileMetadata(Schema):
@@ -21,9 +21,16 @@ class LearningObject(Schema):
 
     _id = fields.UUID(required=True)
     creator_id = fields.UUID(required=True)
-    evaluator_id = fields.UUID(required=False)
+    expert_ids = fields.List(fields.UUID(), default=[], required=False)
+    status = fields.Str(
+        required=True,
+        default='pending',
+        validate=validate.OneOf(
+            ['pending', 'evaluated', 'accepted', 'rejected']
+        )
+    )
     lom_schema_id = fields.UUID(required=True)
-    category = fields.Str(required=True)
+    category = fields.Str(required=True, default='')
     created = fields.Method('get_now')
     modified = fields.Method('get_now')
     deleted = fields.Boolean(default=False)

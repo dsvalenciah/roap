@@ -7,13 +7,13 @@ def delete_one(db_client, user_id, auth_user):
     auth_user_id = auth_user.get('_id')
     if auth_user_role == 'administrator' and user_id != auth_user_id:
         raise UserPermissionError(
-            ['User not have sufficient permissions to do this action.']
+            'User not have sufficient permissions to do this action.'
         )
     if user_id != auth_user_id:
         raise UserPermissionError(
-            ['User not have sufficient permissions to do this action.']
+            'User not have sufficient permissions to do this action.'
         )
 
     result = db_client.users.find_one_and_delete({'_id': user_id})
     if not result.deleted_count:
-        raise UserNotFoundError(['The user is not deleted.'])
+        raise UserNotFoundError('The user is not deleted.')

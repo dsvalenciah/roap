@@ -29,7 +29,7 @@ class Roap():
             ).middleware
         ])
 
-        self.api.add_route('/user-login', login.Login(self.db))
+        self.api.add_route('/v1/user-login', login.Login(self.db))
 
     def get_db(self):
         """Obtain roap db."""

@@ -8,7 +8,7 @@ from manager.exceptions.learning_object import LearningObjectFormatError
 
 from manager.utils.dict_to_xml import dict_to_xml
 
-def get_one(db_client, learning_object_id, learning_object_format):
+def get_one(db_client, learning_object_id, learning_object_format, user):
     """Get a learning object by _id."""
 
     learning_object = db_client.learning_objects.find_one({
@@ -16,7 +16,7 @@ def get_one(db_client, learning_object_id, learning_object_format):
     })
 
     if not learning_object:
-        raise LearningObjectNotFoundError(['Learning Object _id not found.'])
+        raise LearningObjectNotFoundError('Learning Object not found.')
 
     learning_object['id'] = learning_object.get('_id')
 
@@ -27,7 +27,7 @@ def get_one(db_client, learning_object_id, learning_object_format):
         }
 
         if learning_object_format not in format_handler.keys():
-            raise LearningObjectFormatError(['Unknown format.'])
+            raise LearningObjectFormatError('Unknown format.')
 
         return format_handler[learning_object_format](learning_object)
     else:
