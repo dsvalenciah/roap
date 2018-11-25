@@ -7,19 +7,19 @@ from datetime import datetime
 from passlib.hash import sha512_crypt
 
 
-def create_administrator(db):
+def create_default_users(db):
     """Create a administrator."""
     # TODO: configure salt from a config file
     administrator = db.users.find_one(
         {'_id': 'ee6a11ae-e52b-4e64-b4a6-a14d42ff49da'}
     )
-    dsvalenciah_expert = db.users.find_one(
+    expert1 = db.users.find_one(
         {'_id': 'ee6a11ae-e52b-4e64-b4a6-a14d42ff49db'}
     )
-    daniel_expert = db.users.find_one(
+    expert2 = db.users.find_one(
         {'_id': 'ee6a11ae-e52b-4e64-b4a6-a14d42ff49dc'}
     )
-    jani_creator = db.users.find_one(
+    creator = db.users.find_one(
         {'_id': 'ee6a11ae-e52b-4e64-b4a6-a14d42ff49dd'}
     )
     if not administrator:
@@ -38,11 +38,11 @@ def create_administrator(db):
         }
         db.users.insert_one(administrator)
 
-        dsvalenciah_expert = {
+        expert1 = {
             '_id': 'ee6a11ae-e52b-4e64-b4a6-a14d42ff49db',
-            'name': 'dsvalenciah',
-            'password': sha512_crypt.hash('dsvalenciah', salt='dqwjfdsakuyfd'),
-            'email': 'dsvalenciah@unal.edu.co',
+            'name': 'expert1',
+            'password': sha512_crypt.hash('expert1', salt='dqwjfdsakuyfd'),
+            'email': 'expert1@unal.edu.co',
             'role': 'expert',
             'status': 'accepted',
             'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
@@ -51,13 +51,13 @@ def create_administrator(db):
             'validated': True,
             'last_activity': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         }
-        db.users.insert_one(dsvalenciah_expert)
+        db.users.insert_one(expert1)
 
-        daniel_expert = {
+        expert2 = {
             '_id': 'ee6a11ae-e52b-4e64-b4a6-a14d42ff49dc',
-            'name': 'daniel',
-            'password': sha512_crypt.hash('daniel', salt='dqwjfdsakuyfd'),
-            'email': 'daniel@playvox.co',
+            'name': 'expert2',
+            'password': sha512_crypt.hash('expert2', salt='dqwjfdsakuyfd'),
+            'email': 'expert2@unal.edu.co',
             'role': 'expert',
             'status': 'accepted',
             'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
@@ -66,13 +66,13 @@ def create_administrator(db):
             'validated': True,
             'last_activity': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         }
-        db.users.insert_one(daniel_expert)
+        db.users.insert_one(expert2)
 
-        jani_creator = {
+        creator = {
             '_id': 'ee6a11ae-e52b-4e64-b4a6-a14d42ff49dd',
-            'name': 'jani',
-            'password': sha512_crypt.hash('jani', salt='dqwjfdsakuyfd'),
-            'email': 'jani0720c@gmail.co',
+            'name': 'creator',
+            'password': sha512_crypt.hash('creator', salt='dqwjfdsakuyfd'),
+            'email': 'creator@unal.edu.co',
             'role': 'creator',
             'status': 'accepted',
             'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
@@ -81,4 +81,4 @@ def create_administrator(db):
             'validated': True,
             'last_activity': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
         }
-        db.users.insert_one(jani_creator)
+        db.users.insert_one(creator)

@@ -69,11 +69,11 @@ services:
   learning_object_file_renderer:
     image: nginx
     volumes:
-      - file-storage:/usr/share/nginx/html/v1/learning-object-file-renderer:ro
+      - file-storage:/usr/share/nginx/html/learning-object-file-renderer:ro
     ports:
       - 80
     environment:
-      VIRTUAL_HOST: "*/v1/learning-object-file-renderer/*"
+      VIRTUAL_HOST: "*/learning-object-file-renderer/*"
       VIRTUAL_HOST_WEIGHT: 10
     logging:
       driver: "none"

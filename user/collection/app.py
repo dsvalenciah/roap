@@ -5,7 +5,7 @@ Contains roap app and his db run class.
 
 import os
 
-from config.administrator import create_administrator
+from config.default_users import create_default_users
 
 import falcon
 from falcon_cors import CORS
@@ -24,7 +24,7 @@ class Roap():
         self.client = MongoClient(os.getenv(db_host), db_port)
         self.db = self.client[db_name]
 
-        create_administrator(self.db)
+        create_default_users(self.db)
 
         self.api = falcon.API(middleware=[
             CORS(
