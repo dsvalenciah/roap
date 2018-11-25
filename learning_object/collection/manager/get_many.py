@@ -54,7 +54,7 @@ def get_many(db_client, filter_, range_, sorted_, user):
             '$diacriticSensitive': False,
             '$caseSensitive': False,
         }}
-        query = {'$and': [initial_query, query]}
+        query = {**initial_query, **query}
         cursor = db_client.learning_objects.find(
             query,
             {'rating': {'$meta': "textScore"}}
@@ -66,7 +66,7 @@ def get_many(db_client, filter_, range_, sorted_, user):
             .limit(end - start)
         )
     else:
-        query = {'$and': [initial_query, filter_]}
+        query = {**initial_query, **filter_}
         cursor = db_client.learning_objects.find(query)
         learning_objects = list(
             cursor
