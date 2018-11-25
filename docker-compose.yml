@@ -139,14 +139,14 @@ services:
     volumes:
       - queue-storage:/data
 
-#   ui:
-#     image: ui
-#     build: ./ui
-#     ports:
-#       - 80
-#     environment:
-#       VIRTUAL_HOST: "*/*"
-#       VIRTUAL_HOST_WEIGHT: 0
+  ui:
+    image: ui
+    build: ./ui
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/*"
+      VIRTUAL_HOST_WEIGHT: 0
 
   lb:
     image: dockercloud/haproxy
@@ -164,7 +164,7 @@ services:
       - user_collection
       - user_login
       - user_account_validation
-      # - ui
+      - ui
     logging:
       driver: "none"
 
