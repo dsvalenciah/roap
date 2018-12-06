@@ -16,7 +16,7 @@ from marshmallowjson.marshmallowjson import Definition
 from manager.exceptions.user import UserPermissionError
 
 from manager.schemas.learning_object import LearningObject
-
+from manager.utils.i18n_error import ErrorTranslator
 
 def check_user_permission(user, learning_object):
     learning_object_creator_id = learning_object.get('creator_id')
@@ -68,7 +68,8 @@ def modify_one(db_client, old_learning_object_id, new_learning_object, user):
     )
 
     if errors:
-        raise LearningObjectMetadataSchemaError(errors)
+        errors_translator = ErrorTranslator(_)
+        raise LearningObjectMetadataSchemaError(errors_translator.i18n_error(errors))
 
     new_learning_object.update({
         'modified': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),

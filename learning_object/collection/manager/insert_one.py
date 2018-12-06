@@ -31,10 +31,10 @@ def get_last_learning_object_metadata_schema_id(db_client):
 
 def insert_one(
         db_client, learning_object_metadata, learning_object_format,
-        creator_id, learning_object_category='', learning_object_id=None,
+        creator_id, user_language, learning_object_category='', learning_object_id=None,
         learning_object_file=None, ignore_schema=False, with_file=True):
     """Insert learning object."""
-
+    _ = user_language
     format_handler = {
         'xml': lambda lom: xml_to_dict(lom),
         'json': lambda lom: lom

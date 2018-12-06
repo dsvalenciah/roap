@@ -96,7 +96,8 @@ class LearningObjectCollection(object):
                 learning_object_category=category,
                 learning_object_format=_format or 'json',
                 creator_id=user.get('_id'),
-                learning_object_file=file,
+                user_language=user.get('language'),
+                learning_object_file=file
             )
             resp.body = dumps(
                 {'id': _id}
