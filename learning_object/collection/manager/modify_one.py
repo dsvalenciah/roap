@@ -11,35 +11,39 @@ from manager.exceptions.learning_object import (
 )
 
 import re
-
 from marshmallowjson.marshmallowjson import Definition
 
 from manager.exceptions.user import UserPermissionError
 
 from manager.schemas.learning_object import LearningObject
 
+
 def check_user_permission(user, learning_object):
     learning_object_creator_id = learning_object.get('creator_id')
     user_id = user.get('_id')
     user_role = user.get('role')
+    _ = user.get('language')
 
     if user_role != 'administrator':
         if user_id != learning_object_creator_id:
             raise UserPermissionError(
-                'User is not own of this learning object.'
+                _('User is not own of this learning object.')
             )
+
 
 def get_lom_schema(db_client, lom_schema_id):
     return db_client.lom_schema.find_one({'_id': lom_schema_id}).get('lom')
+
 
 def modify_one(db_client, old_learning_object_id, new_learning_object, user):
     """Modify learning object."""
     old_learning_object = db_client.learning_objects.find_one({
         '_id': old_learning_object_id
     })
+    _ = user.get('language')
 
     if not old_learning_object:
-        raise LearningObjectNotFoundError('Learning Object _id not found.')
+        raise LearningObjectNotFoundError(_('Learning Object _id not found.'))
 
     check_user_permission(user, old_learning_object)
 

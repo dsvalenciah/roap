@@ -18,6 +18,7 @@ from manager.exceptions.user import (
 
 from manager.utils.req_to_dict import req_to_dict
 from manager.utils.auth import Authenticate
+from manager.utils.switch_language import SwitchLanguage
 from manager.insert_one import insert_one
 from manager.insert_one import get_last_learning_object_metadata_schema_id
 from manager.get_many import get_many
@@ -26,6 +27,7 @@ from bson.json_util import dumps
 
 import falcon
 
+@falcon.before(SwitchLanguage())
 class LearningObjectCollection(object):
     """Deal with the whole collection of learning-objects."""
 
@@ -64,13 +66,14 @@ class LearningObjectCollection(object):
             )
         except ValueError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
 
     @falcon.before(Authenticate())
     def on_post(self, req, resp):
         """Create learning-object."""
         # TODO: fix category
         # TODO: fix file manage
+        _ = req.context['user']['language']
         post_params = req_to_dict(req)
         metadata = post_params.get('metadata')
         category = post_params.get('category')
@@ -81,7 +84,7 @@ class LearningObjectCollection(object):
         if None in [metadata, category, file]:
             resp.status = falcon.HTTP_BAD_REQUEST
             resp.body = dumps(
-                {'message': ['An metadata, category, and file is required']}
+                {'message': [_('An metadata, category, and file is required')]}
             )
 
         user = req.context['user']
@@ -101,16 +104,16 @@ class LearningObjectCollection(object):
             resp.status = falcon.HTTP_201
         except LearningObjectMetadataSchemaError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except LearningObjectSchemaError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserInactiveError as e:
             resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except LearningObjectFormatError as e:
             resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except LearningObjectFileNotFound as e:
             resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})

@@ -63,6 +63,7 @@ services:
       - db
     volumes:
       - file-storage:/run/files
+      - ./learning_object/collection:/code
     depends_on:
       - learning_object_metadata_schema
 

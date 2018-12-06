@@ -3,4 +3,5 @@ gunicorn
 pymongo
 pyjwt
 falcon-cors
-rq
+redis==2.10.6
+rq==0.12.0

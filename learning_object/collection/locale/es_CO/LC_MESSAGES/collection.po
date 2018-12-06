@@ -1,0 +1,86 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-06 10:32-0500\n"
+"PO-Revision-Date: 2018-12-06 10:44-0500\n"
+"Language: es_CO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.2\n"
+
+#: collection/manager/rating_one.py:32
+#, python-brace-format
+msgid "An a {user_role} cant rate this learning object (only {rater_role})."
+msgstr "Un {user_role} no puede calificar este objeto de aprendizaje (solo {rater_role})."
+
+#: collection/manager/rating_one.py:38
+#, python-brace-format
+msgid "An a {user_role} cant rate this learning object (only {accepted_roles})."
+msgstr "Un {user_role} no puede calificar este objeto de aprendizaje (solo {accepted_roles})."
+
+#: collection/manager/rating_one.py:43
+msgid "Invalid ratig (only [1, 5])."
+msgstr "Calificación inválida (solamente [1,5])."
+
+#: collection/manager/rating_one.py:54
+#, python-brace-format
+msgid "This user cant rate this learning object {user_id}."
+msgstr "Este usuario no puede calificar este objeto de aprendizaje {user_id}."
+
+#: collection/manager/insert_one.py:42 collection/manager/get_one.py:40
+msgid "Unknown format."
+msgstr "Fomato desconocido."
+
+#: collection/manager/insert_one.py:66
+msgid "File not found."
+msgstr "Archivo no encontrado."
+
+#: collection/manager/insert_one.py:91
+#, python-brace-format
+msgid "{learning_object_id} no have extension."
+msgstr "{learning_object_id} no tiene extensión."
+
+#: collection/manager/get_one.py:29
+msgid "Learning Object not found."
+msgstr "Objeto de aprendizaje no encontrado."
+
+#: collection/manager/modify_one.py:29 collection/manager/delete_one.py:26
+msgid "User is not own of this learning object."
+msgstr "Usuario no es propietario de este objeto de aprendizaje."
+
+#: collection/manager/modify_one.py:44 collection/manager/delete_one.py:38
+msgid "Learning Object _id not found."
+msgstr "_id de objeto de aprendizaje no encontrado."
+
+#: collection/manager/utils/auth.py:39
+msgid "User deleted."
+msgstr "Usuario eliminado."
+
+#: collection/manager/utils/auth.py:41
+msgid "User not validated."
+msgstr "Usuario no válidado."
+
+#: collection/manager/utils/auth.py:43
+msgid "User unapproved."
+msgstr "Usuario no aceptado."
+
+#: collection/manager/utils/auth.py:46
+msgid "JWT expired"
+msgstr "JWT expirado"
+
+#: collection/manager/utils/auth.py:48
+msgid "JWT decode error"
+msgstr "Error decodificando JWT"
+
+#: collection/resources/learning_object_collection.py:86
+msgid "An metadata, category, and file is required"
+msgstr "Un metadata, categoría y archivo es requerido"

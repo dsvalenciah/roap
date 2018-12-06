@@ -20,6 +20,7 @@ from manager.exceptions.user import (
 
 from manager.utils.req_to_dict import req_to_dict
 from manager.utils.auth import Authenticate
+from manager.utils.switch_language import SwitchLanguage
 from manager.get_one import get_one
 from manager.modify_one import modify_one
 from manager.delete_one import delete_one
@@ -30,6 +31,7 @@ from bson.json_util import dumps
 import falcon
 
 
+@falcon.before(SwitchLanguage())
 class LearningObject(object):
     """Deal with single learning-object."""
 
@@ -52,16 +54,16 @@ class LearningObject(object):
             resp.body = dumps(learning_object)
         except LearningObjectNotFoundError as e:
             resp.status = falcon.HTTP_NOT_FOUND
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except LearningObjectFormatError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserInactiveError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserPermissionError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
 
     @falcon.before(Authenticate())
     def on_put(self, req, resp, _id):
@@ -74,24 +76,24 @@ class LearningObject(object):
                 db_client=self.db_client,
                 old_learning_object_id=_id,
                 new_learning_object=new_learning_object,
-                user=user,
+                user=user
             )
             resp.body = dumps({'data': {'id': _id}})
         except LearningObjectNotFoundError as e:
             resp.status = falcon.HTTP_NOT_FOUND
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except LearningObjectSchemaError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0],  ensure_ascii=False)})
         except LearningObjectMetadataSchemaError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0],  ensure_ascii=False)})
         except UserInactiveError as e:
             resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0],  ensure_ascii=False)})
         except UserPermissionError as e:
             resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0],  ensure_ascii=False)})
 
     @falcon.before(Authenticate())
     def on_delete(self, req, resp, _id):
@@ -106,16 +108,16 @@ class LearningObject(object):
             resp.body = dumps({'status': 'deleted'})
         except LearningObjectNotFoundError as e:
             resp.status = falcon.HTTP_NOT_FOUND
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except LearningObjectUndeleteError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserInactiveError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserPermissionError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
 
     @falcon.before(Authenticate())
     def on_patch(self, req, resp, _id):
@@ -135,10 +137,10 @@ class LearningObject(object):
             )
         except InvalidUserRaterRole as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except InvalidRatingValue as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserCannotRate as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})

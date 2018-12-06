@@ -3,6 +3,7 @@
 Contains utility functions to works with learning-object get many.
 """
 
+
 def get_many(db_client, filter_, range_, sorted_, user):
     """Get learning objects with query."""
 

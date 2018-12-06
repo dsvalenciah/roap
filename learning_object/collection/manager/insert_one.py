@@ -24,8 +24,10 @@ from manager.schemas.learning_object_metadata import LearningObjectMetadata
 from manager.utils.xml_to_dict import xml_to_dict
 from manager.utils.file_manager import StorageUnit
 
+
 def get_last_learning_object_metadata_schema_id(db_client):
     return db_client.lom_schema.find().sort("created", -1)[0].get('_id')
+
 
 def insert_one(
         db_client, learning_object_metadata, learning_object_format,
@@ -39,7 +41,7 @@ def insert_one(
     }
 
     if learning_object_format not in format_handler.keys():
-        raise LearningObjectFormatError('Unknown format.')
+        raise LearningObjectFormatError(_('Unknown format.'))
 
     learning_object_metadata = (
         format_handler[learning_object_format](learning_object_metadata)
@@ -63,7 +65,7 @@ def insert_one(
 
     if with_file:
         if not learning_object_file:
-            raise LearningObjectFileNotFound('File not found')
+            raise LearningObjectFileNotFound(_('File not found.'))
         file_metadata = {
             '_id': learning_object_id,
             'extension': mimetypes.guess_extension(
@@ -81,14 +83,15 @@ def insert_one(
         )
     else:
         file_extension = (learning_object_metadata
-            .get('technical', {})
-            .get('format')
-        )
+                          .get('technical', {})
+                          .get('format')
+                          )
         if isinstance(file_extension, list):
             file_extension = file_extension[0]
         if not file_extension:
             raise ValueError(
-                f'{learning_object_id} no have extension'
+                _('{learning_object_id} no have extension.').format(
+                    learning_object_id=learning_object_id)
             )
         file_extension = '.' + file_extension
         file_metadata = {
@@ -109,7 +112,7 @@ def insert_one(
         creator_id=creator_id,
         lom_schema_id=learning_object_metadata_schema_id,
         category=learning_object_category,
-        metadata= learning_object_metadata,
+        metadata=learning_object_metadata,
         file_metadata=file_metadata
     )
 
