@@ -12,12 +12,13 @@ from marshmallowjson.marshmallowjson import Definition
 from marshmallowjson.exceptions import ValidationError
 from utils.req_to_dict import req_to_dict
 from utils.auth import Authenticate
-
+from utils.switch_language import SwitchLanguage
 from bson.json_util import dumps
 
 import falcon
 
 
+@falcon.before(SwitchLanguage())
 class LearningObjectMetadata(object):
     """Deal with the whole collection of learning-object-metadata-fields."""
 
@@ -49,8 +50,9 @@ class LearningObjectMetadata(object):
     def on_post(self, req, resp):
         """Update learning-object-metadata-field."""
         user = req.context.get('user')
+        _ = user.get('language')
         if user.get('role') != 'administrator':
-            raise falcon.HTTPUnauthorized('Only administrator.')
+            raise falcon.HTTPUnauthorized(_('Only administrator.'))
 
         lom = req_to_dict(req)
         try:

@@ -23,7 +23,7 @@ FILE_MIME_TYPES = {
 
 
 from utils.auth import Authenticate
-from utils.switch_language import SwitchLanguage()
+from utils.switch_language import SwitchLanguage
 
 
 @falcon.before(SwitchLanguage())

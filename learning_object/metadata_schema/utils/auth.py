@@ -17,6 +17,7 @@ class Authenticate(object):
         """Authorize request."""
         # TODO: get secret from configuration file and fix raise errors
         authentication = req.headers.get('AUTHORIZATION')
+        _ = req.context['user'].get('language')
         if not authentication:
             raise falcon.HTTPMissingHeader("AUTHORIZATION")
 
@@ -35,18 +36,18 @@ class Authenticate(object):
             user_aproved_by_admin = user.get('status') == 'accepted'
 
             if user_deleted:
-                raise falcon.HTTPUnauthorized('User deleted.')
+                raise falcon.HTTPUnauthorized(_('User deleted.'))
             if not user_validated:
-                raise falcon.HTTPUnauthorized('User not validated.')
+                raise falcon.HTTPUnauthorized(_('User not validated.'))
             if not user_aproved_by_admin:
-                raise falcon.HTTPUnauthorized('User unapproved.')
+                raise falcon.HTTPUnauthorized(_('User unapproved.'))
 
         except jwt.ExpiredSignatureError as e:
-            raise falcon.HTTPUnauthorized('JWT expired', str(e))
+            raise falcon.HTTPUnauthorized(_('JWT expired'), str(e))
         except jwt.DecodeError as e:
-            raise falcon.HTTPUnauthorized('JWT decode error', str(e))
+            raise falcon.HTTPUnauthorized(_('JWT decode error'), str(e))
 
-        req.context['user'] = {
+        req.context['user'].update({
             '_id': user.get('_id'),
             'role': user.get('role'),
-        }
+        })
