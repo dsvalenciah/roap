@@ -11,8 +11,10 @@ from utils.req_to_dict import req_to_dict
 import falcon
 import jwt
 from passlib.hash import sha512_crypt
+from utils.switch_language import SwitchLanguage
 
 
+@falcon.before(SwitchLanguage())
 class Login(object):
     """Deal with user authentication."""
 
@@ -29,25 +31,29 @@ class Login(object):
         email = user.get('email')
         password = user.get('password')
         user = self.db.users.find_one({'email': email})
+        _ = req.context.get('language')
 
         if not user:
             # User not exists.
             resp.status = falcon.HTTP_NOT_FOUND
-            resp.body = json.dumps({'message': ['User not found.']})
+            resp.body = json.dumps(
+                {'message': [_('User not found.')]}, ensure_ascii=False)
             return
 
         if not user.get('validated'):
             # User email is not validated.
             resp.status = falcon.HTTP_UNAUTHORIZED
             resp.body = json.dumps(
-                {'message': ['User email is not validated.']}
+                {'message': [_('User email is not validated.')]},
+                ensure_ascii=False
             )
             return
 
         if user.get('status') != 'accepted':
             # User is not validated by admin.
             resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = json.dumps({'message': ['User is not validated by admin.']})
+            resp.body = json.dumps(
+                {'message': [_('User is not validated by admin.')]}, ensure_ascii=False)
             return
 
         if user and sha512_crypt.verify(password, user.get('password')):
@@ -69,5 +75,6 @@ class Login(object):
             })
         else:
             resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = json.dumps({'message': ['Invalid password.']})
+            resp.body = json.dumps(
+                {'message': [_('Invalid password.')]}, ensure_ascii=False)
             # Incorrect password.
