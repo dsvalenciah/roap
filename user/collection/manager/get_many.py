@@ -1,11 +1,13 @@
 from manager.exceptions.user import UserPermissionError
 
+
 def get_many(db_client, filter_, range_, sorted_, auth_user):
     """Get users with query."""
     # TODO: fix it and remove find().
+    _ = auth_user.get('language')
     if auth_user.get('role') != 'administrator':
         raise UserPermissionError(
-            'User not have sufficient permissions to do this action.'
+            _('User not have sufficient permissions to do this action.')
         )
 
     start, end = range_

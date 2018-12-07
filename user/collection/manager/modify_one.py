@@ -7,19 +7,21 @@ from manager.exceptions.user import (
 
 from manager.schemas.user import User
 
+
 def modify_one(db_client, old_user_id, new_user, auth_user):
     """Modify user."""
+    _ = auth_user.get('language')
 
     if auth_user.get('role') != 'administrator':
         if old_user_id != auth_user.get('_id'):
             raise UserPermissionError(
-                'User not have sufficient permissions to do this action.'
+                _('User not have sufficient permissions to do this action.')
             )
 
     old_user = db_client.users.find_one({'_id': old_user_id})
 
     if not old_user:
-        raise UserNotFoundError('User _id not found.')
+        raise UserNotFoundError(_('User _id not found.'))
 
     new_user.update({
         'modified': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),

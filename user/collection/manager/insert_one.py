@@ -3,7 +3,8 @@ from manager.exceptions.user import UserSchemaError, UserDuplicateEmailError
 
 from manager.schemas.user import User
 
-def insert_one(db_client, user):
+
+def insert_one(db_client, user, language):
     """Insert user."""
     # TODO: validate password and initial schema
     # TODO: add rq for process email sending
@@ -11,9 +12,10 @@ def insert_one(db_client, user):
     user_with_similar_email = db_client.users.find_one(
         {'email': user.get('email')}
     )
+    _ = language
     if user_with_similar_email:
         raise UserDuplicateEmailError(
-            'User with speciffied email already exist.'
+            _('User with specified email already exist.')
         )
 
     user, errors = User().dump(user)

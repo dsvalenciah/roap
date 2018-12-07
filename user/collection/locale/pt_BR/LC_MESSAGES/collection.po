@@ -1,0 +1,55 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-07 10:45-0500\n"
+"PO-Revision-Date: 2018-12-07 10:50-0500\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.2\n"
+
+#: collection/manager/insert_one.py:17
+msgid "User with specified email already exist."
+msgstr "O usuário com e-mail especificado já existe."
+
+#: collection/manager/get_one.py:21 collection/manager/modify_one.py:23
+msgid "User _id not found."
+msgstr "Usuário _id não encontrado."
+
+#: collection/manager/modify_one.py:17 collection/manager/get_many.py:9
+#: collection/manager/delete_one.py:11 collection/manager/delete_one.py:15
+msgid "User not have sufficient permissions to do this action."
+msgstr "O usuário não tem permissões suficientes para fazer essa ação."
+
+#: collection/manager/delete_one.py:20
+msgid "The user is not deleted."
+msgstr "O usuário não é eliminado."
+
+#: collection/manager/utils/auth.py:38
+msgid "User deleted."
+msgstr "Usuário eliminado."
+
+#: collection/manager/utils/auth.py:40
+msgid "User not validated."
+msgstr "Usuário não validado."
+
+#: collection/manager/utils/auth.py:42
+msgid "User unapproved."
+msgstr "Usuário não aprovado."
+
+#: collection/manager/utils/auth.py:45
+msgid "JWT expired"
+msgstr "JWT expirou"
+
+#: collection/manager/utils/auth.py:47
+msgid "JWT decode error"
+msgstr "Erro de decodificação JWT"

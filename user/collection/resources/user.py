@@ -4,7 +4,7 @@ Contains necessary Resources to works with user CRUD operations.
 """
 
 import json
-
+import gettext
 from manager.exceptions.user import (
     UserNotFoundError, UserSchemaError, UserUnmodifyError, UserUndeleteError,
     UserDuplicateEmailError, UserPermissionError
@@ -18,12 +18,12 @@ from manager.modify_one import modify_one
 from manager.delete_one import delete_one
 
 from bson.json_util import dumps
-
+from manager.utils.switch_language import SwitchLanguage
 import falcon
 
 # TODO: password pattern
 
-
+@falcon.before(SwitchLanguage())
 class User(object):
     """Deal with single user."""
 
@@ -33,18 +33,22 @@ class User(object):
 
     def on_get(self, req, resp, _id):
         """Get a single user."""
+        _ = req.context.get('user').get('language')
         try:
             user = get_one(
                 db_client=self.db_client,
                 user_id=_id,
+                language=_
             )
             resp.body = dumps(user)
         except UserNotFoundError as e:
             resp.status = falcon.HTTP_NOT_FOUND
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps(
+                {'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserPermissionError as e:
             resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps(
+                {'message': json.dumps(e.args[0], ensure_ascii=False)})
 
     @falcon.before(Authenticate())
     def on_put(self, req, resp, _id):
@@ -61,16 +65,20 @@ class User(object):
             resp.body = dumps({'data': new_user})
         except UserNotFoundError as e:
             resp.status = falcon.HTTP_NOT_FOUND
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps(
+                {'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserSchemaError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps(
+                {'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserUnmodifyError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps(
+                {'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserPermissionError as e:
             resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps(
+                {'message': json.dumps(e.args[0], ensure_ascii=False)})
 
     @falcon.before(Authenticate())
     def on_delete(self, req, resp, _id):
@@ -86,10 +94,13 @@ class User(object):
             resp.body = dumps({'status': 'deleted'})
         except UserNotFoundError as e:
             resp.status = falcon.HTTP_NOT_FOUND
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps(
+                {'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserUndeleteError as e:
             resp.status = falcon.HTTP_BAD_REQUEST
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps(
+                {'message': json.dumps(e.args[0], ensure_ascii=False)})
         except UserPermissionError as e:
             resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = dumps({'message': json.dumps(e.args[0])})
+            resp.body = dumps(
+                {'message': json.dumps(e.args[0], ensure_ascii=False)})
