@@ -123,6 +123,8 @@ services:
       DB_HOST: db
     links:
       - db
+    volumes:
+      - ./user/account_validation:/code
     depends_on:
       - db
       - redis
