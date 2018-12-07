@@ -28,6 +28,7 @@ class StorageUnit(object):
         # TODO: validata a filecontent.
         file_extension = file_metadata.get('extension')
         file_name = file_metadata.get('_id') + file_extension
+        file_id = file_metadata.get('_id')
         with self.open(file_name, mode='wb') as file:
             file.write(base64.decodebytes(base64_file_content.encode("ascii")))
 

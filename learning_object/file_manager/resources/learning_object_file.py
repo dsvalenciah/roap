@@ -6,24 +6,27 @@ import json
 from utils.storage import StorageUnit
 
 import falcon
-
+from bson.json_util import dumps
 
 # TODO: add another ppt file format
 
 FILE_MIME_TYPES = {
-  'zip': 'application/zip',
-  'pdf': 'application/pdf',
-  'png': 'image/png',
-  'jpg': 'image/jpeg',
-  'mp4': 'video/mp4',
-  'mpg': 'audio/mpeg',
-  'doc': 'application/msword',
-  'ppt': 'application/vnd.ms-powerpoint',
-};
+    'zip': 'application/zip',
+    'pdf': 'application/pdf',
+    'png': 'image/png',
+    'jpg': 'image/jpeg',
+    'mp4': 'video/mp4',
+    'mpg': 'audio/mpeg',
+    'doc': 'application/msword',
+    'ppt': 'application/vnd.ms-powerpoint',
+}
 
 
 from utils.auth import Authenticate
+from utils.switch_language import SwitchLanguage()
 
+
+@falcon.before(SwitchLanguage())
 class LearningObjectFile(object):
     """Deal with learning object files."""
 
@@ -42,7 +45,7 @@ class LearningObjectFile(object):
         )
 
         result.update({
-          "original_file_name": learning_object_file.filename,
+            "original_file_name": learning_object_file.filename,
         })
 
         try:

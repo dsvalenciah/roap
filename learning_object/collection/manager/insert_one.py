@@ -23,6 +23,7 @@ from manager.schemas.learning_object_metadata import LearningObjectMetadata
 
 from manager.utils.xml_to_dict import xml_to_dict
 from manager.utils.file_manager import StorageUnit
+from manager.utils.i18n_error import ErrorTranslator
 
 
 def get_last_learning_object_metadata_schema_id(db_client):
@@ -52,21 +53,23 @@ def insert_one(
             db_client
         ).validate(learning_object_metadata)
         if errors:
-            raise LearningObjectMetadataSchemaError(errors)
+            errors_translator = ErrorTranslator(_)
+            raise LearningObjectMetadataSchemaError(
+                errors_translator.i18n_error(errors))
 
-    learning_object_metadata_schema_id = (
+    learning_object_metadata_schema_id=(
         get_last_learning_object_metadata_schema_id(db_client)
     )
 
     # TODO: validate learning object category.
 
     if not learning_object_id:
-        learning_object_id = str(uuid4())
+        learning_object_id=str(uuid4())
 
     if with_file:
         if not learning_object_file:
             raise LearningObjectFileNotFound(_('File not found.'))
-        file_metadata = {
+        file_metadata={
             '_id': learning_object_id,
             'extension': mimetypes.guess_extension(
                 learning_object_file.get('mimeType')

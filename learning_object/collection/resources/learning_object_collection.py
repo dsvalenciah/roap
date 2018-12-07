@@ -73,7 +73,7 @@ class LearningObjectCollection(object):
         """Create learning-object."""
         # TODO: fix category
         # TODO: fix file manage
-        _ = req.context['user']['language']
+        _ = req.context['user'].get('language')
         post_params = req_to_dict(req)
         metadata = post_params.get('metadata')
         category = post_params.get('category')

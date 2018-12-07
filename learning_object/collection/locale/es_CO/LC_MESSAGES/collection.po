@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-06 10:32-0500\n"
-"PO-Revision-Date: 2018-12-06 16:30-0500\n"
+"PO-Revision-Date: 2018-12-06 20:39-0500\n"
 "Language: es_CO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,11 +67,11 @@ msgstr "Usuario eliminado."
 
 #: collection/manager/utils/auth.py:41
 msgid "User not validated."
-msgstr "Usuario no válidado."
+msgstr "Usuario no validado."
 
 #: collection/manager/utils/auth.py:43
 msgid "User unapproved."
-msgstr "Usuario no aceptado."
+msgstr "Usuario no aprobado."
 
 #: collection/manager/utils/auth.py:46
 msgid "JWT expired"
@@ -93,3 +93,6 @@ msgstr "Campo no puede ser null."
 
 msgid "Not a valid list."
 msgstr "No es una lista válida."
+
+msgid "Requiredfield."
+msgstr "Campo obligatorio."
