@@ -1,0 +1,4 @@
+from setup.compile_messages import create_mo_files
+from setup.create_default_learning_objects import create_default_learning_objects
+
+create_mo_files()

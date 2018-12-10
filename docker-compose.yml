@@ -27,19 +27,6 @@ services:
     depends_on:
       - db
 
-  learning_object_file_manager:
-    image: learning_object_file_manager
-    build: ./learning_object/file_manager
-    command: gunicorn -b 0.0.0.0:80 app:api --reload
-    ports:
-      - 80
-    environment:
-      VIRTUAL_HOST: "*/v1/learning-object-file-manager, */v1/learning-object-file-manager/*"
-      VIRTUAL_HOST_WEIGHT: 10
-      FILE_STORAGE: /run/files
-    volumes:
-      - file-storage:/run/files
-
   learning_object_default_files:
     image: learning_object_default_files
     build:
@@ -59,8 +46,11 @@ services:
     environment:
       VIRTUAL_HOST: "*/v1/learning-object-collection, */v1/learning-object-collection/*"
       VIRTUAL_HOST_WEIGHT: 10
-      DB_HOST: db
       FILE_STORAGE: /run/files
+      JWT_SECRET: "dsvalenciah_developer"
+      DB_HOST: db
+      DB_PORT: 27017
+      DB_NAME: "roap"
     links:
       - db
     volumes:
@@ -167,7 +157,6 @@ services:
     links:
       - db
       - learning_object_metadata_schema
-      - learning_object_file_manager
       - learning_object_collection
       - learning_object_file_renderer
       - user_collection

@@ -5,7 +5,7 @@ Contains roap app and his db run class.
 
 import os
 
-from config.default_users import create_default_users
+from setup import create_default_users
 
 import falcon
 from falcon_cors import CORS

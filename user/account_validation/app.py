@@ -5,6 +5,8 @@ Contains roap app and his db run class.
 
 import os
 
+from setup.compile_messages import create_mo_files
+
 import falcon
 from falcon_cors import CORS
 
@@ -21,6 +23,8 @@ class Roap():
         """Create db and api for Roap."""
         self.client = MongoClient(os.getenv(db_host), db_port)
         self.db = self.client[db_name]
+
+        create_mo_files()
 
         self.api = falcon.API(middleware=[
             CORS(

@@ -5,9 +5,7 @@ Contains roap app and his db run class.
 
 import os
 
-from config.learning_object_metadata import (
-    learning_object_metadata_schema_populate
-)
+from setup import create_default_learning_object_metadata_schema
 
 import falcon
 from falcon_cors import CORS
@@ -25,7 +23,7 @@ class Roap():
         self.client = MongoClient(os.getenv(db_host), db_port)
         self.db = self.client[db_name]
 
-        learning_object_metadata_schema_populate(self.db)
+        create_default_learning_object_metadata_schema(self.db)
 
         self.api = falcon.API(middleware=[
             CORS(
