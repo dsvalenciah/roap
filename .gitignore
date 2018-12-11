@@ -1,5 +1,5 @@
 
-learning_object/collection/config/default_learning_objects_xml/*
+learning_object/collection/setup/default_learning_objects_xml/*
 learning_object/default_files/files/*
 ui/build
 ui/roap-ui
