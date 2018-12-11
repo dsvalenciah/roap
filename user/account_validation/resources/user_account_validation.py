@@ -18,8 +18,16 @@ class UserValidate(object):
 
     def on_get(self, req, resp, token):
         """Validate user."""
+        valid_langs = {
+            'en_US': 'en_US',
+            'es_CO': 'es_CO',
+            'pt_BR': 'pt_BR'
+        }
+        value_lang_cookie = valid_langs.get(
+            req.cookies.get('user_lang')) or 'es_CO'
+
         _ = gettext.translation('account_validation', '/code/locale',
-                                languages=[req.cookies.get('user_lang') or 'es_CO']).gettext
+                                languages=[value_lang_cookie]).gettext
 
         try:
             user = jwt.decode(
