@@ -141,10 +141,20 @@ services:
       - db
       - redis
 
-  worker:
+  worker_account_validation:
     image: user_account_validation
     build: ./user/account_validation
-    command: rq worker -u redis://redis
+    command: rq worker account_validation -u redis://redis
+    environment:
+      VIRTUAL_HOST: "*/v1/tasks, */v1/tasks/*"
+    depends_on:
+      - db
+      - redis
+  
+  worker_recover_password:
+    image: user_recover_password
+    build: ./user/recover_password
+    command: rq worker recover_password -u redis://redis
     environment:
       VIRTUAL_HOST: "*/v1/tasks, */v1/tasks/*"
     depends_on:
