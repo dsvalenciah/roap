@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
 import gettext
-
+import datetime
 import jwt
 
 from redis import Redis
@@ -16,45 +16,46 @@ def queue():
     '''
     Get ourselves a default queue.
     '''
-    return Queue('account_validation', connection=Redis(host='redis'))
+    return Queue('recover_password', connection=Redis(host='redis'))
 
 
 def send_email(receiver_email, user_lang):
     """Send user account validation."""
     # TODO: add sender to config file.
     server = smtplib.SMTP('smtp.gmail.com:587')
-    _ = gettext.translation('account_validation', '/code/locale', languages=[user_lang]).gettext
+    _ = gettext.translation('recover_password', '/code/locale', languages=[user_lang]).gettext
     server.ehlo()
     server.starttls()
     sender = 'roap.unal.master@gmail.com'
     server.login(sender, "@roap@unal@master")
 
     token = jwt.encode(
-        {'email': receiver_email},
+        {'email': receiver_email,
+          'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=2)},
         'dsvalenciah_developer',
         algorithm='HS512'
     ).decode('utf-8')
 
     message = MIMEMultipart('alternative')
 
-    message['Subject'] = "ROAp account validation"
+    message['Subject'] = "ROAp recover password"
     message['From'] = sender
     message['To'] = receiver_email
 
     # TODO: fix host.
-    validate_message = _('Hi! Please, click on this <a href="{url}/{token}">link</a> to validate your account.').format(
-        url='http://localhost:8081/user-validate', token=token)
+    recover_password_message = _('Hi! Please, click on this <a href="{url}/{token}">link</a> to recover your password account.').format(
+        url='http://localhost:8081/recover-password', token=token)
 
     html = """
             <html>
                 <head></head>
                 <body>
                     <p>
-                       {validate_message}
+                       {message}
                     </p>
                 </body>
             </html>
-        """.format(validate_message=validate_message)
+        """.format(message=recover_password_message)
 
     message.attach(MIMEText(html, 'html'))
 

@@ -123,6 +123,24 @@ services:
       - db
       - redis
 
+  user_recover_password:
+    image: user_recover_password
+    build: ./user/recover_password
+    command: gunicorn -b 0.0.0.0:80 app:api --reload
+    ports:
+      - 80
+    environment:
+      VIRTUAL_HOST: "*/v1/recover-password, */v1/recover-password/*"
+      VIRTUAL_HOST_WEIGHT: 10
+      DB_HOST: db
+    links:
+      - db
+    volumes:
+    - ./user/recover_password:/code
+    depends_on:
+      - db
+      - redis
+
   worker:
     image: user_account_validation
     build: ./user/account_validation
@@ -162,6 +180,7 @@ services:
       - user_collection
       - user_login
       - user_account_validation
+      - user_recover_password
       - ui
     logging:
       driver: "none"

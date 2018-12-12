@@ -1,0 +1,8 @@
+falcon
+gunicorn
+pymongo
+pyjwt
+falcon-cors
+redis==2.10.6
+rq==0.12.0
+passlib
