@@ -31,7 +31,7 @@ def send_email(receiver_email, user_lang):
 
     token = jwt.encode(
         {'email': receiver_email,
-          'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=2)},
+          'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
         'dsvalenciah_developer',
         algorithm='HS512'
     ).decode('utf-8')
@@ -44,7 +44,7 @@ def send_email(receiver_email, user_lang):
 
     # TODO: fix host.
     recover_password_message = _('Hi! Please, click on this <a href="{url}/{token}">link</a> to recover your password account.').format(
-        url='http://localhost:8081/recover-password', token=token)
+        url='http://localhost:8081/#/recover-password', token=token)
 
     html = """
             <html>

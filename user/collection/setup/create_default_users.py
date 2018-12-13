@@ -42,7 +42,7 @@ def create_default_users(db):
             '_id': 'ee6a11ae-e52b-4e64-b4a6-a14d42ff49db',
             'name': 'expert1',
             'password': sha512_crypt.hash('expert1', salt='dqwjfdsakuyfd'),
-            'email': 'ohernandezn@unal.edu.co',
+            'email': 'expert1@unal.edu.co',
             'role': 'expert',
             'status': 'accepted',
             'created': str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),

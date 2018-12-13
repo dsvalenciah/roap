@@ -12,8 +12,8 @@ from falcon_cors import CORS
 
 from pymongo import MongoClient
 
-from resources.user_account_recover_password import UserRecoverPassword
-from resources.user_account_email import UserEmail
+from resources.recover_password import UserRecoverPassword
+from resources.recover_password_email import UserEmail
 
 
 class Roap():
