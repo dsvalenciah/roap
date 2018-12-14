@@ -1,6 +1,7 @@
 import falcon
 import jwt
 import gettext
+import os
 from bson.json_util import dumps
 from utils.req_to_dict import req_to_dict
 from passlib.hash import sha512_crypt
@@ -17,13 +18,13 @@ class UserRecoverPassword(object):
         new_password = req_to_dict(req).get('password')
         encrypted_password = sha512_crypt.hash(
             new_password,
-            salt='dqwjfdsakuyfd'
+            salt=os.getenv('SALT')
         )
 
         try:
             user = jwt.decode(
                 token,
-                'dsvalenciah_developer',
+                os.getenv('JWT_SECRET'),
                 verify='True',
                 algorithms=['HS512']
             )

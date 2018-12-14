@@ -6,6 +6,7 @@ Contains utility functions to works with Authentication.
 import jwt
 import falcon
 import gettext
+import os
 
 
 class Authenticate(object):
@@ -16,7 +17,7 @@ class Authenticate(object):
 
     def __call__(self, req, resp, resource, params):
         """Authorize request."""
-        # TODO: get secret from configuration file and fix raise errors
+        # TODO: fix raise errors
         authentication = req.headers.get('AUTHORIZATION')
         if not authentication:
             raise falcon.HTTPMissingHeader("AUTHORIZATION")
@@ -24,7 +25,7 @@ class Authenticate(object):
         try:
             user = jwt.decode(
                 authentication,
-                'dsvalenciah_developer',
+                os.getenv('JWT_SECRET'),
                 verify='True',
                 algorithms=['HS512'],
                 # options={'verify_exp': True}

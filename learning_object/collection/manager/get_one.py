@@ -9,15 +9,6 @@ from manager.exceptions.learning_object import LearningObjectFormatError
 
 from manager.utils.dict_to_xml import dict_to_xml
 
-idiomas = {
-    'es': 'es_CO',
-}
-t = gettext.translation('get_one',
-                        '../../locale',
-                        languages=[idiomas['es']],
-                        fallback=True)
-_ = t.gettext
-
 
 def get_one(db_client, learning_object_id, learning_object_format, user):
     """Get a learning object by _id."""

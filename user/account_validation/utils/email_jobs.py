@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
 import gettext
-
+import os
 import jwt
 
 from redis import Redis
@@ -26,12 +26,12 @@ def send_email(receiver_email, user_lang):
     _ = gettext.translation('account_validation', '/code/locale', languages=[user_lang]).gettext
     server.ehlo()
     server.starttls()
-    sender = 'roap.unal.master@gmail.com'
-    server.login(sender, "@roap@unal@master")
+    sender = os.getenv('SENDER_EMAIL')
+    server.login(sender, os.getenv('PASSWORD_SENDER'))
 
     token = jwt.encode(
         {'email': receiver_email},
-        'dsvalenciah_developer',
+        os.getenv('JWT_SECRET'),
         algorithm='HS512'
     ).decode('utf-8')
 
@@ -43,7 +43,7 @@ def send_email(receiver_email, user_lang):
 
     # TODO: fix host.
     validate_message = _('Hi! Please, click on this <a href="{url}/{token}">link</a> to validate your account.').format(
-        url='http://localhost:8081/user-validate', token=token)
+        url='http://localhost:8081/#/user-validate', token=token)
 
     html = """
             <html>

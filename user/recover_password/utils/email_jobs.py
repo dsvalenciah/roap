@@ -7,6 +7,7 @@ import smtplib
 import gettext
 import datetime
 import jwt
+import os
 
 from redis import Redis
 from rq import Queue
@@ -26,13 +27,13 @@ def send_email(receiver_email, user_lang):
     _ = gettext.translation('recover_password', '/code/locale', languages=[user_lang]).gettext
     server.ehlo()
     server.starttls()
-    sender = 'roap.unal.master@gmail.com'
-    server.login(sender, "@roap@unal@master")
+    sender = os.getenv('SENDER_EMAIL')
+    server.login(sender, os.getenv('PASSWORD_SENDER'))
 
     token = jwt.encode(
         {'email': receiver_email,
           'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
-        'dsvalenciah_developer',
+        os.getenv('JWT_SECRET'),
         algorithm='HS512'
     ).decode('utf-8')
 

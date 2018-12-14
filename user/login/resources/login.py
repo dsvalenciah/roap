@@ -5,7 +5,7 @@ Contains necessary Resources to works with user authentication.
 
 import json
 from datetime import datetime, timedelta
-
+import os
 from utils.req_to_dict import req_to_dict
 
 import falcon
@@ -24,7 +24,7 @@ class Login(object):
 
     def on_post(self, req, resp):
         """Authenticate user."""
-        # TODO: add expiration seconds and secret to configuration file
+        # TODO: add expiration seconds
         # TODO: create a login schema.
         # TODO: user has password?
         user = req_to_dict(req)
@@ -67,7 +67,7 @@ class Login(object):
                     'name': user.get('name'),
                     # 'exp': datetime.utcnow() + timedelta(seconds=3600),
                 },
-                'dsvalenciah_developer',
+                os.getenv('JWT_SECRET'),
                 algorithm='HS512'
             ).decode('utf-8')
             resp.body = json.dumps({

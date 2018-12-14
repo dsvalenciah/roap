@@ -5,7 +5,7 @@ Contains user schema.
 
 from datetime import datetime
 from uuid import uuid4
-
+import os
 from passlib.hash import sha512_crypt
 
 from marshmallow import Schema, fields, validate
@@ -48,5 +48,5 @@ class User(Schema):
         if password:
             return sha512_crypt.hash(
                 password,
-                salt='dqwjfdsakuyfd'
+                salt=os.getenv('SALT')
             )

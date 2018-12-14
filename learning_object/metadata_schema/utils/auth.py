@@ -5,7 +5,7 @@ Contains utility functions to works with Authentication.
 
 import jwt
 import falcon
-
+import os
 
 class Authenticate(object):
     """Deal with the user Authentication."""
@@ -24,7 +24,7 @@ class Authenticate(object):
         try:
             user = jwt.decode(
                 authentication,
-                'dsvalenciah_developer',
+                os.getenv('JWT_SECRET'),
                 verify='True',
                 algorithms=['HS512'],
                 # options={'verify_exp': True}

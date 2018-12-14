@@ -18,10 +18,10 @@ from resources import login
 class Roap():
     """Main Roap class."""
 
-    def __init__(self, db_host='DB_HOST', db_port=27017, db_name='roap'):
+    def __init__(self, db_host='DB_HOST', db_port='DB_PORT', db_name='DB_NAME'):
         """Create db and api for Roap."""
-        self.client = MongoClient(os.getenv(db_host), db_port)
-        self.db = self.client[db_name]
+        self.client = MongoClient(os.getenv(db_host), int(os.getenv(db_port)))
+        self.db = self.client[os.getenv(db_name)]
 
         create_mo_files()
 

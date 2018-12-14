@@ -2,7 +2,7 @@
 """
 Contains necessary Resources to works with user validation.
 """
-
+import os
 import falcon
 import jwt
 import gettext
@@ -32,7 +32,7 @@ class UserValidate(object):
         try:
             user = jwt.decode(
                 token,
-                'dsvalenciah_developer',
+                os.getenv('JWT_SECRET'),
                 verify='True',
                 algorithms=['HS512'],
             )
