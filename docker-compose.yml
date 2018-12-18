@@ -156,6 +156,8 @@ services:
     image: user_account_validation
     build: ./user/account_validation
     command: rq worker account_validation -u redis://redis
+    env_file:
+      - .env
     environment:
       VIRTUAL_HOST: "*/v1/task-account-validation, */v1/task-account-validation/*"
     depends_on:
@@ -166,6 +168,8 @@ services:
     image: user_recover_password
     build: ./user/recover_password
     command: rq worker recover_password -u redis://redis
+    env_file:
+      - .env
     environment:
       VIRTUAL_HOST: "*/v1/task-recover-password, */v1/task-recover-password/*"
     depends_on:
