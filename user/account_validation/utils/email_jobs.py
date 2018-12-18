@@ -23,7 +23,11 @@ def send_email(receiver_email, user_lang):
     """Send user account validation."""
     # TODO: add sender to config file.
     server = smtplib.SMTP('smtp.gmail.com:587')
-    _ = gettext.translation('account_validation', '/code/locale', languages=[user_lang]).gettext
+    _ = gettext.translation(
+        'account_validation',
+        '/code/locale',
+        languages=[user_lang]
+    ).gettext
     server.ehlo()
     server.starttls()
     sender = os.getenv('SENDER_EMAIL')
@@ -42,8 +46,13 @@ def send_email(receiver_email, user_lang):
     message['To'] = receiver_email
 
     # TODO: fix host.
-    validate_message = _('Hi! Please, click on this <a href="{url}/{token}">link</a> to validate your account.').format(
-        url='http://localhost:8081/#/user-validate', token=token)
+    validate_message = _((
+        'Hi! Please, click on this <a href="{url}/{token}">link</a> '
+        'to validate your account.'
+    )).format(
+        url=os.getenv('ACCOUNT_VALIDATION_URL'),
+        token=token
+    )
 
     html = """
             <html>

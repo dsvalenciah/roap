@@ -24,7 +24,11 @@ def send_email(receiver_email, user_lang):
     """Send user account validation."""
     # TODO: add sender to config file.
     server = smtplib.SMTP('smtp.gmail.com:587')
-    _ = gettext.translation('recover_password', '/code/locale', languages=[user_lang]).gettext
+    _ = gettext.translation(
+        'recover_password',
+        '/code/locale',
+        languages=[user_lang]
+    ).gettext
     server.ehlo()
     server.starttls()
     sender = os.getenv('SENDER_EMAIL')
@@ -44,8 +48,13 @@ def send_email(receiver_email, user_lang):
     message['To'] = receiver_email
 
     # TODO: fix host.
-    recover_password_message = _('Hi! Please, click on this <a href="{url}/{token}">link</a> to recover your password account.').format(
-        url='http://localhost:8081/#/recover-password', token=token)
+    recover_password_message = _((
+        'Hi! Please, click on this <a href="{url}/{token}">link</a> '
+        'to recover your password account.'
+    )).format(
+        url=os.getenv('RECOVER_PASSWORD_URL'),
+        token=token
+    )
 
     html = """
             <html>
