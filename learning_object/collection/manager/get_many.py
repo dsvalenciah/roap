@@ -64,7 +64,7 @@ def get_many(db_client, filter_, range_, sorted_, user):
             cursor
             .sort([('rating', {'$meta': "textScore"})])
             .skip(start)
-            .limit(end - start)
+            .limit((end - start) + 1)
         )
     else:
         query = {**initial_query, **filter_}
@@ -73,7 +73,7 @@ def get_many(db_client, filter_, range_, sorted_, user):
             cursor
             .sort([(field, -1 if order == 'DESC' else 1)])
             .skip(start)
-            .limit(end - start)
+            .limit((end - start) + 1)
         )
 
     return learning_objects, cursor.count()
