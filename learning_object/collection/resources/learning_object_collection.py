@@ -72,12 +72,10 @@ class LearningObjectCollection(object):
     def on_post(self, req, resp):
         """Create learning-object."""
         # TODO: fix category
-        # TODO: fix file manage
         _ = req.context['user'].get('language')
         post_params = req_to_dict(req)
         metadata = post_params.get('metadata')
         category = post_params.get('category')
-        # TODO: fix file format xml for example
         _format = post_params.get('format')
         file = post_params.get('file')
 

@@ -51,7 +51,11 @@ class LearningObject(object):
                 learning_object_format=learning_object_format,
                 user=user,
             )
-            resp.body = dumps(learning_object)
+            if learning_object_format == 'xml':
+                resp.content_type = 'text/xml'
+                resp.body = learning_object
+            else:
+                resp.body = dumps(learning_object)
         except LearningObjectNotFoundError as e:
             resp.status = falcon.HTTP_NOT_FOUND
             resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
