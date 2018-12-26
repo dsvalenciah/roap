@@ -20,10 +20,10 @@ def check_user_permission(user, learning_object):
 def delete_one(db_client, learning_object_id, user):
     """Delete a learning object by _id."""
 
-    # Check user permission.
     learning_object = db_client.learning_objects.find_one({
         '_id': learning_object_id
     })
+    _id = learning_object_id
     _ = user.get('language')
 
     if not learning_object:
@@ -31,4 +31,7 @@ def delete_one(db_client, learning_object_id, user):
 
     check_user_permission(user, learning_object)
 
-    db_client.learning_objects.delete_one({'_id': _id})
+    db_client.learning_objects.update_one(
+        {'_id': _id},
+        {'$set': {'deleted': True}},
+    )

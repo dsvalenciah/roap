@@ -16,7 +16,7 @@ def get_many(db_client, filter_, range_, sorted_, user):
     # Role level permissions
     user_role_permissions_handler = {
         'external': [
-            {'status': 'accepted'}
+            {'status': 'accepted', 'deleted': False},
         ],
         'creator': [
             {
@@ -25,7 +25,7 @@ def get_many(db_client, filter_, range_, sorted_, user):
                     '$in': ['pending', 'evaluated', 'accepted', 'rejected']
                 }
             },
-            {'status': 'accepted'}
+            {'status': 'accepted', 'deleted': False},
         ],
         'expert': [
             {
@@ -40,7 +40,7 @@ def get_many(db_client, filter_, range_, sorted_, user):
                     '$in': ['pending', 'evaluated', 'accepted', 'rejected']
                 }
             },
-            {'status': 'accepted'}
+            {'status': 'accepted', 'deleted': False}
         ],
         'administrator': [
             {}
