@@ -33,29 +33,6 @@ class Login(object):
         user = self.db.users.find_one({'email': email})
         _ = req.context.get('language')
 
-        if not user:
-            # User not exists.
-            resp.status = falcon.HTTP_NOT_FOUND
-            resp.body = json.dumps(
-                {'message': [_('User not found.')]}, ensure_ascii=False)
-            return
-
-        if not user.get('validated'):
-            # User email is not validated.
-            resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = json.dumps(
-                {'message': [_('User email is not validated.')]},
-                ensure_ascii=False
-            )
-            return
-
-        if user.get('status') != 'accepted':
-            # User is not validated by admin.
-            resp.status = falcon.HTTP_UNAUTHORIZED
-            resp.body = json.dumps(
-                {'message': [_('User is not validated by admin.')]}, ensure_ascii=False)
-            return
-
         if user and sha512_crypt.verify(password, user.get('password')):
             token = jwt.encode(
                 {
@@ -74,7 +51,24 @@ class Login(object):
                 'token': token
             })
         else:
+            resp.status = falcon.HTTP_NOT_FOUND
+            resp.body = json.dumps(
+                {'message': [_('User not found or invalid password.')]}, ensure_ascii=False)
+            return
+            # Incorrect password.
+
+        if not user.get('validated'):
+            # User email is not validated.
             resp.status = falcon.HTTP_UNAUTHORIZED
             resp.body = json.dumps(
-                {'message': [_('Invalid password.')]}, ensure_ascii=False)
-            # Incorrect password.
+                {'message': [_('User email is not validated.')]},
+                ensure_ascii=False
+            )
+            return
+
+        if user.get('status') != 'accepted':
+            # User is not validated by admin.
+            resp.status = falcon.HTTP_FORBIDDEN
+            resp.body = json.dumps(
+                {'message': [_('User is not validated by admin.')]}, ensure_ascii=False)
+            return

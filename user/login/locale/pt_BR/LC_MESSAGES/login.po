@@ -18,8 +18,8 @@ msgstr ""
 "X-Generator: Poedit 2.2\n"
 
 #: login/resources/login.py:39
-msgid "User not found."
-msgstr "Usuário não encontrado."
+msgid "User not found or invalid password."
+msgstr "Usuário não encontrado ou senha inválida."
 
 #: login/resources/login.py:46
 msgid "User email is not validated."
@@ -28,7 +28,3 @@ msgstr "O e-mail do usuário não é validado."
 #: login/resources/login.py:53
 msgid "User is not validated by admin."
 msgstr "O usuário não é validado pelo administrador."
-
-#: login/resources/login.py:75
-msgid "Invalid password."
-msgstr "Senha inválida."
