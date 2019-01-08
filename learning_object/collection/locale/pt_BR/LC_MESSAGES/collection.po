@@ -96,3 +96,15 @@ msgstr "Não é uma lista válida."
 
 msgid "Requiredfield."
 msgstr "Campo obrigatório."
+
+#: collection/manager/utils/file_manager.py:94
+msgid "Incorrect file name."
+msgstr "Nome de arquivo incorreto."
+
+#: collection/manager/utils/file_manager.py:96
+msgid "Not supported file mimetype."
+msgstr "Tipo de arquivo não suportado."
+
+#: collection/manager/utils/file_manager.py:113
+msgid "Folder without index.html."
+msgstr "Pasta sem index.html"

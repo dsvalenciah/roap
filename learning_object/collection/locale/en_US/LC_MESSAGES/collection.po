@@ -84,3 +84,15 @@ msgstr ""
 #: collection/resources/learning_object_collection.py:86
 msgid "An metadata, category, and file is required"
 msgstr ""
+
+#: collection/manager/utils/file_manager.py:94
+msgid "Incorrect file name."
+msgstr ""
+
+#: collection/manager/utils/file_manager.py:96
+msgid "Not supported file mimetype."
+msgstr ""
+
+#: collection/manager/utils/file_manager.py:113
+msgid "Folder without index.html."
+msgstr ""
