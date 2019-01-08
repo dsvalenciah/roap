@@ -40,5 +40,5 @@ class InvalidRatingValue(RoapError):
 class UserCannotRate(RoapError):
     """docstring for UserCannotRate"""
 
-class LearningObjectFileNotFound(RoapError):
+class LearningObjectFile(RoapError):
     """docstring for UserCannotRate"""

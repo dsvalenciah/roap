@@ -11,7 +11,7 @@ mimetypes.init()
 
 from manager.exceptions.learning_object import (
     LearningObjectFormatError, LearningObjectMetadataSchemaError,
-    LearningObjectSchemaError, LearningObjectFileNotFound
+    LearningObjectSchemaError, LearningObjectFile
 )
 
 import re
@@ -68,18 +68,18 @@ def insert_one(
 
     if with_file:
         if not learning_object_file:
-            raise LearningObjectFileNotFound(_('File not found.'))
-        file_metadata={
+            raise LearningObjectFile(_('File not found.'))
+        file_metadata = {
             '_id': learning_object_id,
-            'extension': mimetypes.guess_extension(
-                learning_object_file.get('mimeType')
+            'extension': (
+                '.' + learning_object_file.get('name', '.').split('.')[-1]
             ),
             'name': learning_object_file.get('name'),
             'mime_type': learning_object_file.get('mimeType'),
             'size': learning_object_file.get('size'),
             'last_modified': learning_object_file.get('lastModified')
         }
-        storage_unit = StorageUnit()
+        storage_unit = StorageUnit(exceptions_language_handler=user_language)
         storage_unit.store(
             learning_object_file.get('base64File'),
             file_metadata
@@ -97,11 +97,13 @@ def insert_one(
                     learning_object_id=learning_object_id)
             )
         file_extension = '.' + file_extension
+        file_name = learning_object_id + file_extension
+        mime_type, _ = mimetypes.guess_type(file_name)
         file_metadata = {
             '_id': learning_object_id,
             'extension': file_extension,
-            'name': learning_object_id + file_extension,
-            'mime_type': None,
+            'name': file_name,
+            'mime_type': mime_type,
             'size': None,
             'last_modified': None
         }

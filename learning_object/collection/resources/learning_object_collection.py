@@ -9,7 +9,7 @@ from manager.exceptions.learning_object import (
     LearningObjectNotFoundError, LearningObjectSchemaError,
     LearningObjectUnmodifyError, LearningObjectUndeleteError,
     LearningObjectFormatError, LearningObjectMetadataSchemaError,
-    LearningObjectFileNotFound
+    LearningObjectFile
 )
 
 from manager.exceptions.user import (
@@ -113,6 +113,6 @@ class LearningObjectCollection(object):
         except LearningObjectFormatError as e:
             resp.status = falcon.HTTP_UNAUTHORIZED
             resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
-        except LearningObjectFileNotFound as e:
+        except LearningObjectFile as e:
             resp.status = falcon.HTTP_UNAUTHORIZED
             resp.body = dumps({'message': json.dumps(e.args[0], ensure_ascii=False)})
