@@ -1,6 +1,8 @@
 from yattag import Doc, indent
 from datetime import datetime
 from manager.get_many import get_many
+import jwt
+import os
 
 
 class Oai(object):
@@ -64,7 +66,7 @@ class Oai(object):
                             text('deflate')
 
         elif req.params.get('verb') == 'ListRecords':
-            if not req.params.get('metadataPrefix'):
+            if not req.params.get('metadataPrefix') and not req.params.get('resumptionToken'):
                 with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
                     with tag('responseDate'):
                         text(datetime.strftime(
@@ -83,26 +85,96 @@ class Oai(object):
                     with tag('error', code='cannotDisseminateFormat'):
                         text(
                             f'{req.params.get("metadataPrefix")} is not supported by the item or by the repository')
-            elif req.params.get('metadataPrefix') == 'lom':
-                learning_objects, total_count = get_many(
-                    db_client=self.db_client,
-                    filter_={},
-                    range_=[0, 9],
-                    sorted_=["id", "DESC"],
-                    user=req.context.get('user'),
-                    learning_object_format='xml'
-                )
-                with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
-                    with tag('responseDate'):
-                        text(datetime.strftime(
-                            datetime.now(), format="%Y-%m-%d %H:%M:%S"))
-                    with tag('request'):
-                        text('http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
-                    with tag('ListRecords'):
-                        for lo in learning_objects:
-                            with tag('record'):
-                                with tag('metadata'):
-                                    text(lo.get('metadata'))
+            elif req.params.get('metadataPrefix') == 'lom' or req.params.get('resumptionToken'):
+                if(req.params.get('resumptionToken')):
+                    try:
+                        resumptionToken = jwt.decode(
+                            req.params.get('resumptionToken'),
+                            os.getenv('JWT_SECRET'),
+                            verify='True',
+                            algorithms=['HS512']
+                        )
+
+                        learning_objects, total_count = get_many(
+                            db_client=self.db_client,
+                            filter_={},
+                            range_=[resumptionToken.get('cursor'), int(
+                                resumptionToken.get('cursor')) + 100],
+                            sorted_=["id", "DESC"],
+                            user=req.context.get('user'),
+                            learning_object_format='xml'
+                        )
+
+                        token = jwt.encode({
+                            'cursor': int(
+                                resumptionToken.get('cursor')) + 100
+                        },
+                            os.getenv('JWT_SECRET'),
+                            algorithm='HS512').decode('utf-8')
+                        with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
+                            with tag('responseDate'):
+                                text(datetime.strftime(
+                                    datetime.now(), format="%Y-%m-%d %H:%M:%S"))
+                            with tag('request'):
+                                text(
+                                    'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                            with tag('ListRecords'):
+                                for lo in learning_objects:
+                                    with tag('record'):
+                                        with tag('header'):
+                                            with tag('identifier'):
+                                                text(lo.get('_id'))
+                                            with tag('modified'):
+                                                text(lo.get('modified'))
+                                        with tag('metadata'):
+                                            doc.asis(lo.get('metadata'))
+                                    with tag('resumptionToken', cursor=resumptionToken.get('cursor')):
+                                        text(token)
+
+                    except:
+                        with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
+                            with tag('responseDate'):
+                                text(datetime.strftime(
+                                    datetime.now(), format="%Y-%m-%d %H:%M:%S"))
+                            with tag('request'):
+                                text(
+                                    'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                            with tag('error', code='badResumptionToken'):
+                                text(
+                                    'The value of the resumptionToken argument is invalid or expired')
+                else:
+                    learning_objects, total_count = get_many(
+                        db_client=self.db_client,
+                        filter_={},
+                        range_=[0, 100],
+                        sorted_=["id", "DESC"],
+                        user=req.context.get('user'),
+                        learning_object_format='xml'
+                    )
+                    token = jwt.encode({
+                        'cursor': 100
+                    },
+                        os.getenv('JWT_SECRET'),
+                        algorithm='HS512').decode('utf-8')
+                    with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
+                        with tag('responseDate'):
+                            text(datetime.strftime(
+                                datetime.now(), format="%Y-%m-%d %H:%M:%S"))
+                        with tag('request'):
+                            text(
+                                'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                        with tag('ListRecords'):
+                            for lo in learning_objects:
+                                with tag('record'):
+                                    with tag('header'):
+                                        with tag('identifier'):
+                                            text(lo.get('_id'))
+                                        with tag('modified'):
+                                            text(lo.get('modified'))
+                                    with tag('metadata'):
+                                        doc.asis(lo.get('metadata'))
+                                with tag('resumptionToken', cursor=0):
+                                    text(token)
 
         resp.content_type = 'text/xml'
         result = indent(
