@@ -5,4 +5,5 @@ marshmallow
 marshmallowjson==0.4.5
 xmltodict
 pyjwt
+yattag
 falcon-cors

@@ -14,7 +14,7 @@ from pymongo import MongoClient
 
 from resources.learning_object import LearningObject
 from resources.learning_object_collection import LearningObjectCollection
-
+from resources.oai import Oai
 
 class Roap():
     """Main Roap class."""
@@ -43,6 +43,9 @@ class Roap():
         )
         self.api.add_route(
             '/v1/learning-object-collection/{_id}', LearningObject(self.db)
+        )
+        self.api.add_route(
+            '/v1/oai', Oai(self.db)
         )
 
     def get_db(self):
