@@ -53,6 +53,7 @@ class LearningObjectCollection(object):
                 range_=range_,
                 sorted_=sorted_,
                 user=user,
+                learning_object_format=False
             )
             for learning_object in learning_objects:
                 learning_object['id'] = learning_object['_id']
