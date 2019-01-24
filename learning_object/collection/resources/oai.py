@@ -11,7 +11,9 @@ class Oai(object):
         self.valid_arguments = {
             'verb': True,
             'metadataPrefix': True,
-            'resumptionToken': True
+            'resumptionToken': True,
+            'from': True,
+            'until': True
         }
         self.verbs = {
             'Identify': True,
@@ -23,6 +25,7 @@ class Oai(object):
 
     def on_get(self, req, resp):
         doc, tag, text = Doc().tagtext()
+        filters = {}
         req.context['user'] = {
             '_id': None,
             'role': 'external'
@@ -108,22 +111,42 @@ class Oai(object):
                                 algorithms=['HS512']
                             )
 
+                            if(resumptionToken.get('from')):
+                                filters['modified'] = {
+                                    '$gte': resumptionToken.get('from') + ' 00:00:00'}
+
+                            if(resumptionToken.get('until')):
+                                if(filters.get('modified')):
+                                    filters['modified'].update(
+                                        {'$lte': resumptionToken.get('until') + ' 23:59:59'})
+                                else:
+                                    filters['modified'] = {
+                                        '$lte': resumptionToken.get('until')}
+
                             learning_objects, total_count = get_many(
                                 db_client=self.db_client,
-                                filter_={},
+                                filter_=filters,
                                 range_=[int(resumptionToken.get('cursor')), int(
                                     resumptionToken.get('cursor')) + 1],
                                 sorted_=["id", "DESC"],
                                 user=req.context.get('user'),
                                 learning_object_format='xml'
                             )
-
-                            token = jwt.encode({
+                            token_info = {
                                 'cursor': int(
                                     resumptionToken.get('cursor')) + 1
-                            },
-                                os.getenv('JWT_SECRET'),
-                                algorithm='HS512').decode('utf-8')
+                            }
+
+                            if(resumptionToken.get('from')):
+                                token_info['from'] = req.params.get('from')
+
+                            if(resumptionToken.get('until')):
+                                token_info['until'] = req.params.get('until')
+
+                            token = jwt.encode(token_info,
+                                               os.getenv('JWT_SECRET'),
+                                               algorithm='HS512').decode('utf-8')
+
                             with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                                 with tag('responseDate'):
                                     text(datetime.strftime(
@@ -157,19 +180,38 @@ class Oai(object):
                                     text(
                                         'The value of the resumptionToken argument is invalid or expired')
                     else:
+                        if(req.params.get('from')):
+                            filters['modified'] = {
+                                '$gte': req.params.get('from') + ' 00:00:00'}
+
+                        if(req.params.get('until')):
+                            if(filters.get('modified')):
+                                filters['modified'].update(
+                                    {'$lte': req.params.get('until') + ' 23:59:59'})
+                            else:
+                                filters['modified'] = {
+                                    '$lte': req.params.get('until')}
+
                         learning_objects, total_count = get_many(
                             db_client=self.db_client,
-                            filter_={},
+                            filter_=filters,
                             range_=[0, 1],
                             sorted_=["id", "DESC"],
                             user=req.context.get('user'),
                             learning_object_format='xml'
                         )
-                        token = jwt.encode({
+                        token_info = {
                             'cursor': 2
-                        },
-                            os.getenv('JWT_SECRET'),
-                            algorithm='HS512').decode('utf-8')
+                        }
+                        if(req.params.get('from')):
+                            token_info['from'] = req.params.get('from')
+
+                        if(req.params.get('until')):
+                            token_info['until'] = req.params.get('until')
+
+                        token = jwt.encode(token_info,
+                                           os.getenv('JWT_SECRET'),
+                                           algorithm='HS512').decode('utf-8')
                         with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                             with tag('responseDate'):
                                 text(datetime.strftime(
