@@ -22,9 +22,9 @@ class Oai(object):
             '_id': None,
             'role': 'external'
         }
-
+        doc.asis('<?xml version="1.0" encoding="UTF-8"?>')
         if not (req.params.get('verb') and self.verbs.get(req.params.get('verb'))):
-            with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
+            with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                 with tag('responseDate'):
                     text(datetime.strftime(
                         datetime.now(), format="%Y-%m-%d %H:%M:%S"))
@@ -34,7 +34,7 @@ class Oai(object):
                     text('Illegal verb')
         elif req.params.get('verb') == 'Identify':
             if(len(req.params.keys()) > 1):
-                with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
+                with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                     with tag('responseDate'):
                         text(datetime.strftime(
                             datetime.now(), format="%Y-%m-%d %H:%M:%S"))
@@ -43,7 +43,7 @@ class Oai(object):
                     with tag('error', code='badArgument'):
                         text('The request\'s arguments are not valid or missing')
             else:
-                with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
+                with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                     with tag('responseDate'):
                         text(datetime.strftime(
                             datetime.now(), format="%Y-%m-%d %H:%M:%S"))
@@ -67,7 +67,7 @@ class Oai(object):
 
         elif req.params.get('verb') == 'ListRecords':
             if not req.params.get('metadataPrefix') and not req.params.get('resumptionToken'):
-                with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
+                with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                     with tag('responseDate'):
                         text(datetime.strftime(
                             datetime.now(), format="%Y-%m-%d %H:%M:%S"))
@@ -76,7 +76,7 @@ class Oai(object):
                     with tag('error', code='badArgument'):
                         text('The request\'s arguments are not valid or missing')
             elif not self.metadataPrefix.get(req.params.get('metadataPrefix')):
-                with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
+                with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                     with tag('responseDate'):
                         text(datetime.strftime(
                             datetime.now(), format="%Y-%m-%d %H:%M:%S"))
@@ -111,7 +111,7 @@ class Oai(object):
                         },
                             os.getenv('JWT_SECRET'),
                             algorithm='HS512').decode('utf-8')
-                        with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
+                        with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                             with tag('responseDate'):
                                 text(datetime.strftime(
                                     datetime.now(), format="%Y-%m-%d %H:%M:%S"))
@@ -132,7 +132,7 @@ class Oai(object):
                                         text(token)
 
                     except:
-                        with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
+                        with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                             with tag('responseDate'):
                                 text(datetime.strftime(
                                     datetime.now(), format="%Y-%m-%d %H:%M:%S"))
@@ -156,7 +156,7 @@ class Oai(object):
                     },
                         os.getenv('JWT_SECRET'),
                         algorithm='HS512').decode('utf-8')
-                    with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd')):
+                    with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                         with tag('responseDate'):
                             text(datetime.strftime(
                                 datetime.now(), format="%Y-%m-%d %H:%M:%S"))
