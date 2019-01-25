@@ -13,7 +13,8 @@ class Oai(object):
             'metadataPrefix': True,
             'resumptionToken': True,
             'from': True,
-            'until': True
+            'until': True,
+            'set': True
         }
         self.verbs = {
             'Identify': True,
@@ -48,7 +49,7 @@ class Oai(object):
                 with tag('error', code='badArgument'):
                     text('The request\'s arguments are not valid or missing')
         else:
-            if not (req.params.get('verb') and self.verbs.get(req.params.get('verb')) and is_valid):
+            if not (req.params.get('verb') and self.verbs.get(req.params.get('verb'))):
                 with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                     with tag('responseDate'):
                         text(datetime.strftime(
@@ -101,8 +102,28 @@ class Oai(object):
                             text('http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
                         with tag('error', code='badArgument'):
                             text('The request\'s arguments are not valid or missing')
+                elif req.params.get('set'):
+                    with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
+                        with tag('responseDate'):
+                            text(datetime.strftime(
+                                datetime.now(), format="%Y-%m-%d %H:%M:%S"))
+                        with tag('request'):
+                            text('http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                        with tag('error', code='noSetHierarchy'):
+                            text('The repository does not support sets')
                 elif req.params.get('metadataPrefix') == 'lom' or req.params.get('resumptionToken'):
                     if(req.params.get('resumptionToken')):
+                        if(req.params.get('from') or req.params.get('until')):
+                            with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
+                                with tag('responseDate'):
+                                    text(datetime.strftime(
+                                        datetime.now(), format="%Y-%m-%d %H:%M:%S"))
+                                with tag('request'):
+                                    text(
+                                        'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                                with tag('error', code='badArgument'):
+                                    text(
+                                        'The request\'s arguments are not valid or missing')
                         try:
                             resumptionToken = jwt.decode(
                                 req.params.get('resumptionToken'),
@@ -200,38 +221,59 @@ class Oai(object):
                             user=req.context.get('user'),
                             learning_object_format='xml'
                         )
+
                         token_info = {
                             'cursor': 2
                         }
+
                         if(req.params.get('from')):
                             token_info['from'] = req.params.get('from')
 
                         if(req.params.get('until')):
                             token_info['until'] = req.params.get('until')
 
-                        token = jwt.encode(token_info,
-                                           os.getenv('JWT_SECRET'),
-                                           algorithm='HS512').decode('utf-8')
-                        with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
-                            with tag('responseDate'):
-                                text(datetime.strftime(
-                                    datetime.now(), format="%Y-%m-%d %H:%M:%S"))
-                            with tag('request', verb='ListRecords', metadataPrefix='lom'):
-                                text(
-                                    'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
-                            with tag('ListRecords'):
-                                for lo in learning_objects:
-                                    with tag('record'):
-                                        with tag('header'):
-                                            with tag('identifier'):
-                                                text(lo.get('_id'))
-                                            with tag('modified'):
-                                                text(lo.get('modified'))
-                                        with tag('metadata'):
-                                            doc.asis(lo.get('metadata'))
-                                if(len(learning_objects) < total_count):
-                                    with tag('resumptionToken', cursor=0):
-                                        text(token)
+                        if(len(learning_objects)):
+                            token = jwt.encode(token_info,
+                                               os.getenv('JWT_SECRET'),
+                                               algorithm='HS512').decode('utf-8')
+
+                            with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
+                                with tag('responseDate'):
+                                    text(datetime.strftime(
+                                        datetime.now(), format="%Y-%m-%d %H:%M:%S"))
+                                with tag('request', verb='ListRecords', metadataPrefix='lom'):
+                                    if req.params.get('from'):
+                                        doc.attr(
+                                            ('from', req.params.get('from')))
+
+                                    if req.params.get('until'):
+                                        doc.attr(until=req.params.get('until'))
+                                    text(
+                                        'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                                with tag('ListRecords'):
+                                    for lo in learning_objects:
+                                        with tag('record'):
+                                            with tag('header'):
+                                                with tag('identifier'):
+                                                    text(lo.get('_id'))
+                                                with tag('modified'):
+                                                    text(lo.get('modified'))
+                                            with tag('metadata'):
+                                                doc.asis(lo.get('metadata'))
+                                    if(len(learning_objects) < total_count):
+                                        with tag('resumptionToken', cursor=0):
+                                            text(token)
+                        else:
+                            with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
+                                with tag('responseDate'):
+                                    text(datetime.strftime(
+                                        datetime.now(), format="%Y-%m-%d %H:%M:%S"))
+                                with tag('request'):
+                                    text(
+                                        'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                                with tag('error', code='noRecordsMatch'):
+                                    text(
+                                        'The combination of the values of the from, until, set and metadataPrefix arguments results in an empty list.')
                 elif not self.metadataPrefix.get(req.params.get('metadataPrefix')):
                     with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                         with tag('responseDate'):
