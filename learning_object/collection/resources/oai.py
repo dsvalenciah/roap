@@ -8,21 +8,21 @@ import os
 class Oai(object):
     def __init__(self, db_client):
         self.db_client = db_client
-        self.valid_arguments = {
-            'verb': True,
-            'metadataPrefix': True,
-            'resumptionToken': True,
-            'from': True,
-            'until': True,
-            'set': True
-        }
-        self.verbs = {
-            'Identify': True,
-            'ListRecords': True
-        }
-        self.metadataPrefix = {
-            'lom': True
-        }
+        self.valid_arguments = [
+            'verb',
+            'metadataPrefix',
+            'resumptionToken',
+            'from',
+            'until',
+            'set'
+        ]
+        self.valid_verbs = [
+            'Identify',
+            'ListRecords'
+        ]
+        self.valid_metadata_prefix = [
+            'lom'
+        ]
 
     def on_get(self, req, resp):
         doc, tag, text = Doc().tagtext()
@@ -35,7 +35,7 @@ class Oai(object):
         is_valid = True
 
         for key in req.params.keys():
-            if(not self.valid_arguments.get(key)):
+            if(not key in self.valid_arguments):
                 is_valid = False
                 break
 
@@ -45,17 +45,17 @@ class Oai(object):
                     text(datetime.strftime(
                         datetime.now(), format="%Y-%m-%d %H:%M:%S"))
                 with tag('request'):
-                    text('http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                    text('http://gaia.manizales.unal.edu.co:8081/v1/oai')
                 with tag('error', code='badArgument'):
                     text('The request\'s arguments are not valid or missing')
         else:
-            if not (req.params.get('verb') and self.verbs.get(req.params.get('verb'))):
+            if not (req.params.get('verb') and req.params.get('verb') in self.valid_verbs):
                 with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                     with tag('responseDate'):
                         text(datetime.strftime(
                             datetime.now(), format="%Y-%m-%d %H:%M:%S"))
                     with tag('request'):
-                        text('http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                        text('http://gaia.manizales.unal.edu.co:8081/v1/oai')
                     with tag('error', code='badVerb'):
                         text('Illegal verb')
             elif req.params.get('verb') == 'Identify':
@@ -65,7 +65,7 @@ class Oai(object):
                             text(datetime.strftime(
                                 datetime.now(), format="%Y-%m-%d %H:%M:%S"))
                         with tag('request', verb='Identify'):
-                            text('http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                            text('http://gaia.manizales.unal.edu.co:8081/v1/oai')
                         with tag('error', code='badArgument'):
                             text('The request\'s arguments are not valid or missing')
                 else:
@@ -74,13 +74,13 @@ class Oai(object):
                             text(datetime.strftime(
                                 datetime.now(), format="%Y-%m-%d %H:%M:%S"))
                         with tag('request', verb='Identify'):
-                            text('http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                            text('http://gaia.manizales.unal.edu.co:8081/v1/oai')
                         with tag('Identify'):
                             with tag('repositoryName'):
                                 text('ROAp')
                             with tag('baseURL'):
                                 text(
-                                    'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                                    'http://gaia.manizales.unal.edu.co:8081/v1/oai')
                             with tag('protocolVersion'):
                                 text('2.0')
                             with tag('adminEmail'):
@@ -99,7 +99,7 @@ class Oai(object):
                             text(datetime.strftime(
                                 datetime.now(), format="%Y-%m-%d %H:%M:%S"))
                         with tag('request'):
-                            text('http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                            text('http://gaia.manizales.unal.edu.co:8081/v1/oai')
                         with tag('error', code='badArgument'):
                             text('The request\'s arguments are not valid or missing')
                 elif req.params.get('set'):
@@ -108,7 +108,7 @@ class Oai(object):
                             text(datetime.strftime(
                                 datetime.now(), format="%Y-%m-%d %H:%M:%S"))
                         with tag('request'):
-                            text('http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                            text('http://gaia.manizales.unal.edu.co:8081/v1/oai')
                         with tag('error', code='noSetHierarchy'):
                             text('The repository does not support sets')
                 elif req.params.get('metadataPrefix') == 'lom' or req.params.get('resumptionToken'):
@@ -120,7 +120,7 @@ class Oai(object):
                                         datetime.now(), format="%Y-%m-%d %H:%M:%S"))
                                 with tag('request'):
                                     text(
-                                        'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                                        'http://gaia.manizales.unal.edu.co:8081/v1/oai')
                                 with tag('error', code='badArgument'):
                                     text(
                                         'The request\'s arguments are not valid or missing')
@@ -174,7 +174,7 @@ class Oai(object):
                                         datetime.now(), format="%Y-%m-%d %H:%M:%S"))
                                 with tag('request', verb="ListRecords", resumptionToken=req.params.get('resumptionToken')):
                                     text(
-                                        'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                                        'http://gaia.manizales.unal.edu.co:8081/v1/oai')
                                 with tag('ListRecords'):
                                     for lo in learning_objects:
                                         with tag('record'):
@@ -196,7 +196,7 @@ class Oai(object):
                                         datetime.now(), format="%Y-%m-%d %H:%M:%S"))
                                 with tag('request'):
                                     text(
-                                        'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                                        'http://gaia.manizales.unal.edu.co:8081/v1/oai')
                                 with tag('error', code='badResumptionToken'):
                                     text(
                                         'The value of the resumptionToken argument is invalid or expired')
@@ -249,7 +249,7 @@ class Oai(object):
                                     if req.params.get('until'):
                                         doc.attr(until=req.params.get('until'))
                                     text(
-                                        'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                                        'http://gaia.manizales.unal.edu.co:8081/v1/oai')
                                 with tag('ListRecords'):
                                     for lo in learning_objects:
                                         with tag('record'):
@@ -270,17 +270,17 @@ class Oai(object):
                                         datetime.now(), format="%Y-%m-%d %H:%M:%S"))
                                 with tag('request'):
                                     text(
-                                        'http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                                        'http://gaia.manizales.unal.edu.co:8081/v1/oai')
                                 with tag('error', code='noRecordsMatch'):
                                     text(
                                         'The combination of the values of the from, until, set and metadataPrefix arguments results in an empty list.')
-                elif not self.metadataPrefix.get(req.params.get('metadataPrefix')):
+                elif not req.params.get('metadaPrefix') in self.valid_metadata_prefix:
                     with tag('OAI-PMH',  ('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd'), ('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')):
                         with tag('responseDate'):
                             text(datetime.strftime(
                                 datetime.now(), format="%Y-%m-%d %H:%M:%S"))
                         with tag('request'):
-                            text('http://gaia.manizales.unal.edu.co/roapRAIM/oai.php')
+                            text('http://gaia.manizales.unal.edu.co:8081/v1/oai')
                         with tag('error', code='cannotDisseminateFormat'):
                             text(
                                 f'{req.params.get("metadataPrefix")} is not supported by the item or by the repository')
