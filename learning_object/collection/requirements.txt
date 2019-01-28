@@ -1,9 +1,9 @@
-falcon
-gunicorn
-pymongo
-marshmallow
+falcon==1.4.1
+gunicorn==19.9.0
+pymongo==3.7.2
+marshmallow==2.18.0
 marshmallowjson==0.4.5
-xmltodict
-pyjwt
-yattag
-falcon-cors
+xmltodict==0.11.0
+pyjwt==1.7.1
+yattag==1.10.1
+falcon-cors==1.1.7

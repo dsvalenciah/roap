@@ -1,16 +1,15 @@
 '''
 Abstract tasks.
 '''
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import smtplib
-import gettext
 import datetime
-import jwt
+import gettext
 import os
 
+import jwt
+import sendgrid
 from redis import Redis
 from rq import Queue
+from sendgrid.helpers.mail import Content, Email, Mail
 
 
 def queue():
@@ -22,17 +21,12 @@ def queue():
 
 def send_email(receiver_email, user_lang):
     """Send user account validation."""
-    # TODO: add sender to config file.
-    server = smtplib.SMTP('smtp.gmail.com:587')
     _ = gettext.translation(
         'recover_password',
         '/code/locale',
         languages=[user_lang]
     ).gettext
-    server.ehlo()
-    server.starttls()
     sender = os.getenv('SENDER_EMAIL')
-    server.login(sender, os.getenv('PASSWORD_SENDER'))
 
     token = jwt.encode(
         {'email': receiver_email,
@@ -41,13 +35,6 @@ def send_email(receiver_email, user_lang):
         algorithm='HS512'
     ).decode('utf-8')
 
-    message = MIMEMultipart('alternative')
-
-    message['Subject'] = "ROAp recover password"
-    message['From'] = sender
-    message['To'] = receiver_email
-
-    # TODO: fix host.
     recover_password_message = _((
         'Hi! Please, click on this <a href="{url}/{token}">link</a> '
         'to recover your password account.'
@@ -56,22 +43,10 @@ def send_email(receiver_email, user_lang):
         token=token
     )
 
-    html = """
-            <html>
-                <head></head>
-                <body>
-                    <p>
-                       {message}
-                    </p>
-                </body>
-            </html>
-        """.format(message=recover_password_message)
-
-    message.attach(MIMEText(html, 'html'))
-
-    server.sendmail(
-        sender,
-        receiver_email,
-        message.as_string()
-    )
-    server.quit()
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email(sender)
+    to_email = Email(receiver_email)
+    subject = _("ROAp: recover password")
+    content = Content("text/html", recover_password_message)
+    mail = Mail(from_email, subject, to_email, content)
+    sg.client.mail.send.post(request_body=mail.get())

@@ -25,9 +25,14 @@ msgstr ""
 msgid "JWT decode error"
 msgstr ""
 
-#: account_validation/utils/email_jobs.py:44
+#: account_validation/utils/email_jobs.py:37
 #, python-brace-format
 msgid ""
 "Hi! Please, click on this <a href=\"{url}/{token}\">link</a> to validate "
 "your account."
+msgstr ""
+
+#: account_validation/utils/email_jobs.py:47
+#, python-brace-format
+msgid "ROAp: account validation"
 msgstr ""
