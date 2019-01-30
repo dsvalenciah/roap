@@ -36,6 +36,7 @@ class LearningObject(Schema):
     deleted = fields.Boolean(default=False)
     evaluated = fields.Boolean(default=False)
     metadata = fields.Dict(required=True)
+    metadata_xml = fields.Dict(required=True)
     file_metadata = fields.Nested(FileMetadata, required=True)
     rating = fields.Dict(default={
         user_role: {str(i): [] for i in range(1, 6)}

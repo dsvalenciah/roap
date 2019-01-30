@@ -21,7 +21,8 @@ from datetime import datetime
 from manager.schemas.learning_object import LearningObject
 from manager.schemas.learning_object_metadata import LearningObjectMetadata
 
-from manager.utils.xml_to_dict import xml_to_dict
+from manager.utils.xml_to_dict import xml_to_dict as xml_with_dict
+from manager.utils.dict_to_xml import dict_to_xml as dict_with_xml
 from manager.utils.file_manager import StorageUnit
 from manager.utils.i18n_error import ErrorTranslator
 
@@ -37,21 +38,24 @@ def insert_one(
     """Insert learning object."""
     _ = user_language
     format_handler = {
-        'xml': lambda lom: xml_to_dict(lom),
-        'json': lambda lom: lom
+        'xml': lambda lom: xml_with_dict(lom),
+        'json': lambda lom: dict_with_xml(lom)
     }
 
     if learning_object_format not in format_handler.keys():
         raise LearningObjectFormatError(_('Unknown format.'))
 
-    learning_object_metadata = (
+    (
+        learning_object_metadata_dict,
+        learning_object_metadata_xml
+    ) = (
         format_handler[learning_object_format](learning_object_metadata)
     )
 
     if not ignore_schema:
         errors = LearningObjectMetadata(
             db_client
-        ).validate(learning_object_metadata)
+        ).validate(learning_object_metadata_dict)
         if errors:
             errors_translator = ErrorTranslator(_)
             raise LearningObjectMetadataSchemaError(
@@ -85,7 +89,7 @@ def insert_one(
             file_metadata
         )
     else:
-        file_extension = (learning_object_metadata
+        file_extension = (learning_object_metadata_dict
                           .get('technical', {})
                           .get('format')
                           )
@@ -108,7 +112,7 @@ def insert_one(
             'last_modified': None
         }
 
-    learning_object_metadata['technical']['location'] = (
+    learning_object_metadata_dict['technical']['location'] = (
         f'/learning-object-collection/{learning_object_id}/show'
     )
 
@@ -117,7 +121,8 @@ def insert_one(
         creator_id=creator_id,
         lom_schema_id=learning_object_metadata_schema_id,
         category=learning_object_category,
-        metadata=learning_object_metadata,
+        metadata=learning_object_metadata_dict,
+        metadata_xml=learning_object_metadata_xml,
         file_metadata=file_metadata
     )
 

@@ -2,7 +2,6 @@
 """
 Contains utility functions to works with learning-object get many.
 """
-from manager.utils.dict_to_xml import dict_to_xml
 
 
 def get_many(db_client, filter_, range_, sorted_, user, learning_object_format):
@@ -79,7 +78,7 @@ def get_many(db_client, filter_, range_, sorted_, user, learning_object_format):
 
     if learning_object_format:
         format_handler = {
-            'xml': lambda lo: dict_to_xml(lo.get('metadata')),
+            'xml': lambda lo: lo.get('metadata_xml'),
         }
         for index_lo in range(len(learning_objects)):
             learning_objects[index_lo]['metadata'] = format_handler[learning_object_format](

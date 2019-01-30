@@ -7,8 +7,6 @@ import gettext
 from manager.exceptions.learning_object import LearningObjectNotFoundError
 from manager.exceptions.learning_object import LearningObjectFormatError
 
-from manager.utils.dict_to_xml import dict_to_xml
-
 
 def get_one(db_client, learning_object_id, learning_object_format, user):
     """Get a learning object by _id."""
@@ -25,7 +23,7 @@ def get_one(db_client, learning_object_id, learning_object_format, user):
 
     if learning_object_format:
         format_handler = {
-            'xml': lambda lo: dict_to_xml(lo.get('metadata')),
+            'xml': lambda lo: lo.get('metadata_xml'),
             'json': lambda lo: lo.get('metadata')
         }
 
