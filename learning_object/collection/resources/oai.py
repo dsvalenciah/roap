@@ -148,14 +148,14 @@ class Oai(object):
                                 db_client=self.db_client,
                                 filter_=filters,
                                 range_=[int(resumptionToken.get('cursor')), int(
-                                    resumptionToken.get('cursor')) + 1],
+                                    resumptionToken.get('cursor')) + int(os.getenv('LOS_PER_PAGE_OAI_PMH')) - 1],
                                 sorted_=["id", "DESC"],
                                 user=req.context.get('user'),
                                 learning_object_format='xml'
                             )
                             token_info = {
                                 'cursor': int(
-                                    resumptionToken.get('cursor')) + 1
+                                    resumptionToken.get('cursor')) + int(os.getenv('LOS_PER_PAGE_OAI_PMH'))
                             }
 
                             if(resumptionToken.get('from')):
@@ -216,14 +216,14 @@ class Oai(object):
                         learning_objects, total_count = get_many(
                             db_client=self.db_client,
                             filter_=filters,
-                            range_=[0, 1],
+                            range_=[0, int(os.getenv('LOS_PER_PAGE_OAI_PMH')) - 1],
                             sorted_=["id", "DESC"],
                             user=req.context.get('user'),
                             learning_object_format='xml'
                         )
 
                         token_info = {
-                            'cursor': 2
+                            'cursor': int(os.getenv('LOS_PER_PAGE_OAI_PMH'))
                         }
 
                         if(req.params.get('from')):
