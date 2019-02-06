@@ -181,7 +181,7 @@ class Oai(object):
                                             with tag('header'):
                                                 with tag('identifier'):
                                                     text(lo.get('_id'))
-                                                with tag('modified'):
+                                                with tag('datestamp'):
                                                     text(lo.get('modified'))
                                             with tag('metadata'):
                                                 doc.asis(lo.get('metadata'))
@@ -256,7 +256,7 @@ class Oai(object):
                                             with tag('header'):
                                                 with tag('identifier'):
                                                     text(lo.get('_id'))
-                                                with tag('modified'):
+                                                with tag('datestamp'):
                                                     text(lo.get('modified'))
                                             with tag('metadata'):
                                                 doc.asis(lo.get('metadata'))
