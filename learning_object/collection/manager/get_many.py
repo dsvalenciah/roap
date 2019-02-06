@@ -15,6 +15,9 @@ def get_many(db_client, filter_, range_, sorted_, user, learning_object_format):
 
     # Role level permissions
     user_role_permissions_handler = {
+        'oai': [
+            {'status': 'accepted', 'deleted': True}
+        ],
         'external': [
             {'status': 'accepted', 'deleted': False},
         ],

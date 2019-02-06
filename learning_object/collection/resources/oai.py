@@ -29,7 +29,7 @@ class Oai(object):
         filters = {}
         req.context['user'] = {
             '_id': None,
-            'role': 'external'
+            'role': 'oai'
         }
         doc.asis('<?xml version="1.0" encoding="UTF-8"?>')
         is_valid = True
@@ -178,13 +178,20 @@ class Oai(object):
                                 with tag('ListRecords'):
                                     for lo in learning_objects:
                                         with tag('record'):
-                                            with tag('header'):
-                                                with tag('identifier'):
-                                                    text(lo.get('_id'))
-                                                with tag('datestamp'):
-                                                    text(lo.get('modified'))
-                                            with tag('metadata'):
-                                                doc.asis(lo.get('metadata'))
+                                            if(lo.get('deleted')):
+                                                with tag('header', status='deleted'):
+                                                    with tag('identifier'):
+                                                        text(lo.get('_id'))
+                                                    with tag('datestamp'):
+                                                        text(lo.get('modified'))
+                                            else:
+                                                with tag('header'):
+                                                    with tag('identifier'):
+                                                        text(lo.get('_id'))
+                                                    with tag('datestamp'):
+                                                        text(lo.get('modified'))
+                                                with tag('metadata'):
+                                                    doc.asis(lo.get('metadata'))
                                     if(len(learning_objects) + int(resumptionToken.get('cursor')) < total_count):
                                         with tag('resumptionToken', cursor=resumptionToken.get('cursor')):
                                             text(token)
@@ -253,13 +260,20 @@ class Oai(object):
                                 with tag('ListRecords'):
                                     for lo in learning_objects:
                                         with tag('record'):
-                                            with tag('header'):
-                                                with tag('identifier'):
-                                                    text(lo.get('_id'))
-                                                with tag('datestamp'):
-                                                    text(lo.get('modified'))
-                                            with tag('metadata'):
-                                                doc.asis(lo.get('metadata'))
+                                            if(lo.get('deleted')):
+                                                with tag('header', status='deleted'):
+                                                    with tag('identifier'):
+                                                        text(lo.get('_id'))
+                                                    with tag('datestamp'):
+                                                        text(lo.get('modified'))
+                                            else:
+                                                with tag('header'):
+                                                    with tag('identifier'):
+                                                        text(lo.get('_id'))
+                                                    with tag('datestamp'):
+                                                        text(lo.get('modified'))
+                                                with tag('metadata'):
+                                                    doc.asis(lo.get('metadata'))
                                     if(len(learning_objects) < total_count):
                                         with tag('resumptionToken', cursor=0):
                                             text(token)

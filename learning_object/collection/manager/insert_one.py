@@ -111,10 +111,14 @@ def insert_one(
             'size': None,
             'last_modified': None
         }
-
-    learning_object_metadata_dict['technical']['location'] = (
-        f'/learning-object-collection/{learning_object_id}/show'
-    )
+    if(file_extension == '.zip'):
+        learning_object_metadata_dict['technical']['location'] = (
+            f'/learning-object-file-renderer/{learning_object_id}/'
+        )
+    else:
+        learning_object_metadata_dict['technical']['location'] = (
+            f'/learning-object-file-renderer/{learning_object_id}{file_extension}'
+        )
 
     learning_object_dict = dict(
         _id=learning_object_id,
