@@ -73,11 +73,10 @@ def insert_one(
     if with_file:
         if not learning_object_file:
             raise LearningObjectFile(_('File not found.'))
+        file_extension = '.' + learning_object_file.get('name', '.').split('.')[-1]
         file_metadata = {
             '_id': learning_object_id,
-            'extension': (
-                '.' + learning_object_file.get('name', '.').split('.')[-1]
-            ),
+            'extension': file_extension,
             'name': learning_object_file.get('name'),
             'mime_type': learning_object_file.get('mimeType'),
             'size': learning_object_file.get('size'),
