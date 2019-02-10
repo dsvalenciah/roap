@@ -40,6 +40,7 @@ def dict_to_xml(learning_object):
     full_parsed_xml = xmltodict.unparse(
         new_learning_object_content,
         encoding='utf-8',
-        pretty=True
+        pretty=True,
+        full_document=False
     )
     return learning_object, full_parsed_xml
