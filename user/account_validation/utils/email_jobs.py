@@ -3,7 +3,6 @@ Abstract tasks.
 '''
 import gettext
 import os
-
 import jwt
 import sendgrid
 from redis import Redis
