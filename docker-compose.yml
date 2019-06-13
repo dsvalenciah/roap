@@ -164,6 +164,18 @@ services:
       - db
       - redis
   
+  worker_new_user_admin_notification:
+    image: user_account_validation
+    build: ./user/account_validation
+    command: rq worker new_user_admin_notification -u redis://redis
+    env_file:
+      - .env
+    environment:
+      VIRTUAL_HOST: "*/v1/task-new-user-admin-notification, */v1/task-new-user-admin-notification/*"
+    depends_on:
+      - db
+      - redis
+  
   worker_recover_password:
     image: user_recover_password
     build: ./user/recover_password

@@ -1,5 +1,5 @@
 import falcon
-from utils.email_jobs import queue
+from utils.email_activation_account import queue
 
 
 class UserEmail(object):
@@ -15,6 +15,6 @@ class UserEmail(object):
         value_lang_cookie = valid_langs.get(
             req.cookies.get('user_lang')) or 'es_CO'
 
-        queue().enqueue('utils.email_jobs.send_email',
+        queue().enqueue('utils.email_activation_account.send_email',
                         email, value_lang_cookie)
         resp.media = {'status': 'ok'}

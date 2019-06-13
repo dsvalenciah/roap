@@ -7,7 +7,7 @@ import falcon
 import jwt
 import gettext
 from bson.json_util import dumps
-
+from utils.email_new_user_admin_notification import queue
 
 class UserValidate(object):
     """Deal with user validation."""
@@ -40,9 +40,10 @@ class UserValidate(object):
                 {'email': user.get('email')},
                 {'$set': {'validated': True}},
             )
-        except jwt.ExpiredSignatureError as e:
+            queue().enqueue('utils.email_new_user_admin_notification')
+        except jwt.ExpiredSignatureError as __:
             resp.status = falcon.HTTP_UNAUTHORIZED
             resp.body = dumps({'message': [_('JWT token expired')]})
-        except jwt.DecodeError as e:
+        except jwt.DecodeError as __:
             resp.status = falcon.HTTP_UNAUTHORIZED
             resp.body = dumps({'message': [_('JWT decode error')]})
