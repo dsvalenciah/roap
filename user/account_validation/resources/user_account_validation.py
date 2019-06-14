@@ -40,7 +40,7 @@ class UserValidate(object):
                 {'email': user.get('email')},
                 {'$set': {'validated': True}},
             )
-            queue().enqueue('utils.email_new_user_admin_notification')
+            queue().enqueue('utils.email_new_user_admin_notification.send_email')
         except jwt.ExpiredSignatureError as __:
             resp.status = falcon.HTTP_UNAUTHORIZED
             resp.body = dumps({'message': [_('JWT token expired')]})
