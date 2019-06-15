@@ -1,4 +1,4 @@
-from ..schemas import Collection
+from ..schemas import LOCollection
 from ..exceptions import CollectionSchemaError, UserPermissionError
 from uuid import uuid4
 
@@ -15,11 +15,11 @@ def insert_one(db_client, collection_name, user):
         name=collection_name
     )
 
-    collection, errors = Collection().dump(collection_dict)
+    collection, errors = LOCollection().dump(collection_dict)
 
     if errors:
         raise CollectionSchemaError(errors)
     
-    result = db_client.collections.insert_one(collection)
+    result = db_client.locollection.insert_one(collection)
 
     return result.inserted_id

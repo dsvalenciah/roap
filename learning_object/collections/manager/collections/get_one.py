@@ -3,7 +3,7 @@ from ..exceptions import CollectionNotFoundError
 
 def get_one(db_client, collection_id, user):
     _ = user.get('language')
-    collection = db_client.collections.find_one({
+    collection = db_client.locollection.find_one({
         '_id': collection_id
     })
 

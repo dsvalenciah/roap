@@ -8,7 +8,7 @@ from .utils import (
     Authenticate, ErrorTranslator, req_to_dict, SwitchLanguage
 )
 
-from .schemas import Collection, SubCollection
+from .schemas import LOCollection, SubCollection
 
 from .exceptions import (
     CollectionFormatError, CollectionNotFoundError, CollectionSchemaError, CollectionUndeleteError, CollectionUnmodifyError, UserNotFoundError, UserPermissionError,

@@ -10,7 +10,7 @@ def insert_one(db_client, collection_id, name_sub_collection, user):
         raise UserPermissionError(
             _('User can\'t modify sub collections of collections'))
 
-    collection = db_client.collections.find({
+    collection = db_client.locollection.find({
         '_id': collection_id
     })
 

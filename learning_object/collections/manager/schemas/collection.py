@@ -5,7 +5,7 @@ class SubCollection(Schema):
     name = fields.Str(required=True)
     collection_id = fields.UUID(required=True)
 
-class Collection(Schema):
+class LOCollection(Schema):
     _id = fields.UUID(required=True)
     name = fields.Str(required=True)
     sub_collection_ids = fields.List(fields.UUID(), default=[], required=False)
