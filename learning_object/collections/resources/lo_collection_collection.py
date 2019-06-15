@@ -1,10 +1,10 @@
 import json
 from bson.json_util import dumps
-from manager.collections import (
+from manager import (
     get_many_collections, insert_one_collection, get_one_collection, modify_one_collection
 )
 
-from manager.sub_collections import(
+from manager import(
     insert_one_sub_collection
 )
 from manager.utils.req_to_dict import req_to_dict
