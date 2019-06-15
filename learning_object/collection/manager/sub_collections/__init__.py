@@ -1,0 +1,1 @@
+from .insert_one import insert_one as insert_one_sub_collection

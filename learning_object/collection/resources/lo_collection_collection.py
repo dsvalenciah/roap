@@ -1,5 +1,12 @@
 import json
 from bson.json_util import dumps
+from manager.collections import (
+    get_many_collections, insert_one_collection, get_one_collection, modify_one_collection
+)
+
+from manager.sub_collections import(
+    insert_one_sub_collection
+)
 from manager.utils.req_to_dict import req_to_dict
 from manager.utils.auth import Authenticate
 from manager.utils.switch_language import SwitchLanguage
@@ -15,7 +22,7 @@ class LOCollectionCollection(object):
     @falcon.before(Authenticate())
     def on_get(self, req, resp):
         user = req.context.get('user')
-        collections = get_many(
+        collections = get_many_collections(
             db_client=self.db_client
         )
 
@@ -33,12 +40,12 @@ class LOCollectionCollection(object):
         )
         new_collection = get_one_collection(
             db_client=self.db_client, _id_collection=_id_collection)
-        sub_collections_ids = list()
+        sub_collection_ids = list()
 
         for sub_collection in post_params.get('sub_collections'):
             _id_sub_collection = insert_one_sub_collection(
                 db_client=self.db_client, collection_id=_id_collection, name_sub_collection=sub_collection.get('name'))
-            sub_collections_ids.append(_id_sub_collection)
+            sub_collection_ids.append(_id_sub_collection)
 
         new_collection.update({'sub_collection_ids': sub_collection_ids})
         modify_one_collection(

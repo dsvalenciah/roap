@@ -14,6 +14,6 @@ def insert_one(db_client, collection_name):
         print(errors)
         print("ERORRRRRR!")
     
-    result = db_client.collections.isnert_one(collection)
+    result = db_client.collections.insert_one(collection)
 
     return result.inserted_id
