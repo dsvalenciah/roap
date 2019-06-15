@@ -10,7 +10,7 @@ def get_one(db_client, collection_id, user):
     if not collection:
         raise CollectionNotFoundError(_('Collection not found'))
 
-    sub_collections = list(db_client.sub_collections.find({
+    sub_collections = list(db_client.sub_collection.find({
         'collection_id': collection_id
     }))
 
