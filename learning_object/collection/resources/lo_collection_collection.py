@@ -28,7 +28,7 @@ class LOCollectionCollection(object):
 
         resp.body = dumps(collections)
 
-    @falcon.before(Authenticate())
+    #@falcon.before(Authenticate())
     def on_post(self, req, resp):
         post_params = req_to_dict(req)
         user = req.context['user']
@@ -39,7 +39,7 @@ class LOCollectionCollection(object):
             collection_name=post_params.get('name')
         )
         new_collection = get_one_collection(
-            db_client=self.db_client, _id_collection=_id_collection)
+            db_client=self.db_client, collection_id=_id_collection)
         sub_collection_ids = list()
 
         for sub_collection in post_params.get('sub_collections'):
@@ -48,9 +48,10 @@ class LOCollectionCollection(object):
             sub_collection_ids.append(_id_sub_collection)
 
         new_collection.update({'sub_collection_ids': sub_collection_ids})
+        print(_id_collection)
         modify_one_collection(
             db_client=self.db_client,
-            old_collection_id=_id_collection,
+            collection_id=_id_collection,
             new_collection=new_collection
 
         )
