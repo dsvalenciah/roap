@@ -1,4 +1,4 @@
-from manager.schemas.learning_object import Collection
+from ..schemas import Collection
 from uuid import uuid4
 
 def insert_one(db_client, collection_name):

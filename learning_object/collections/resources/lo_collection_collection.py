@@ -1,15 +1,10 @@
 import json
 from bson.json_util import dumps
-from manager import (
-    get_many_collections, insert_one_collection, get_one_collection, modify_one_collection
-)
 
 from manager import(
-    insert_one_sub_collection
+    insert_one_sub_collection, req_to_dict, Authenticate, SwitchLanguage,
+    get_many_collections, insert_one_collection, get_one_collection, modify_one_collection
 )
-from manager.utils.req_to_dict import req_to_dict
-from manager.utils.auth import Authenticate
-from manager.utils.switch_language import SwitchLanguage
 
 import falcon
 
@@ -28,7 +23,7 @@ class LOCollectionCollection(object):
 
         resp.body = dumps(collections)
 
-    #@falcon.before(Authenticate())
+    # @falcon.before(Authenticate())
     def on_post(self, req, resp):
         post_params = req_to_dict(req)
         user = req.context['user']

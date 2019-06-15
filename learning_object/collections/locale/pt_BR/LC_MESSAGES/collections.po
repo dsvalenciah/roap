@@ -1,0 +1,110 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-06 10:32-0500\n"
+"PO-Revision-Date: 2018-12-06 19:18-0500\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.2\n"
+
+#: collection/manager/rating_one.py:32
+#, python-brace-format
+msgid "An a {user_role} cant rate this learning object (only {rater_role})."
+msgstr "Um {user_role} não pode qualificar este objeto de aprendizagem (somente {rater_role})."
+
+#: collection/manager/rating_one.py:38
+#, python-brace-format
+msgid "An a {user_role} cant rate this learning object (only {accepted_roles})."
+msgstr "Um {user_role} não pode qualificar este objeto de aprendizagem (apenas {accepted_roles})."
+
+#: collection/manager/rating_one.py:43
+msgid "Invalid ratig (only [1, 5])."
+msgstr "Classificação inválida (apenas [1,5])."
+
+#: collection/manager/rating_one.py:54
+#, python-brace-format
+msgid "This user cant rate this learning object {user_id}."
+msgstr "Este usuário não pode qualificar este objeto de aprendizagem {user_id}."
+
+#: collection/manager/insert_one.py:42 collection/manager/get_one.py:40
+msgid "Unknown format."
+msgstr "Formato desconhecido."
+
+#: collection/manager/insert_one.py:66
+msgid "File not found."
+msgstr "Ficheiro não encontrado."
+
+#: collection/manager/insert_one.py:91
+#, python-brace-format
+msgid "{learning_object_id} no have extension."
+msgstr "{learning_object_id} não tem extensão."
+
+#: collection/manager/get_one.py:29
+msgid "Learning Object not found."
+msgstr "Objecto de aprendizagem não encontrado."
+
+#: collection/manager/modify_one.py:29 collection/manager/delete_one.py:26
+msgid "User is not own of this learning object."
+msgstr "O usuário não possui este objeto de aprendizagem."
+
+#: collection/manager/modify_one.py:44 collection/manager/delete_one.py:38
+msgid "Learning Object _id not found."
+msgstr "Id do objeto de aprendizagem não encontrado."
+
+#: collection/manager/utils/auth.py:39
+msgid "User deleted."
+msgstr "Usuário eliminado."
+
+#: collection/manager/utils/auth.py:41
+msgid "User not validated."
+msgstr "Usuário inválido."
+
+#: collection/manager/utils/auth.py:43
+msgid "User unapproved."
+msgstr "Usuário não aceito."
+
+#: collection/manager/utils/auth.py:46
+msgid "JWT expired"
+msgstr "JWT expirou"
+
+#: collection/manager/utils/auth.py:48
+msgid "JWT decode error"
+msgstr "Erro de descodificação JWT"
+
+#: collection/resources/learning_object_collection.py:86
+msgid "An metadata, category, and file is required"
+msgstr "É necessário um metadados, uma categoria e um ficheiro"
+
+msgid "Not a valid choice."
+msgstr "Não é uma escolha válida."
+
+msgid "Field may not be null."
+msgstr "O campo pode não ser nulo."
+
+msgid "Not a valid list."
+msgstr "Não é uma lista válida."
+
+msgid "Requiredfield."
+msgstr "Campo obrigatório."
+
+#: collection/manager/utils/file_manager.py:94
+msgid "Incorrect file name."
+msgstr "Nome de arquivo incorreto."
+
+#: collection/manager/utils/file_manager.py:96
+msgid "Not supported file mimetype."
+msgstr "Tipo de arquivo não suportado."
+
+#: collection/manager/utils/file_manager.py:113
+msgid "Folder without index.html."
+msgstr "Pasta sem index.html"

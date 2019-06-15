@@ -7,3 +7,5 @@ from .sub_collections import (
 from .utils import (
     Authenticate, ErrorTranslator, req_to_dict, SwitchLanguage
 )
+
+from .schemas import Collection, SubCollection

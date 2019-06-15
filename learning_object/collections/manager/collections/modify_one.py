@@ -1,4 +1,4 @@
-from manager.schemas.learning_object import Collection
+from ..schemas import Collection
 
 def modify_one(db_client, collection_id, new_collection):
     old_collection = db_client.collections.find_one({

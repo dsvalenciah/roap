@@ -14,7 +14,6 @@ from pymongo import MongoClient
 
 from resources.learning_object import LearningObject
 from resources.learning_object_collection import LearningObjectCollection
-from resources.lo_collection_collection import LOCollectionCollection
 from resources.oai import Oai
 
 class Roap():
@@ -48,14 +47,6 @@ class Roap():
         self.api.add_route(
             '/v1/oai', Oai(self.db)
         )
-
-        self.api.add_route(
-            '/v1/collection', LOCollectionCollection(self.db)
-        )
-        """
-        self.api.add_route(
-            '/v1/collection/{_id}', LOCollection(self.db)
-        )"""
 
     def get_db(self):
         """Obtain roap db."""

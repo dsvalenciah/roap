@@ -1,4 +1,4 @@
-from manager.schemas.learning_object import SubCollection
+from ..schemas import SubCollection
 from uuid import uuid4
 
 

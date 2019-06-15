@@ -12,7 +12,7 @@ class SwitchLanguage():
             req.cookies.get('user_lang')) or 'es_CO'
 
         language = gettext.translation(
-            'collection', '/code/locale', languages=[value_lang_cookie])
+            'collections', '/code/locale', languages=[value_lang_cookie])
 
         req.context['user'] = {
             'language': language.gettext

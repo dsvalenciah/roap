@@ -1,0 +1,98 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-06 10:32-0500\n"
+"PO-Revision-Date: 2018-12-06 20:39-0500\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.2\n"
+
+#: collection/manager/rating_one.py:32
+#, python-brace-format
+msgid "An a {user_role} cant rate this learning object (only {rater_role})."
+msgstr ""
+
+#: collection/manager/rating_one.py:38
+#, python-brace-format
+msgid "An a {user_role} cant rate this learning object (only {accepted_roles})."
+msgstr ""
+
+#: collection/manager/rating_one.py:43
+msgid "Invalid ratig (only [1, 5])."
+msgstr ""
+
+#: collection/manager/rating_one.py:54
+#, python-brace-format
+msgid "This user cant rate this learning object {user_id}."
+msgstr ""
+
+#: collection/manager/insert_one.py:42 collection/manager/get_one.py:40
+msgid "Unknown format."
+msgstr ""
+
+#: collection/manager/insert_one.py:66
+msgid "File not found."
+msgstr ""
+
+#: collection/manager/insert_one.py:91
+#, python-brace-format
+msgid "{learning_object_id} no have extension."
+msgstr ""
+
+#: collection/manager/get_one.py:29
+msgid "Learning Object not found."
+msgstr ""
+
+#: collection/manager/modify_one.py:29 collection/manager/delete_one.py:26
+msgid "User is not own of this learning object."
+msgstr ""
+
+#: collection/manager/modify_one.py:44 collection/manager/delete_one.py:38
+msgid "Learning Object _id not found."
+msgstr ""
+
+#: collection/manager/utils/auth.py:39
+msgid "User deleted."
+msgstr ""
+
+#: collection/manager/utils/auth.py:41
+msgid "User not validated."
+msgstr ""
+
+#: collection/manager/utils/auth.py:43
+msgid "User unapproved."
+msgstr ""
+
+#: collection/manager/utils/auth.py:46
+msgid "JWT expired"
+msgstr ""
+
+#: collection/manager/utils/auth.py:48
+msgid "JWT decode error"
+msgstr ""
+
+#: collection/resources/learning_object_collection.py:86
+msgid "An metadata, category, and file is required"
+msgstr ""
+
+#: collection/manager/utils/file_manager.py:94
+msgid "Incorrect file name."
+msgstr ""
+
+#: collection/manager/utils/file_manager.py:96
+msgid "Not supported file mimetype."
+msgstr ""
+
+#: collection/manager/utils/file_manager.py:113
+msgid "Folder without index.html."
+msgstr ""
