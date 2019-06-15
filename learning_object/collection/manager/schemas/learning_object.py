@@ -16,6 +16,17 @@ class FileMetadata(Schema):
     size = fields.Integer(required=True)
     last_modified = fields.Str(required=True)
 
+
+class SubCollection(Schema):
+    _id = fields.UUID(required=True)
+    name = fields.Str(required=True)
+    collection_id = fields.UUID(required=True)
+
+class Collection(Schema):
+    _id = fields.UUID(required=True)
+    name = fields.Str(required=True)
+    sub_collection_ids = fields.List(fields.UUID(), default=[], required=False)
+
 class LearningObject(Schema):
     """Definition for learning-object schema."""
 
@@ -30,7 +41,8 @@ class LearningObject(Schema):
         )
     )
     lom_schema_id = fields.UUID(required=True)
-    category = fields.Str(required=True, default='')
+    collection_id = fields.UUID(required=True)
+    sub_collection_id = fields.UUID(required=True)
     created = fields.Method('get_now')
     modified = fields.Method('get_now')
     deleted = fields.Boolean(default=False)
