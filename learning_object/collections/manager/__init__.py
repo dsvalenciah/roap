@@ -9,3 +9,8 @@ from .utils import (
 )
 
 from .schemas import Collection, SubCollection
+
+from .exceptions import (
+    CollectionFormatError, CollectionNotFoundError, CollectionSchemaError, CollectionUndeleteError, CollectionUnmodifyError, UserNotFoundError, UserPermissionError,
+    SubCollectionFormatError, SubCollectionNotFoundError, SubCollectionSchemaError, SubCollectionUndeleteError, SubCollectionUnmodifyError
+)
