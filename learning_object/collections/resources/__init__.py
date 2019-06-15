@@ -1,1 +1,2 @@
 from .lo_collection_collection import LOCollectionCollection
+from .lo_collection import LOCollection

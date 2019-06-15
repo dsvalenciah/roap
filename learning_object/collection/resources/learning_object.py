@@ -5,7 +5,6 @@ Contains necessary Resources to works with learning-objects CRUD operations.
 
 import json
 
-from random import randint
 
 from manager.exceptions.learning_object import (
     LearningObjectNotFoundError, LearningObjectSchemaError,

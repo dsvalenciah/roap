@@ -2,12 +2,17 @@ from ..exceptions import CollectionNotFoundError
 
 
 def get_one(db_client, collection_id, user):
+    _ = user.get('language')
     collection = db_client.collections.find_one({
         '_id': collection_id
     })
 
-    _ = user.get('language')
     if not collection:
         raise CollectionNotFoundError(_('Collection not found'))
-    
+
+    sub_collections = list(db_client.sub_collections.find({
+        'collection_id': collection_id
+    }))
+
+    collection.update({'sub_collections': sub_collections})
     return collection

@@ -8,7 +8,8 @@ from pymongo import MongoClient
 
 
 #from resources import LOCollection
-from resources import LOCollectionCollection
+from resources import LOCollectionCollection, LOCollection
+
 
 class Roap():
     """Main Roap class."""
@@ -33,10 +34,10 @@ class Roap():
         self.api.add_route(
             '/v1/collection', LOCollectionCollection(self.db)
         )
-        """
+
         self.api.add_route(
             '/v1/collection/{_id}', LOCollection(self.db)
-        )"""
+        )
 
     def get_db(self):
         """Obtain roap db."""
