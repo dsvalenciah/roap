@@ -60,7 +60,7 @@ services:
     depends_on:
       - learning_object_metadata_schema
     
-    lo_collections:
+  lo_collections:
     image: lo_collections
     build: ./learning_object/collections
     command: gunicorn -b 0.0.0.0:80 app:api --reload
