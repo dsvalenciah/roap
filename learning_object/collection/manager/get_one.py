@@ -3,7 +3,6 @@
 Contains utility functions to works with learning-object get one.
 """
 
-import gettext
 from manager.exceptions.learning_object import LearningObjectNotFoundError
 from manager.exceptions.learning_object import LearningObjectFormatError
 
