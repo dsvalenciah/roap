@@ -1,7 +1,7 @@
 from .collections import (insert_one_collection, get_many_collections,
                           get_one_collection, modify_one_collection)
 from .sub_collections import (
-    insert_one_sub_collection
+    insert_one_sub_collection, get_many_sub_collections
 )
 
 from .utils import (
