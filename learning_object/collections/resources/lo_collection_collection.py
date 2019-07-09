@@ -2,7 +2,7 @@ import json
 from bson.json_util import dumps
 
 from manager import(
-    insert_one_sub_collection, req_to_dict, Authenticate, SwitchLanguage,
+    req_to_dict, Authenticate, SwitchLanguage,
     get_many_collections, insert_one_collection, get_one_collection, modify_one_collection,
     CollectionNotFoundError, UserPermissionError, CollectionSchemaError, SubCollectionSchemaError
 )
@@ -54,25 +54,7 @@ class LOCollectionCollection(object):
         try:
             _id_collection = insert_one_collection(
                 db_client=self.db_client,
-                collection_name=post_params.get('name'), user=user
-            )
-            new_collection = get_one_collection(
-                db_client=self.db_client, collection_id=_id_collection, user=user)
-
-            sub_collection_ids = list()
-
-            for sub_collection in post_params.get('sub_collections'):
-                _id_sub_collection = insert_one_sub_collection(
-                    db_client=self.db_client, collection_id=_id_collection, name_sub_collection=sub_collection.get('name'), user=user)
-                sub_collection_ids.append(_id_sub_collection)
-
-            new_collection.update({'sub_collection_ids': sub_collection_ids})
-
-            modify_one_collection(
-                db_client=self.db_client,
-                collection_id=_id_collection,
-                new_collection=new_collection,
-                user=user
+                collection_dict=post_params, user=user
             )
 
             resp.body = dumps(

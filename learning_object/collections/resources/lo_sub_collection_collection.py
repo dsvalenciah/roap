@@ -2,9 +2,10 @@ import json
 from bson.json_util import dumps
 
 from manager import(
-    req_to_dict, Authenticate, SwitchLanguage,
-    get_many_sub_collections, 
-    CollectionNotFoundError, UserPermissionError
+    get_many_collections,
+    req_to_dict, Authenticate, SwitchLanguage, 
+    CollectionNotFoundError, UserPermissionError,
+    get_many_sub_collections
 )
 
 import falcon
@@ -30,8 +31,10 @@ class LOSubCollectionCollection(object):
                 range_=range_,
                 sorted_=sorted_
             )
+            print(sub_collections)
             for sub_collection in sub_collections:
-                sub_collection['id'] = sub_collection['_id']
+                sub_collection['id'] = sub_collection['id_']
+
             resp.body = dumps(sub_collections)
             len_sub_collections = len(sub_collections)
             resp.content_range = (

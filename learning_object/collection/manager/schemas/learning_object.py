@@ -30,8 +30,8 @@ class LearningObject(Schema):
             ['pending', 'evaluated', 'accepted', 'rejected']
         )
     )
-    lom_schema_id = fields.UUID(required=True)
-    collection_id = fields.UUID(required=True)
+    lom_schema_id = fields.UUID(required=False)
+    collection_id = fields.UUID(required=False)
     sub_collection_id = fields.UUID(required=True)
     created = fields.Method('get_now')
     modified = fields.Method('get_now')

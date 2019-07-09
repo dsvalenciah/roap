@@ -3,28 +3,23 @@
 Contains utility functions to works with learning-object insert one.
 """
 
+from manager.utils.i18n_error import ErrorTranslator
+from manager.utils.file_manager import StorageUnit
+from manager.utils.dict_to_xml import dict_to_xml as dict_with_xml
+from manager.utils.xml_to_dict import xml_to_dict as xml_with_dict
+from manager.schemas.learning_object_metadata import LearningObjectMetadata
+from manager.schemas.learning_object import LearningObject
+from datetime import datetime
+import re
+from manager.exceptions.learning_object import (
+    LearningObjectFormatError, LearningObjectMetadataSchemaError,
+    LearningObjectSchemaError, LearningObjectFile
+)
 import json
 import mimetypes
 from uuid import uuid4
 
 mimetypes.init()
-
-from manager.exceptions.learning_object import (
-    LearningObjectFormatError, LearningObjectMetadataSchemaError,
-    LearningObjectSchemaError, LearningObjectFile
-)
-
-import re
-
-from datetime import datetime
-
-from manager.schemas.learning_object import LearningObject
-from manager.schemas.learning_object_metadata import LearningObjectMetadata
-
-from manager.utils.xml_to_dict import xml_to_dict as xml_with_dict
-from manager.utils.dict_to_xml import dict_to_xml as dict_with_xml
-from manager.utils.file_manager import StorageUnit
-from manager.utils.i18n_error import ErrorTranslator
 
 
 def get_last_learning_object_metadata_schema_id(db_client):
@@ -33,7 +28,7 @@ def get_last_learning_object_metadata_schema_id(db_client):
 
 def insert_one(
         db_client, learning_object_metadata, learning_object_format,
-        creator_id, user_language, learning_object_category='', learning_object_id=None,
+        creator_id, user_language, learning_object_collection_id='', learning_object_sub_collection_id='', learning_object_id=None,
         learning_object_file=None, ignore_schema=False, with_file=True):
     """Insert learning object."""
     _ = user_language
@@ -61,19 +56,20 @@ def insert_one(
             raise LearningObjectMetadataSchemaError(
                 errors_translator.i18n_error(errors))
 
-    learning_object_metadata_schema_id=(
+    learning_object_metadata_schema_id = (
         get_last_learning_object_metadata_schema_id(db_client)
     )
 
     # TODO: validate learning object category.
 
     if not learning_object_id:
-        learning_object_id=str(uuid4())
+        learning_object_id = str(uuid4())
 
     if with_file:
         if not learning_object_file:
             raise LearningObjectFile(_('File not found.'))
-        file_extension = '.' + learning_object_file.get('name', '.').split('.')[-1]
+        file_extension = '.' + \
+            learning_object_file.get('name', '.').split('.')[-1]
         file_metadata = {
             '_id': learning_object_id,
             'extension': file_extension,
@@ -123,11 +119,14 @@ def insert_one(
         _id=learning_object_id,
         creator_id=creator_id,
         lom_schema_id=learning_object_metadata_schema_id,
-        category=learning_object_category,
         metadata=learning_object_metadata_dict,
         metadata_xml=learning_object_metadata_xml,
         file_metadata=file_metadata
     )
+
+    if learning_object_collection_id != '':
+        learning_object_dict.update({'collection_id': learning_object_collection_id,
+                                     'sub_collection_id': learning_object_sub_collection_id})
 
     learning_object, errors = LearningObject().dump(learning_object_dict)
 

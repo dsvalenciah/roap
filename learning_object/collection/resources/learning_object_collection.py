@@ -76,11 +76,12 @@ class LearningObjectCollection(object):
         _ = req.context['user'].get('language')
         post_params = req_to_dict(req)
         metadata = post_params.get('metadata')
-        category = post_params.get('category')
+        collection_id = post_params.get('collection_id')
+        sub_collection_id = post_params.get('sub_collection_id')
         _format = post_params.get('format')
         file = post_params.get('file')
 
-        if None in [metadata, category, file]:
+        if None in [metadata, collection_id, sub_collection_id, file]:
             resp.status = falcon.HTTP_BAD_REQUEST
             resp.body = dumps(
                 {'message': [_('An metadata, category, and file is required')]}
@@ -92,7 +93,8 @@ class LearningObjectCollection(object):
             _id = insert_one(
                 db_client=self.db_client,
                 learning_object_metadata=metadata,
-                learning_object_category=category,
+                learning_object_collection_id=collection_id,
+                learning_object_sub_collection_id=sub_collection_id,
                 learning_object_format=_format or 'json',
                 creator_id=user.get('_id'),
                 user_language=user.get('language'),

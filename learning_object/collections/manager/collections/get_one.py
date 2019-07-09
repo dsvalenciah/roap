@@ -10,9 +10,10 @@ def get_one(db_client, collection_id, user):
     if not collection:
         raise CollectionNotFoundError(_('Collection not found'))
 
-    sub_collections = list(db_client.sub_collection.find({
-        'collection_id': collection_id
-    }))
+    lo_quantity = db_client.learning_objects.find({ 'collection_id': collection_id }).count()
 
-    collection.update({'sub_collections': sub_collections})
+    collection.update({'lo_quantity': lo_quantity})
+
+    for sub_collection in collection.get('sub_collections'):
+            sub_collection.update({'lo_quantity': db_client.learning_objects.find({'sub_collection_id': sub_collection.get('id_')}).count()})
     return collection

@@ -1,1 +1,1 @@
-from .collection import SubCollection, LOCollection
+from .collection import LOCollection
