@@ -38,5 +38,6 @@ def create_default_learning_objects(db):
                     creator_id='ee6a11aee52b4e64b4a6a14d42ff49da',
                     user_language=user_language.gettext,
                     with_file=False,
-                    ignore_schema=True
+                    ignore_schema=True,
+                    status='accepted'
                 )

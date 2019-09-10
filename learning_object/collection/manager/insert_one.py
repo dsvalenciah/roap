@@ -29,7 +29,7 @@ def get_last_learning_object_metadata_schema_id(db_client):
 def insert_one(
         db_client, learning_object_metadata, learning_object_format,
         creator_id, user_language, learning_object_collection_id='', learning_object_sub_collection_id='', learning_object_id=None,
-        learning_object_file=None, ignore_schema=False, with_file=True):
+        learning_object_file=None, ignore_schema=False, with_file=True, status='pending'):
     """Insert learning object."""
     _ = user_language
     format_handler = {
@@ -121,7 +121,8 @@ def insert_one(
         lom_schema_id=learning_object_metadata_schema_id,
         metadata=learning_object_metadata_dict,
         metadata_xml=learning_object_metadata_xml,
-        file_metadata=file_metadata
+        file_metadata=file_metadata,
+        status=status
     )
 
     if learning_object_collection_id != '':

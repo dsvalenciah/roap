@@ -3,6 +3,7 @@ import os
 
 import falcon
 from falcon_cors import CORS
+from setup import *
 
 from pymongo import MongoClient
 
