@@ -29,7 +29,8 @@ def delete_one(db_client, learning_object_id, user):
     if not learning_object:
         raise LearningObjectNotFoundError(_('Learning Object _id not found.'))
 
-    check_user_permission(user, learning_object)
+    if user.get('role') != 'administrator':
+        check_user_permission(user, learning_object)
 
     db_client.learning_objects.update_one(
         {'_id': _id},
