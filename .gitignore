@@ -111,3 +111,5 @@ ENV/
 
 # vscode
 .vscode/
+learning_object/collection/marshmallowjson
+learning_object/metadata_schema/marshmallowjson

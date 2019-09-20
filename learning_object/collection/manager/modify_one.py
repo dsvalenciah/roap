@@ -68,6 +68,7 @@ def modify_one(db_client, old_learning_object_id, new_learning_object, user):
     )
 
     if errors:
+        print(LearningObjectMetadata.fields['annotation'].schema.fields)
         errors_translator = ErrorTranslator(_)
         raise LearningObjectMetadataSchemaError(errors_translator.i18n_error(errors))
 

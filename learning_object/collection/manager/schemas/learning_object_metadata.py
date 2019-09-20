@@ -14,25 +14,25 @@ def LearningObjectMetadata(db_client):
     return Definition(lom_schema).top()
 
 """
-# TODO: to add many nested fields, add many=True in all nested fields
+# TODO: to add many nested fields, add many=False in all nested fields
 # handle it with @predump and add the multiple forms in the front end
 from marshmallow import Schema, fields, validate, pre_dump
 
 class Identifier(Schema):
-    catalog = fields.String(required=True)
-    entry = fields.String(required=True)
+    catalog = fields.String(required=False, allow_none=True)
+    entry = fields.String(required=False, allow_none=True)
 
 class General(Schema):
-    identifier = fields.Nested(Identifier)  # Must be many=True
+    identifier = fields.Nested(Identifier)  # Must be many=False
     title = fields.String(required=True)
-    language = fields.List(fields.String(), required=True)
+    language = fields.List(fields.String(), required=False, allow_none=True)
     description = fields.List(fields.String(), required=True)
     keyword = fields.List(fields.String(), required=True)
-    coverage = fields.List(fields.String(), required=True)
-    structure = fields.String(required=True)
+    coverage = fields.List(fields.String(), required=False, allow_none=True)
+    structure = fields.String(required=False, allow_none=True)
     aggregationlevel = fields.String(
-        required=True,
-        validate=validate.OneOf(["1", "2", "3", "4"])
+        required=False,
+        allow_none=True
     )
     #@pre_dump
     #def wrap_indata(self, indata):
@@ -40,20 +40,20 @@ class General(Schema):
     #        indata['identifier'] = [indata['identifier']] 
 
 class Contribute(Schema):
-    role = fields.String(required=True)
-    date = fields.DateTime(required=True)
-    entity = fields.List(fields.String(), required=True)
+    role = fields.String(required=False, allow_none=True)
+    date = fields.DateTime(required=False, allow_none=True)
+    entity = fields.List(fields.String(), required=False, allow_none=True)
 
 class LifeCycle(Schema):
-    version = fields.String(required=True)
-    status = fields.String(required=True)
-    contribute = fields.List(fields.String(), required=True)
+    version = fields.String(required=False, allow_none=True)
+    status = fields.String(required=False, allow_none=True)
+    contribute = fields.List(fields.String(), required=False, allow_none=True)
 
 class MetaMetadata(Schema):
-    identifier = fields.Nested(Identifier)  # Must be many=True
-    contribute = fields.Nested(Contribute)  # Must be many=True
-    metadataschema = fields.String(required=True)
-    language = fields.List(fields.String(), required=True)
+    identifier = fields.Nested(Identifier)  # Must be many=False
+    contribute = fields.Nested(Contribute)  # Must be many=False
+    metadataschema = fields.String(required=False, allow_none=True)
+    language = fields.List(fields.String(), required=False, allow_none=True)
     #@pre_dump
     #def wrap_indata(self, indata):
     #    if type(indata['identifier']) is dict:
@@ -62,100 +62,96 @@ class MetaMetadata(Schema):
     #        indata['contribute'] = [indata['contribute']]
 
 class Orcomposite(Schema):
-    type = fields.String(required=True)
-    name = fields.String(required=True)
-    minimumversion = fields.String(required=True)
-    maximumversion = fields.String(required=True)
+    type = fields.String(required=False, allow_none=True)
+    name = fields.String(required=False, allow_none=True)
+    minimumversion = fields.String(required=False, allow_none=True)
+    maximumversion = fields.String(required=False, allow_none=True)
 
 class Requirements(Schema):
-    orcomposite = fields.Nested(Orcomposite)  # Must be many=True
+    orcomposite = fields.Nested(Orcomposite)  # Must be many=False
     #@pre_dump
     #def wrap_indata(self, indata):
     #    if type(indata['orcomposite']) is dict:
     #        indata['orcomposite'] = [indata['orcomposite']] 
 
 class Technical(Schema):
-    format = fields.List(fields.String(), required=True)
-    size =  fields.String(required=True)
-    location = fields.List(fields.String(), required=True)
-    requirements = fields.Nested(Requirements)  # Must be many=True
-    installationremarks = fields.List(fields.String(), required=True)
-    otherplatformrequirements = fields.List(fields.String(), required=True)
-    duration =  fields.String(required=True)
+    format = fields.List(fields.String(), required=False, allow_none=True)
+    size =  fields.String(required=False, allow_none=True)
+    location = fields.List(fields.String(), required=False, allow_none=True)
+    requirements = fields.Nested(Requirements)  # Must be many=False
+    installationremarks = fields.List(fields.String(), required=False, allow_none=True)
+    otherplatformrequirements = fields.List(fields.String(), required=False, allow_none=True)
+    duration =  fields.String(required=False, allow_none=True)
     #@pre_dump
     #def wrap_indata(self, indata):
     #    if type(indata['requirements']) is dict:
     #        indata['requirements'] = [indata['requirements']] 
 
 class Educational(Schema):
-    interactivitytype = fields.String(required=True)
-    learningresourcetype = fields.List(fields.String(), required=True)
+    interactivitytype = fields.String(required=False, allow_none=True)
+    learningresourcetype = fields.List(fields.String(), required=False, allow_none=True)
     interactivitylevel = fields.String(
-        required=True,
-        validate=validate.OneOf(["active", "expositive", "mixed"])
+        required=False,
+        allow_none=True)
     )
     semanticdensity = fields.String(
-        required=True,
-        validate=validate.OneOf(
-            ["very low", "low", "medium", "high", "very high"]
-        )
+        required=False,
+        allow_none=True
     )
-    intendedenduserrole = fields.List(fields.String(), required=True)
-    context = fields.List(fields.String(), required=True)
-    typicalagerange = fields.List(fields.String(), required=True)
+    intendedenduserrole = fields.List(fields.String(), required=False, allow_none=True)
+    context = fields.List(fields.String(), required=False, allow_none=True)
+    typicalagerange = fields.List(fields.String(), required=False, allow_none=True)
     difficulty = fields.String(
-        required=True,
-        validate=validate.OneOf(
-            ["very easy", "easy", "medium", "difficult", "very difficult"]
-        )
+        required=False,
+        allow_none=True
     )
-    typicallearningtime = fields.String(required=True)
-    description = fields.List(fields.String(), required=True)
-    language = fields.List(fields.String(), required=True)
+    typicallearningtime = fields.String(required=False, allow_none=True)
+    description = fields.List(fields.String(), required=False, allow_none=True)
+    language = fields.List(fields.String(), required=False, allow_none=True)
 
 class Rights(Schema):
-    cost = fields.String(required=True)
-    copyrightandotherrestrictions = fields.String(required=True)
-    description = fields.String(required=True)
+    cost = fields.String(required=False, allow_none=True)
+    copyrightandotherrestrictions = fields.String(required=False, allow_none=True)
+    description = fields.String(required=False, allow_none=True)
 
 class Resource(Schema):
-    identifier = fields.Nested(Identifier)  # Must be many=True
-    description = fields.List(fields.String(), required=True)
+    identifier = fields.Nested(Identifier)  # Must be many=False
+    description = fields.List(fields.String(), required=False, allow_none=True)
     #@pre_dump
     #def wrap_indata(self, indata):
     #    if type(indata['identifier']) is dict:
     #        indata['identifier'] = [indata['identifier']] 
 
 class Relation(Schema):
-    kind = fields.String(required=True)
-    resource = fields.Nested(Resource)  # Must be many=True
+    kind = fields.String(required=False, allow_none=True)
+    resource = fields.Nested(Resource)  # Must be many=False
     #@pre_dump
     #def wrap_indata(self, indata):
     #    if type(indata['resource']) is dict:
     #        indata['resource'] = [indata['resource']] 
 
 class Annotation(Schema):
-    entity = fields.String(required=True)
-    date = fields.DateTime(required=True)
-    description = fields.String(required=True)
+    entity = fields.String(required=False, allow_none=True)
+    date = fields.DateTime(required=False, allow_none=True)
+    description = fields.String(required=False, allow_none=True)
 
 class Taxon(Schema):
-    id = fields.String(required=True),
-    entry = fields.String(required=True)
+    id = fields.String(required=False, allow_none=True)
+    entry = fields.String(required=False, allow_none=True)
 
 class TaxonPath(Schema):
-    source = fields.String(required=True)
-    taxon = fields.Nested(Taxon)  # Must be many=True
+    source = fields.String(required=False, allow_none=True)
+    taxon = fields.Nested(Taxon)  # Must be many=False
     #@pre_dump
     #def wrap_indata(self, indata):
     #    if type(indata['taxon']) is dict:
     #        indata['taxon'] = [indata['taxon']] 
 
 class Classification(Schema):
-    purpose = fields.String(required=True)
-    taxonPath = fields.Nested(TaxonPath)  # Must be many=True
-    description = fields.String(required=True)
-    keyword = fields.List(fields.String(), required=True)
+    purpose = fields.String(required=False, allow_none=True)
+    taxonPath = fields.Nested(TaxonPath)  # Must be many=False
+    description = fields.String(required=False, allow_none=True)
+    keyword = fields.List(fields.String(), required=False, allow_none=True)
     #@pre_dump
     #def wrap_indata(self, indata):
     #    if type(indata['taxonPath']) is dict:
