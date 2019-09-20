@@ -157,6 +157,36 @@ class Classification(Schema):
     #    if type(indata['taxonPath']) is dict:
     #        indata['taxonPath'] = [indata['taxonPath']] 
 
+class PresentationMode(Schema):
+    auditory = fields.String(required=False, allow_none=True)
+    textual = fields.String(required=False, allow_none=True)
+    visual = fields.String(required=False, allow_none=True)
+
+class InteractionMode(Schema):
+    keyboard = fields.String(required=False, allow_none=True)
+    mouse = fields.String(required=False, allow_none=True)
+    voicerecognition = fields.String(required=False, allow_none=True)
+
+class AdaptationType(Schema):
+    audiodescription = fields.String(required=False, allow_none=True)
+    hearingalternative = fields.String(required=False, allow_none=True)
+    signlanguage= fields.String(required=False, allow_none=True)
+    subtitles = fields.String(required=False, allow_none=True)
+
+class Accessibility(Schema):
+    presentationmode = fields.Nested(PresentationMode)
+    interactionmode = fields.Nested(InteractionMode)
+    adaptationtype = fields.Nested(AdaptationType)
+
+    #@pre_dump
+    #def wrap_indata(self, indata):
+    #    if type(indata['presentationmode']) is dict:
+    #        indata['presentationmode'] = [indata['presentationmode']]
+    #    if type(indata['interactionmode']) is dict:
+    #        indata['interactionmode'] = [indata['interactionmode']]
+    #    if type(indata['adaptationtype']) is dict:
+    #        indata['adaptationtype'] = [indata['adaptationtype']]
+
 class LearningObjectMetadata(Schema):
     general = fields.Nested(General)
     lifecycle = fields.Nested(LifeCycle)
@@ -167,4 +197,5 @@ class LearningObjectMetadata(Schema):
     relation = fields.Nested(Relation)
     annotation = fields.Nested(Annotation)
     classification = fields.Nested(Classification)
+    accessibility = fields.Nested(Accessibility)
 """

@@ -351,6 +351,84 @@
             "allow_none": true
         }
     },
+    "presentationmode": {
+        "auditory": {
+            "kind": "string",
+            "required": false,
+            "allow_none": true
+        },
+        "textual": {
+            "kind": "string",
+            "required": false,
+            "allow_none": true
+        },
+        "visual": {
+            "kind": "string",
+            "required": false,
+            "allow_none": true
+        }
+    },
+    "interactionmode": {
+        "keyboard": {
+            "kind": "string",
+            "required": false,
+            "allow_none": true
+        },
+        "mouse": {
+            "kind": "string",
+            "required": false,
+            "allow_none": true
+        },
+        "voicerecognition": {
+            "kind": "string",
+            "required": false,
+            "allow_none": true
+        }
+    },
+    "adaptationtype": {
+        "audiodescription": {
+            "kind": "string",
+            "required": false,
+            "allow_none": true
+        },
+        "hearingalternative": {
+            "kind": "string",
+            "required": false,
+            "allow_none": true
+        },
+        "textualalternative": {
+            "kind": "string",
+            "required": false,
+            "allow_none": true
+        },
+        "signlanguage": {
+            "kind": "string",
+            "required": false,
+            "allow_none": true
+        },
+        "subtitles": {
+            "kind": "string",
+            "required": false,
+            "allow_none": true
+        }
+    },
+    "accessibility": {
+        "presentationmode": {
+            "kind": "presentationmode",
+            "required": false,
+            "allow_none": true
+        },
+        "interactionmode": {
+            "kind": "interactionmode",
+            "required": false,
+            "allow_none": true
+        },
+        "adaptationtype": {
+            "kind": "adaptationtype",
+            "required": false,
+            "allow_none": true
+        }
+    },
     "learningObject": {
         "general": {
             "kind": "general",
@@ -394,6 +472,11 @@
         },
         "classification": {
             "kind": "classification",
+            "required": false,
+            "allow_none": true
+        },
+        "accessibility": {
+            "kind": "accessibility",
             "required": false,
             "allow_none": true
         }
