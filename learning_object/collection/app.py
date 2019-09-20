@@ -25,7 +25,10 @@ class Roap():
         self.client = MongoClient(os.getenv(db_host), int(os.getenv(db_port)))
         self.db = self.client[os.getenv(db_name)]
 
-        create_default_learning_objects(self.db)
+        must_create_default_learning_objects = int(os.getenv('MUST_CREATE_DEFAULT_LEARNING_OBJECTS'))
+
+        if must_create_default_learning_objects:
+            create_default_learning_objects(self.db)
 
         self.api = falcon.API(middleware=[
             CORS(
