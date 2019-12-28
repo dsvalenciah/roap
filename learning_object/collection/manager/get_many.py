@@ -62,12 +62,10 @@ def get_many(db_client, filter_, range_, sorted_, user, learning_object_format):
         }}
         query = {**initial_query, **query}
         cursor = db_client.learning_objects.find(
-            query,
-            {'rating': {'$meta': "textScore"}}
+            query
         )
         learning_objects = list(
             cursor
-            .sort([('rating', {'$meta': "textScore"})])
             .skip(start)
             .limit((end - start) + 1)
         )
