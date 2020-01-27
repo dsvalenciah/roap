@@ -47,7 +47,8 @@
         "keyword": {
             "kind": "list",
             "items": "string",
-            "required": true
+            "required": false,
+            "allow_none": true
         },
         "coverage": {
             "kind": "string",

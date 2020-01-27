@@ -27,7 +27,7 @@ class General(Schema):
     title = fields.String(required=True)
     language = fields.List(fields.String(), required=False, allow_none=True)
     description = fields.List(fields.String(), required=True)
-    keyword = fields.List(fields.String(), required=True)
+    keyword = fields.List(fields.String(), required=False, allow_none=True)
     coverage = fields.List(fields.String(), required=False, allow_none=True)
     structure = fields.String(required=False, allow_none=True)
     aggregationlevel = fields.String(
