@@ -1,7 +1,7 @@
 falcon==1.4.1
 gunicorn==19.9.0
 pymongo==3.7.2
-pyjwt==1.7.1
+pyjwt==2.4.0
 passlib==1.7.1
 falcon-cors==1.1.7
 marshmallow==2.18.0
